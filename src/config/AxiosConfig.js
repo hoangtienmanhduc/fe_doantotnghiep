@@ -7,7 +7,6 @@ import {
     getRefreshToken,
     getSessionId,
     getUsername,
-    getXApiKey,
     setAccessToken,
 } from '../components/authentication/AuthUtils';
 import { renewToken } from '~/components/authentication/AuthEndPoint.jsx';

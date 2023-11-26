@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRepeat } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
-import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { useRef } from 'react';
 import { Toast } from 'primereact/toast';
@@ -26,10 +25,7 @@ function generateRandomString(length) {
 }
 
 function Login() {
-    const navigate = useNavigate();
     const [randomString, setRandomString] = useState(generateRandomString(4));
-    const [isErrorVisible, setIsErrorVisible] = useState(false);
-    const [isVerificationCodeMatched, setIsVerificationCodeMatched] = useState(true);
     const [inputValues, setInputValues] = useState({
         username: '',
         password: '',
@@ -39,15 +35,7 @@ function Login() {
     const handleInputChange = (event, field) => {
         const value = event.target.value;
         setInputValues((prevValues) => ({ ...prevValues, [field]: value }));
-        setIsVerificationCodeMatched(value === randomString);
     };
-
-    const checkAllFieldsFilled = () => {
-        const values = Object.values(inputValues);
-        return values.every((value) => value.trim() !== '');
-    };
-
-    const [isAllFieldsFilled, setIsAllFieldsFilled] = useState(true);
 
     useEffect(() => {
         regenerateString();
@@ -90,7 +78,7 @@ function Login() {
                     if (!!data && data?.userInfo && data?.userToken) {
                         storeAllUserData(data);
 
-                        window.location.assign('/');
+                        window.location.assign('/home');
                     } else {
                         toast.current.show({
                             severity: 'error',
@@ -232,28 +220,13 @@ function Login() {
                     <Button
                         login
                         onClick={() => {
-                            setIsAllFieldsFilled(checkAllFieldsFilled());
-
                             // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
                             // Thực hiện chuyển hướng
                             handleOnSubmit();
-
-                            // Tự động ẩn thông báo sau 3 giây
-                            setTimeout(() => {
-                                setIsErrorVisible(false);
-                            }, 1000);
                         }}
                     >
                         Đăng nhập
                     </Button>
-
-                    {/* {!isAllFieldsFilled && isErrorVisible && !isVerificationCodeMatched && (
-                        <p style={{ color: 'red', marginTop: '10px' }}>Vui lòng điền đầy đủ thông tin!</p>
-                    )}
-
-                    {!isVerificationCodeMatched && isErrorVisible && isAllFieldsFilled && (
-                        <p style={{ color: 'red', marginTop: '10px' }}>Mã xác minh không đúng!</p>
-                    )} */}
                 </div>
             </div>
             <Toast ref={toast} />

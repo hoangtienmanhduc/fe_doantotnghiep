@@ -82,6 +82,7 @@ function Home() {
     };
     return (
         <div className={cx('wrapper')}>
+            {console.log(userInfo)}
             <div className={cx('header')}>
                 <div className={cx('information')}>
                     <h2 style={{ marginLeft: '10px' }}>Thông tin sinh viên</h2>

@@ -12,8 +12,8 @@ import Login from '~/pages/Login';
 
 //public routes
 const publicRoutes = [
-    { path: '/', component: Home },
-    { path: '/login', component: Login, layout: null },
+    { path: '/home', component: Home },
+    { path: '/', component: Login, layout: null },
     { path: '/lichtheotiendo', component: Lichtheotiendo },
     { path: '/ketquahoctap', component: Ketquahoctap, layout: HeaderOnly },
     { path: '/phieutonghop', component: PhieuTongHop, layout: DefaultLayoutSidebar },

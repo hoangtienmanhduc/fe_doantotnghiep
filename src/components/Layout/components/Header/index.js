@@ -19,7 +19,7 @@ const MENU_ITEMS = [
     },
     {
         title: 'Đăng xuất',
-        to: '/login',
+        to: '/',
     },
 ];
 
