@@ -6,7 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRepeat } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
 import { useNavigate } from 'react-router-dom';
-
+import { useCallback } from 'react';
+import { useRef } from 'react';
+import { Toast } from 'primereact/toast';
+import { authenticateUser } from '~/components/authentication/AuthEndPoint';
+import { storeAllUserData } from '~/components/authentication/AuthUtils';
 const cx = classNames.bind(styles);
 
 function generateRandomString(length) {
@@ -27,7 +31,7 @@ function Login() {
     const [isErrorVisible, setIsErrorVisible] = useState(false);
     const [isVerificationCodeMatched, setIsVerificationCodeMatched] = useState(true);
     const [inputValues, setInputValues] = useState({
-        studentCode: '',
+        username: '',
         password: '',
         verificationCode: '',
     });
@@ -53,6 +57,36 @@ function Login() {
     const regenerateString = () => {
         setRandomString(generateRandomString(4));
     };
+
+    //Submit login
+    const toast = useRef(null);
+    const handleOnSubmit = useCallback(async () => {
+        if (!inputValues?.studentCode) {
+            toast.current.show({ severity: 'info', summary: 'Info', detail: 'Student code is required !!' });
+        }
+
+        if (!inputValues?.password) {
+            toast.current.show({ severity: 'info', summary: 'Info', detail: 'Password is required !!' });
+        }
+        debugger;
+        await authenticateUser(inputValues)
+            .then(async (data) => {
+                if (!!data && data?.userInfo && data?.userToken) {
+                    storeAllUserData(data);
+
+                    window.location.assign('/');
+                } else {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'User is not found !!',
+                    });
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [inputValues]);
 
     return (
         <div className={cx('wrapper')}>
@@ -120,8 +154,8 @@ function Login() {
                         <input
                             placeholder="Nhập mã sinh viên"
                             spellCheck={false}
-                            value={inputValues.studentCode}
-                            onChange={(e) => handleInputChange(e, 'studentCode')}
+                            value={inputValues.username}
+                            onChange={(e) => handleInputChange(e, 'username')}
                         />
                     </div>
                     <div className={cx('search')}>
@@ -189,11 +223,19 @@ function Login() {
 
                             // Hiển thị thông báo lỗi
                             setIsErrorVisible(true);
-
-                            // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
-                            if (isVerificationCodeMatched && checkAllFieldsFilled()) {
+                            debugger;
+                            if (!isVerificationCodeMatched) {
+                                toast.current.show({
+                                    severity: 'info',
+                                    summary: 'Info',
+                                    detail: 'Verification Code is not match !!',
+                                });
+                            }
+                            if (!!isVerificationCodeMatched) {
+                                // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
                                 // Thực hiện chuyển hướng
-                                navigate('/');
+                                handleOnSubmit();
+                                // navigate('/');
                             }
 
                             // Tự động ẩn thông báo sau 3 giây
@@ -205,15 +247,16 @@ function Login() {
                         Đăng nhập
                     </Button>
 
-                    {!isAllFieldsFilled && isErrorVisible && !isVerificationCodeMatched && (
+                    {/* {!isAllFieldsFilled && isErrorVisible && !isVerificationCodeMatched && (
                         <p style={{ color: 'red', marginTop: '10px' }}>Vui lòng điền đầy đủ thông tin!</p>
                     )}
 
                     {!isVerificationCodeMatched && isErrorVisible && isAllFieldsFilled && (
                         <p style={{ color: 'red', marginTop: '10px' }}>Mã xác minh không đúng!</p>
-                    )}
+                    )} */}
                 </div>
             </div>
+            <Toast ref={toast} />
         </div>
     );
 }

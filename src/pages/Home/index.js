@@ -21,6 +21,9 @@ import Chart from 'react-google-charts';
 import Table_Home from '~/components/Table';
 import { useState } from 'react';
 import Select from 'react-select';
+import { useQuery } from '@tanstack/react-query';
+import { getUserId } from '~/components/authentication/AuthUtils';
+import { getUserInfo } from '~/api/user/UserService';
 
 const cx = classNames.bind(styles);
 
@@ -65,7 +68,13 @@ const options = {
     },
 };
 
+const QueryKey = 'Home';
+
 function Home() {
+    const { data: userInfo } = useQuery([QueryKey, getUserId()], () => getUserInfo(getUserId(), getUserId()), {
+        enabled: !!getUserId(),
+    });
+
     const [selectedOption, setSelectedOption] = useState(optionmenu);
 
     const handleChange = (selectedOption) => {
@@ -87,33 +96,33 @@ function Home() {
                         <div className={cx('infor1')}>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>MSSV:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>19434491</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.code}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Họ tên:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>Hoàng Tiến Mạnh Đức</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.firstName + ' ' + userInfo?.lastName}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Giới tính:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>Nam</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.gender}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Ngày sinh:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>12/04/2001</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.dob}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Nơi sinh:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>Đăk Lăk</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.address?.formattedAddress}</h4>
                             </div>
                         </div>
                         <div className={cx('infor1')}>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Lớp học:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>DHKTPM15A</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.specificationClassName}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Khóa học:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>2019 - 2020</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.academicYearName}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Bậc đào tạo:</h4>
@@ -123,11 +132,11 @@ function Home() {
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>
                                     Loại hình đào tạo:
                                 </h4>
-                                <h4 style={{ marginLeft: '3px' }}>Chính quy</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.typeOfEducation}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Ngành:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>Kỹ thuật phần mềm</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.specializationName}</h4>
                             </div>
                         </div>
                     </div>
