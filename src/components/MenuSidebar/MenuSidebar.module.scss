@@ -1,0 +1,85 @@
+/* Google font imports */
+/* Open Sans 400 */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+/* style the component container */
+.accordion_container {
+    width: 200px;
+    background-color: white;
+    overflow: hidden;
+    border: 1px solid rgb(102, 117, 128);
+}
+
+/* style the title button of the accordion menu */
+.accordion_title {
+    width: 100%;
+    height: 50px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding-left: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    background-color: white;
+}
+
+.accordion_content {
+    height: 0px;
+    transition: height 0.3s ease-in;
+}
+
+/*  
+The .show_content class is added and removed from the accordion_content div in the JSX to achieve the show and hide effect for the content when the accordion is clicked.
+*/
+.show_content {
+    height: 200px;
+    opacity: 1;
+    visibility: visible;
+    transition: height 0.3s ease-out;
+}
+
+.show_content2 {
+    height: 100px;
+    opacity: 1;
+    visibility: visible;
+    transition: height 0.3s ease-out;
+}
+
+.show_content3 {
+    height: 150px;
+    opacity: 1;
+    visibility: visible;
+    transition: height 0.3s ease-out;
+}
+
+/* Style the list item container divs */
+.list_item_container {
+    width: 100%;
+    height: 50px;
+    padding-left: 15px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    border-top: 1px solid #a8a8a8;
+}
+
+/* Style the first lit item top border, makes the title look encloses without overlapping borders when the accordion is closed */
+.accordion_content .list_item_container:first-of-type {
+    border-top: 3px solid black;
+}
+
+/* Style the list items p text */
+.list_item_container p {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+/* Style list_item text when list_item_container is hovered */
+.list_item_container:hover > p {
+    color: #0072c9;
+}
