@@ -61,32 +61,49 @@ function Login() {
     //Submit login
     const toast = useRef(null);
     const handleOnSubmit = useCallback(async () => {
-        if (!inputValues?.studentCode) {
-            toast.current.show({ severity: 'info', summary: 'Info', detail: 'Student code is required !!' });
+        // Kiểm tra xem mã nhập có đúng không
+        let isError = false;
+        const isVerificationCodeMatched = inputValues.verificationCode === randomString;
+
+        if (!inputValues?.username) {
+            toast.current.show({ severity: 'info', summary: 'Info', detail: 'Username is required !!' });
+            isError = true;
         }
 
         if (!inputValues?.password) {
             toast.current.show({ severity: 'info', summary: 'Info', detail: 'Password is required !!' });
+            isError = true;
         }
-        debugger;
-        await authenticateUser(inputValues)
-            .then(async (data) => {
-                if (!!data && data?.userInfo && data?.userToken) {
-                    storeAllUserData(data);
 
-                    window.location.assign('/');
-                } else {
-                    toast.current.show({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'User is not found !!',
-                    });
-                }
-            })
-            .catch((err) => {
-                console.log(err);
+        if (!isVerificationCodeMatched) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Verification Code is not match !!',
             });
-    }, [inputValues]);
+            isError = true;
+        }
+
+        if (!isError) {
+            await authenticateUser(inputValues)
+                .then(async (data) => {
+                    if (!!data && data?.userInfo && data?.userToken) {
+                        storeAllUserData(data);
+
+                        window.location.assign('/');
+                    } else {
+                        toast.current.show({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'User is not found !!',
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [inputValues, randomString]);
 
     return (
         <div className={cx('wrapper')}>
@@ -217,26 +234,9 @@ function Login() {
                         onClick={() => {
                             setIsAllFieldsFilled(checkAllFieldsFilled());
 
-                            // Kiểm tra xem mã nhập có đúng không
-                            const isVerificationCodeMatched = inputValues.verificationCode === randomString;
-                            setIsVerificationCodeMatched(isVerificationCodeMatched);
-
-                            // Hiển thị thông báo lỗi
-                            setIsErrorVisible(true);
-                            debugger;
-                            if (!isVerificationCodeMatched) {
-                                toast.current.show({
-                                    severity: 'info',
-                                    summary: 'Info',
-                                    detail: 'Verification Code is not match !!',
-                                });
-                            }
-                            if (!!isVerificationCodeMatched) {
-                                // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
-                                // Thực hiện chuyển hướng
-                                handleOnSubmit();
-                                // navigate('/');
-                            }
+                            // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
+                            // Thực hiện chuyển hướng
+                            handleOnSubmit();
 
                             // Tự động ẩn thông báo sau 3 giây
                             setTimeout(() => {
