@@ -31,3 +31,19 @@ export function createOrUpdateGenericAcademicYear(userId, data = {}) {
         .then((res) => res.data)
         .catch((error) => console.log(error));
 }
+
+export function getListAcademicYearInfo(
+    userId,
+    filterRequest = {},
+    rows,
+    dto = false,
+    sortField = 'id',
+    sortOrder = -1,
+) {
+    return axiosInstance
+        .post(`${BACKEND_ENDPOINT}/academic/getList`, filterRequest, {
+            params: { userId, rows, dto, sortField, sortOrder },
+        })
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}

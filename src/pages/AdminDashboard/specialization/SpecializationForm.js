@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { useState } from 'react';
 import { useCallback } from 'react';
@@ -11,6 +10,9 @@ import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { createOrUpdateGenericSectionClass } from '~/api/section/SectionClassService';
+import { getListFacultyInfo } from '~/api/faculty/FacultyService';
+import { InputText } from 'primereact/inputtext';
+import { createOrUpdateGenericSpecialization } from '~/api/specialization/SpecializationService';
 
 const QueryKeyFacultyOptions = 'Faculty-Options';
 
@@ -30,9 +32,7 @@ const SpecializationForm = forwardRef((props, ref) => {
 
     const { data: facultyOptions } = useQuery(
         [QueryKeyFacultyOptions, getUserId()],
-        () => {
-            // getL(getUserId(), {}, null, true);
-        },
+        () => getListFacultyInfo(getUserId(), {}, null, true),
         { enabled: !!getUserId() },
     );
 
@@ -53,14 +53,31 @@ const SpecializationForm = forwardRef((props, ref) => {
             isError = true;
         }
 
+        if (!data?.name) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Name is required!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.code) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Code is required!!',
+            });
+            isError = true;
+        }
+
         if (!isError) {
             let toPostData = {
                 ...data,
-                systemRole: 'teacher',
             };
-            const sectionData = await createOrUpdateGenericSectionClass(getUserId(), toPostData);
+            const specializationData = await createOrUpdateGenericSpecialization(getUserId(), toPostData);
 
-            if (sectionData?.id) {
+            if (specializationData?.id) {
                 try {
                     toast.current.show({
                         severity: 'success',
@@ -110,6 +127,26 @@ const SpecializationForm = forwardRef((props, ref) => {
                                 optionLabel="name"
                                 placeholder="Select Require Specialization"
                                 className="w-full p-4"
+                            />
+                        </span>
+                    </div>
+                    <div className="col-12">
+                        <h2>Name</h2>
+                        <span className="w-full">
+                            <InputText
+                                value={data?.name}
+                                onChange={(e) => handleOnChange('name', e?.target.value)}
+                                className=" w-full p-4"
+                            />
+                        </span>
+                    </div>
+                    <div className="col-12">
+                        <h2>Code</h2>
+                        <span className="w-full">
+                            <InputText
+                                value={data?.code}
+                                onChange={(e) => handleOnChange('code', e?.target.value)}
+                                className=" w-full p-4"
                             />
                         </span>
                     </div>

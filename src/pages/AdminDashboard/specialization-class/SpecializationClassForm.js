@@ -11,8 +11,12 @@ import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { createOrUpdateGenericSectionClass } from '~/api/section/SectionClassService';
+import { createOrUpdateGenericSpecializationClass } from '~/api/specialization/SpecializationClassService';
+import { getListAcademicYearInfo } from '~/api/academic-year/AcademicYearService';
+import { getListSpecializationInfo } from '~/api/specialization/SpecializationService';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
+const QueryKeyAcademicYear = 'Academic-Year-Options';
 
 const SpecializationClassForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
@@ -30,9 +34,13 @@ const SpecializationClassForm = forwardRef((props, ref) => {
 
     const { data: specializationOptions } = useQuery(
         [QueryKeySpecializationOptions, getUserId()],
-        () => {
-            // getL(getUserId(), {}, null, true);
-        },
+        () => getListSpecializationInfo(getUserId(), {}, null, true),
+        { enabled: !!getUserId() },
+    );
+
+    const { data: academicYearOptions } = useQuery(
+        [QueryKeyAcademicYear, getUserId()],
+        () => getListAcademicYearInfo(getUserId(), {}, null, true),
         { enabled: !!getUserId() },
     );
 
@@ -48,33 +56,25 @@ const SpecializationClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Specialization is required!!',
-            });
-            isError = true;
-        }
-        if (!data?.firstName) {
-            toast.current.show({
-                severity: 'info',
-                summary: 'Info',
-                detail: 'Firstname is required!!',
+                detail: 'Specializaion is required!!',
             });
             isError = true;
         }
 
-        if (!data?.lastName) {
+        if (!data?.academicYearId) {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Lastname is required!!',
+                detail: 'Academic Year is required!!',
             });
             isError = true;
         }
 
-        if (!data?.CINumber) {
+        if (!data?.name) {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'CI Number is required!!',
+                detail: 'Name is required!!',
             });
             isError = true;
         }
@@ -82,16 +82,15 @@ const SpecializationClassForm = forwardRef((props, ref) => {
         if (!isError) {
             let toPostData = {
                 ...data,
-                systemRole: 'teacher',
             };
-            const sectionData = await createOrUpdateGenericSectionClass(getUserId(), toPostData);
+            const specializationClassData = await createOrUpdateGenericSpecializationClass(getUserId(), toPostData);
 
-            if (sectionData?.id) {
+            if (specializationClassData?.id) {
                 try {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Student Successful!!',
+                        detail: 'Create Or Update Specialization Class Successful!!',
                     });
                 } catch (err) {
                     console.log('Fail to reload table');
@@ -113,7 +112,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
         <Dialog
             header={
                 <h1 className="m-3 font-bold">
-                    <strong>Student Form</strong>
+                    <strong>Specialization Class Form</strong>
                     <hr />
                 </h1>
             }
@@ -126,7 +125,6 @@ const SpecializationClassForm = forwardRef((props, ref) => {
         >
             <div className="m-3">
                 <div className="col-12">
-                    <h2>User Information</h2>
                     <div className="col-12">
                         <h2>Specialization</h2>
                         <span className="w-full">
@@ -141,41 +139,24 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                         </span>
                     </div>
                     <div className="col-12">
-                        <h2>Firstname</h2>
+                        <h2>Academic Year</h2>
                         <span className="w-full">
-                            <InputText
-                                value={data?.firstName}
-                                onChange={(e) => handleOnChange('firstName', e?.target.value)}
-                                className=" w-full p-4"
+                            <Dropdown
+                                value={data?.lecturerId}
+                                onChange={(e) => handleOnChange('academicYearId', e?.target.value)}
+                                options={academicYearOptions}
+                                optionLabel="name"
+                                placeholder="Select Require Academic Year"
+                                className="w-full p-4"
                             />
                         </span>
                     </div>
                     <div className="col-12">
-                        <h2>Lastname</h2>
+                        <h2>Name</h2>
                         <span className="w-full">
                             <InputText
-                                value={data?.lastName}
-                                onChange={(e) => handleOnChange('lastName', e?.target.value)}
-                                className=" w-full p-4"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12">
-                        <h2>Date of birth</h2>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.dob}
-                                onChange={(e) => handleOnChange('dob', e?.target.value)}
-                                className=" w-full p-4"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12">
-                        <h2>CI Number</h2>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.CINumber}
-                                onChange={(e) => handleOnChange('CINumber', e?.target.value)}
+                                value={data?.name}
+                                onChange={(e) => handleOnChange('name', e?.target.value)}
                                 className=" w-full p-4"
                             />
                         </span>

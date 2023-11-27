@@ -54,8 +54,13 @@ const SectionManagement = () => {
                     header={header}
                     size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    showGridlines
-                    className="text-3xl"
+                    className="text-2xl"
+                    paginator
+                    scrollable
+                    scrollHeight="400px"
+                    resizableColumns
+                    stripedRows
+                    rows={5}
                 >
                     {columns.map((col, i) => (
                         <Column
@@ -63,6 +68,7 @@ const SectionManagement = () => {
                             key={col.field}
                             field={col.field}
                             header={col.header}
+                            sortable
                             body={(rowData) =>
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (

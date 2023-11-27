@@ -5,31 +5,21 @@ import { Button } from 'primereact/button';
 import { useQuery } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
-import { getPageSectionClassInfo } from '~/api/section/SectionClassService';
 import SpecializationForm from './SpecializationForm';
+import { getPageSpecializationInfo } from '~/api/specialization/SpecializationService';
 
 const QueryKey = 'Specialization-Management';
 
 const SpecializationManagement = () => {
-    const { data, refetch } = useQuery([QueryKey, getUserId()], () => getPageSectionClassInfo(getUserId()), {
+    const { data, refetch } = useQuery([QueryKey, getUserId()], () => getPageSpecializationInfo(getUserId()), {
         enabled: !!getUserId(),
     });
 
     const specializationRef = useRef(null);
     const columns = [
-        { field: 'sectionName', header: 'Section Name' },
-        { field: 'sectionCode', header: 'Section Code' },
-        { field: 'lecturerName', header: 'Lecturer Name' },
-        { field: 'lecturerCode', header: 'Lecturer Code' },
-        { field: 'classCode', header: 'Class Code' },
-        { field: 'room', header: 'Room' },
-        { field: 'periodFrom', header: 'Period From' },
-        { field: 'periodTo', header: 'Period To' },
-        { field: 'numberOfStudents', header: 'Number of Students' },
-        { field: 'dayInWeek', header: 'Day in Week' },
-        { field: 'sectionClassType', header: 'Section Class Type' },
-        { field: 'startedAt', header: 'Started At' },
-        { field: 'note', header: 'Note' },
+        { field: 'facultyName', header: 'Faculty Name' },
+        { field: 'name', header: 'Name' },
+        { field: 'code', header: 'Code' },
         { field: 'action', header: 'Action' },
     ];
 
@@ -57,8 +47,13 @@ const SpecializationManagement = () => {
                     header={header}
                     size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    showGridlines
-                    className="text-3xl"
+                    className="text-2xl"
+                    paginator
+                    scrollable
+                    scrollHeight="400px"
+                    resizableColumns
+                    stripedRows
+                    rows={5}
                 >
                     {columns.map((col, i) => (
                         <Column
@@ -66,6 +61,7 @@ const SpecializationManagement = () => {
                             key={col.field}
                             field={col.field}
                             header={col.header}
+                            sortable
                             body={(rowData) =>
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (

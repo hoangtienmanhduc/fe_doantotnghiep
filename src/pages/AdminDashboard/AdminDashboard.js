@@ -12,7 +12,7 @@ import StudentManagement from './student/StudentManagement';
 import SpecializationClassManagement from './specialization-class/SpecializationClassManagement';
 import SpecializationManagement from './specialization/SpecializationManagement';
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState('courseManagement');
+    const [activeTab, setActiveTab] = useState('academicYearManagement');
     const tabList = [
         { key: 'academicYearManagement', label: 'Academic Year Management', icon: 'pi pi-th-large', component: '' },
         { key: 'facultyManagement', label: 'Faculty Management', icon: 'pi pi-th-large', component: '' },
@@ -42,7 +42,12 @@ const AdminDashboard = () => {
                     <h1 className="p-4 text-blue-200">Admin Dashboard</h1> <hr className="mb-3" />
                     <ul className="list-none p-0 m-0 overflow-hidden bg-blue-100">
                         {tabList.map((item) => (
-                            <li key={item.key} className="m-2 bg-white text-blue-400">
+                            <li
+                                key={item.key}
+                                className={`m-2 ${
+                                    activeTab === item?.key ? 'bg-white text-blue-400 ' : 'bg-blue-400 text-white'
+                                }`}
+                            >
                                 <a
                                     onClick={() => handleOnClick(item)}
                                     className="p-4 no-underline flex align-items-center cursor-pointer border-1 border-transparent hover:text-white  hover:bg-blue-200 hover:border-gray-100 transition-duration-150 transition-colors"

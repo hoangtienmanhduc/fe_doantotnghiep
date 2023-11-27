@@ -45,16 +45,20 @@ const AcademicYearManagement = () => {
                     header={header}
                     size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    showGridlines
+                    className="text-2xl"
+                    paginator
+                    scrollable
+                    scrollHeight="400px"
+                    resizableColumns
+                    stripedRows
                     rows={5}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
-                    className="text-3xl"
                 >
                     {columns.map((col, i) => (
                         <Column
                             className="text-center p-4"
                             key={col.field}
                             field={col.field}
+                            sortable
                             header={col.header}
                             body={(rowData) =>
                                 col.field === 'deleted' ? (

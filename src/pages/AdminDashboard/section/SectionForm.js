@@ -131,7 +131,6 @@ const SectionForm = forwardRef((props, ref) => {
 
     const handleOnChange = useCallback(
         (key, value) => {
-            debugger;
             setData({ ...data, [key]: value });
         },
         [data],

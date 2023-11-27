@@ -50,15 +50,19 @@ const SpecializationClassManagement = () => {
                     header={header}
                     size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    showGridlines
+                    className="text-2xl"
+                    paginator
+                    stripedRows
+                    scrollable
+                    scrollHeight="400px"
+                    resizableColumns
                     rows={5}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
-                    className="text-3xl"
                 >
                     {columns.map((col, i) => (
                         <Column
                             className="text-center p-4"
                             key={col.field}
+                            sortable
                             field={col.field}
                             header={col.header}
                             body={(rowData) =>

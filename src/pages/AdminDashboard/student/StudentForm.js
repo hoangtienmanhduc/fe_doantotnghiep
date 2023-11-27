@@ -14,8 +14,11 @@ import { getListSpecializationInfo } from '~/api/specialization/SpecializationSe
 import { getListDistrict, getListProvince, getListRegion, getListWard } from '~/api/address/AddressService';
 import { useEffect } from 'react';
 import { createOrUpdateGenericUser } from '~/api/user/UserService';
+import { typeOfEducationOptions } from './StudentConstant';
+import { getListSpecializationClassInfo } from '~/api/specialization/SpecializationClassService';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
+const QueryKeySpecializationClassOptions = 'Specialization-Class-Options';
 const QueryKeyRegionOptions = 'Region-Options';
 const QueryKeyWardOptions = 'Ward-Options';
 const QueryKeyProvinceOptions = 'Province-Options';
@@ -38,6 +41,11 @@ const StudentForm = forwardRef((props, ref) => {
     const { data: specializationOptions } = useQuery(
         [QueryKeySpecializationOptions, getUserId()],
         () => getListSpecializationInfo(getUserId(), {}, null, true),
+        { enabled: !!getUserId() },
+    );
+    const { data: specializationClassOptions } = useQuery(
+        [QueryKeySpecializationClassOptions, getUserId()],
+        () => getListSpecializationClassInfo(getUserId(), {}, null, true),
         { enabled: !!getUserId() },
     );
 
@@ -195,7 +203,32 @@ const StudentForm = forwardRef((props, ref) => {
                             />
                         </span>
                     </div>
-
+                    <div className="col-12">
+                        <h2>Specialization Class</h2>
+                        <span className="w-full">
+                            <Dropdown
+                                value={data?.specializationClassId}
+                                onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
+                                options={specializationClassOptions}
+                                optionLabel="name"
+                                optionValue="id"
+                                placeholder="Select Require Specialization Class"
+                                className="w-full p-4"
+                            />
+                        </span>
+                    </div>
+                    <div className="col-12">
+                        <h2>Type Of Education</h2>
+                        <span className="w-full">
+                            <Dropdown
+                                value={data?.typeOfEducation}
+                                onChange={(e) => handleOnChange('typeOfEducation', e?.target.value)}
+                                options={typeOfEducationOptions}
+                                placeholder="Select Require Type of education"
+                                className="w-full p-4"
+                            />
+                        </span>
+                    </div>
                     <div className="col-12">
                         <h2>Firstname</h2>
                         <span className="w-full">
