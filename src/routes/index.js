@@ -9,11 +9,13 @@ import Dangkyhocphan from '~/pages/Dangkyhocphan';
 import Lichhoc from '~/pages/Lichhoc';
 import Tracuucongno from '~/pages/Tracuucongno';
 import Login from '~/pages/Login';
+import { useMemo } from 'react';
 
 //public routes
+
 const publicRoutes = [
-    { path: '/home', component: Home },
     { path: '/', component: Login, layout: null },
+    { path: '/home', component: Home },
     { path: '/lichtheotiendo', component: Lichtheotiendo },
     { path: '/ketquahoctap', component: Ketquahoctap, layout: HeaderOnly },
     { path: '/phieutonghop', component: PhieuTongHop, layout: DefaultLayoutSidebar },
