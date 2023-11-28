@@ -9,7 +9,8 @@ import { useCallback } from 'react';
 import { useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { authenticateUser } from '~/components/authentication/AuthEndPoint';
-import { storeAllUserData } from '~/components/authentication/AuthUtils';
+import { getSystemRole, storeAllUserData } from '~/components/authentication/AuthUtils';
+import { UserRoles } from '~/App';
 const cx = classNames.bind(styles);
 
 function generateRandomString(length) {
@@ -78,7 +79,13 @@ function Login() {
                     if (!!data && data?.userInfo && data?.userToken) {
                         storeAllUserData(data);
 
-                        window.location.assign('/home');
+                        if (data?.userRole === UserRoles.ADMIN) {
+                            window.location.assign('/admin');
+                        } else if (data?.userRole === UserRoles.LECTURER) {
+                            window.location.assign('/lecturer');
+                        } else {
+                            window.location.assign('/home');
+                        }
                     } else {
                         toast.current.show({
                             severity: 'error',

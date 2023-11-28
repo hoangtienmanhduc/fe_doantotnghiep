@@ -45,9 +45,10 @@ export function removeXApiKey() {
 }
 
 // USER INFO
-export function setUserInfo({ id, username, clientId }) {
+export function setUserInfo({ id, username, systemRole }) {
     localStorage.setItem('id', id);
     localStorage.setItem('username', username);
+    localStorage.setItem('systemRole', systemRole);
 }
 
 export function getUserId() {
@@ -56,6 +57,10 @@ export function getUserId() {
 
 export function getUsername() {
     return localStorage.getItem('username');
+}
+
+export function getSystemRole() {
+    return localStorage.getItem('systemRole');
 }
 
 // SESSION

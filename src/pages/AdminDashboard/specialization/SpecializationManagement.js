@@ -1,0 +1,102 @@
+import React from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { useQuery } from '@tanstack/react-query';
+import { getUserId } from '~/components/authentication/AuthUtils';
+import { useRef } from 'react';
+import SpecializationForm from './SpecializationForm';
+import { getPageSpecializationInfo } from '~/api/specialization/SpecializationService';
+
+const QueryKey = 'Specialization-Management';
+
+const SpecializationManagement = () => {
+    const { data, refetch } = useQuery([QueryKey, getUserId()], () => getPageSpecializationInfo(getUserId()), {
+        enabled: !!getUserId(),
+    });
+
+    const specializationRef = useRef(null);
+    const columns = [
+        { field: 'facultyName', header: 'Faculty Name' },
+        { field: 'name', header: 'Name' },
+        { field: 'code', header: 'Code' },
+        { field: 'action', header: 'Action' },
+    ];
+
+    const header = (
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
+            <h2 className="text-900 font-bold">Specialization Management</h2>
+            <div className="flex align-items-center ">
+                <Button className="p-5 text-5xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button
+                    className="p-5 text-5xl"
+                    icon="pi pi-plus"
+                    rounded
+                    raised
+                    onClick={() => specializationRef.current.showForm()}
+                />
+            </div>
+        </div>
+    );
+
+    return (
+        <React.Fragment>
+            <div className="card">
+                <DataTable
+                    value={!!data && data?.content?.length > 0 ? data?.content : []}
+                    header={header}
+                    size="large"
+                    tableStyle={{ minWidth: '60rem' }}
+                    className="text-2xl"
+                    paginator
+                    scrollable
+                    scrollHeight="400px"
+                    resizableColumns
+                    stripedRows
+                    rows={5}
+                >
+                    {columns.map((col, i) => (
+                        <Column
+                            className="text-center p-4"
+                            key={col.field}
+                            field={col.field}
+                            header={col.header}
+                            sortable
+                            body={(rowData) =>
+                                col.field === 'deleted' ? (
+                                    rowData[col.field] ? (
+                                        <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                            Yes
+                                        </div>
+                                    ) : (
+                                        <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                            No
+                                        </div>
+                                    )
+                                ) : col.field === 'action' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        <Button
+                                            text
+                                            className="p-5 text-5xl"
+                                            icon="pi pi-pencil"
+                                            rounded
+                                            raised
+                                            onClick={() => specializationRef.current.showForm(rowData)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field]}
+                                    </div>
+                                )
+                            }
+                        />
+                    ))}
+                </DataTable>
+            </div>
+            <SpecializationForm ref={specializationRef} />
+        </React.Fragment>
+    );
+};
+
+export default SpecializationManagement;
