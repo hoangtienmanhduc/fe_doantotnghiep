@@ -30,76 +30,76 @@ function Ketquahoctap() {
                 >
                     <table border="1" width={1980}>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '150px' }} rowspan="3">
+                            <th style={{ height: '150px' }} rowSpan="3">
                                 STT
                             </th>
-                            <th rowspan="3">Mã lớp học phần</th>
-                            <th rowspan="3">Tên môn học/học phần</th>
-                            <th rowspan="3">Số tín chỉ</th>
+                            <th rowSpan="3">Mã lớp học phần</th>
+                            <th rowSpan="3">Tên môn học/học phần</th>
+                            <th rowSpan="3">Số tín chỉ</th>
                             <th style={{ height: '50px' }} colspan="2">
                                 Giữa kì
                             </th>
                             <th colspan="9">Số tín chỉ</th>
                             <th colspan="5">Thực hành</th>
-                            <th rowspan="3">TBQT</th>
-                            <th rowspan="3">Cuối kỳ</th>
-                            <th rowspan="3">Điểm tổng kết</th>
-                            <th rowspan="3">Thang điểm 4</th>
-                            <th rowspan="3">Điểm chữ</th>
-                            <th rowspan="3">Xếp loại</th>
-                            <th rowspan="3">Ghi chú</th>
-                            <th style={{ width: '20px' }} rowspan="3">
+                            <th rowSpan="3">TBQT</th>
+                            <th rowSpan="3">Cuối kỳ</th>
+                            <th rowSpan="3">Điểm tổng kết</th>
+                            <th rowSpan="3">Thang điểm 4</th>
+                            <th rowSpan="3">Điểm chữ</th>
+                            <th rowSpan="3">Xếp loại</th>
+                            <th rowSpan="3">Ghi chú</th>
+                            <th style={{ width: '20px' }} rowSpan="3">
                                 Đạt
                             </th>
                         </tr>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ width: '50px' }} rowspan="2">
+                            <th style={{ width: '50px' }} rowSpan="2">
                                 1
                             </th>
-                            <th rowspan="2">Chuyên cần</th>
+                            <th rowSpan="2">Chuyên cần</th>
                             <th colspan="9">LT Hệ số 1</th>
-                            <th style={{ width: '40px' }} rowspan="2">
+                            <th style={{ width: '40px' }} rowSpan="2">
                                 1
                             </th>
-                            <th style={{ width: '40px' }} rowspan="2">
+                            <th style={{ width: '40px' }} rowSpan="2">
                                 2
                             </th>
-                            <th style={{ width: '40px' }} rowspan="2">
+                            <th style={{ width: '40px' }} rowSpan="2">
                                 3
                             </th>
-                            <th style={{ width: '40px' }} rowspan="2">
+                            <th style={{ width: '40px' }} rowSpan="2">
                                 4
                             </th>
-                            <th style={{ width: '40px' }} rowspan="2">
+                            <th style={{ width: '40px' }} rowSpan="2">
                                 5
                             </th>
                         </tr>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 1
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 2
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 3
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 4
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 5
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 6
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 7
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 8
                             </th>
-                            <th style={{ width: '50px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '50px', height: '50px' }} rowSpan="1">
                                 9
                             </th>
                         </tr>

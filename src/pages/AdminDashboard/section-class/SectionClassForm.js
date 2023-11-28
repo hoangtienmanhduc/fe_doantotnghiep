@@ -235,7 +235,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                         <span className="w-full">
                             <InputNumber
                                 value={data?.periodFrom}
-                                onValueChange={(e) => handleOnChange('periodFrom', e?.value)}
+                                onChange={(e) => handleOnChange('periodFrom', e?.value)}
                                 className="w-full h-5rem"
                             />
                         </span>
@@ -245,7 +245,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                         <span className="w-full">
                             <InputNumber
                                 value={data?.periodTo}
-                                onValueChange={(e) => handleOnChange('periodTo', e?.value)}
+                                onChange={(e) => handleOnChange('periodTo', e?.value)}
                                 className="w-full h-5rem"
                             />
                         </span>
@@ -254,7 +254,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                         <h2>Day In Week</h2>
                         <span className="w-full">
                             <Dropdown
-                                value={[]}
+                                value={data?.dayInWeek}
                                 onChange={(e) => handleOnChange('dayInWeek', e?.target.value)}
                                 options={dayInWeekOptions}
                                 placeholder="Select Day in Week"

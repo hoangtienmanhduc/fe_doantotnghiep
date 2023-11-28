@@ -217,25 +217,25 @@ function Tracuucongno() {
                 >
                     <table border="1" className={cx('table table-bordered table-striped')} width={1980}>
                         <tr style={{ backgroundColor: 'rgba(243, 247, 249, 0.27)', color: 'rgb(29, 161, 242)' }}>
-                            <th style={{ width: '25px', height: '70px' }} rowspan="1"></th>
+                            <th style={{ width: '25px', height: '70px' }} rowSpan="1"></th>
                             <th>STT</th>
-                            <th rowspan="1">Đợt</th>
-                            <th rowspan="1">Mã</th>
-                            <th rowspan="1">Mã LHP</th>
-                            <th rowspan="1">Nội dung</th>
-                            <th rowspan="1">Số TC</th>
-                            <th rowspan="1">Mức phí ban đầu</th>
-                            <th rowspan="1">% Miễn giảm</th>
-                            <th rowspan="1">Số tiền miễn giảm</th>
-                            <th rowspan="1">Mức nộp</th>
-                            <th rowspan="1">Trạng thái ĐK</th>
-                            <th rowspan="1">Ngày nộp</th>
-                            <th rowspan="1">Số tiền nộp</th>
-                            <th rowspan="1">Khấu trừ (+)</th>
-                            <th rowspan="1">Trừ nợ (-)</th>
-                            <th rowspan="1">Công nợ</th>
-                            <th rowspan="1">Trạng Thái</th>
-                            <th rowspan="1">Không truy cứu công nợ</th>
+                            <th rowSpan="1">Đợt</th>
+                            <th rowSpan="1">Mã</th>
+                            <th rowSpan="1">Mã LHP</th>
+                            <th rowSpan="1">Nội dung</th>
+                            <th rowSpan="1">Số TC</th>
+                            <th rowSpan="1">Mức phí ban đầu</th>
+                            <th rowSpan="1">% Miễn giảm</th>
+                            <th rowSpan="1">Số tiền miễn giảm</th>
+                            <th rowSpan="1">Mức nộp</th>
+                            <th rowSpan="1">Trạng thái ĐK</th>
+                            <th rowSpan="1">Ngày nộp</th>
+                            <th rowSpan="1">Số tiền nộp</th>
+                            <th rowSpan="1">Khấu trừ (+)</th>
+                            <th rowSpan="1">Trừ nợ (-)</th>
+                            <th rowSpan="1">Công nợ</th>
+                            <th rowSpan="1">Trạng Thái</th>
+                            <th rowSpan="1">Không truy cứu công nợ</th>
                         </tr>
                         {currentItems.map((semester, index) => (
                             <React.Fragment key={index}>

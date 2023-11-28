@@ -144,15 +144,15 @@ function Chuongtrinhkhung() {
                     <table border="1" className={cx('table table-bordered table-striped')} width={920}>
                         <tr style={{ backgroundColor: 'rgba(243, 247, 249, 0.27)', color: 'rgb(29, 161, 242)' }}>
                             <th style={{ width: '25px', height: '70px' }}>STT</th>
-                            <th rowspan="1">Tên môn học/Học phần</th>
-                            <th rowspan="1">Mã Học phần</th>
-                            <th rowspan="1">Học phần</th>
-                            <th rowspan="1">Số TC</th>
-                            <th rowspan="1">Số tiết LT</th>
-                            <th rowspan="1">Số tiết TH</th>
-                            <th rowspan="1">Nhóm tự chọn</th>
-                            <th rowspan="1">Số TC bắt buộc của nhóm</th>
-                            <th style={{ width: '30px' }} rowspan="1">
+                            <th rowSpan="1">Tên môn học/Học phần</th>
+                            <th rowSpan="1">Mã Học phần</th>
+                            <th rowSpan="1">Học phần</th>
+                            <th rowSpan="1">Số TC</th>
+                            <th rowSpan="1">Số tiết LT</th>
+                            <th rowSpan="1">Số tiết TH</th>
+                            <th rowSpan="1">Nhóm tự chọn</th>
+                            <th rowSpan="1">Số TC bắt buộc của nhóm</th>
+                            <th style={{ width: '30px' }} rowSpan="1">
                                 Đạt
                             </th>
                         </tr>

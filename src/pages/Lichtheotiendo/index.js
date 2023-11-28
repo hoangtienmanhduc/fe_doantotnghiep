@@ -344,16 +344,16 @@ function Lichtheotiendo() {
                 >
                     <table border="1" width={1130}>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '100px', width: '40px' }} rowspan="2">
+                            <th style={{ height: '100px', width: '40px' }} rowSpan="2">
                                 STT
                             </th>
-                            <th style={{ width: '100px' }} rowspan="2">
+                            <th style={{ width: '100px' }} rowSpan="2">
                                 Mã lớp học phần
                             </th>
-                            <th style={{ width: '200px' }} rowspan="2">
+                            <th style={{ width: '200px' }} rowSpan="2">
                                 Tên môn học/học phần
                             </th>
-                            <th style={{ width: '35px' }} rowspan="2">
+                            <th style={{ width: '35px' }} rowSpan="2">
                                 Số tín chỉ
                             </th>
                             <th style={{ width: '250px' }} colspan="6">
@@ -362,36 +362,36 @@ function Lichtheotiendo() {
                             <th style={{ width: '100px' }} colspan="2">
                                 Thời gian
                             </th>
-                            <th style={{ width: '100px' }} rowspan="2">
+                            <th style={{ width: '100px' }} rowSpan="2">
                                 Mã giảng viên
                             </th>
-                            <th style={{ width: '100px' }} rowspan="2">
+                            <th style={{ width: '100px' }} rowSpan="2">
                                 Giảng viên
                             </th>
                         </tr>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ width: '40px' }} rowspan="1">
+                            <th style={{ width: '40px' }} rowSpan="1">
                                 Thứ
                             </th>
-                            <th style={{ width: '60px' }} rowspan="1">
+                            <th style={{ width: '60px' }} rowSpan="1">
                                 Tiết
                             </th>
-                            <th style={{ width: '70px' }} rowspan="1">
+                            <th style={{ width: '70px' }} rowSpan="1">
                                 Loại lịch
                             </th>
-                            <th style={{ width: '70px' }} rowspan="1">
+                            <th style={{ width: '70px' }} rowSpan="1">
                                 Phòng
                             </th>
-                            <th style={{ width: '50px' }} rowspan="1">
+                            <th style={{ width: '50px' }} rowSpan="1">
                                 Nhóm
                             </th>
-                            <th style={{ width: '40px' }} rowspan="1">
+                            <th style={{ width: '40px' }} rowSpan="1">
                                 Giờ
                             </th>
-                            <th style={{ width: '90px' }} rowspan="1">
+                            <th style={{ width: '90px' }} rowSpan="1">
                                 Bắt đầu
                             </th>
-                            <th style={{ width: '90px' }} rowspan="1">
+                            <th style={{ width: '90px' }} rowSpan="1">
                                 Kết thúc
                             </th>
                         </tr>

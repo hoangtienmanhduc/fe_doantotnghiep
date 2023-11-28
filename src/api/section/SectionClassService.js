@@ -47,3 +47,12 @@ export function createOrUpdateGenericSectionClass(userId, data = {}) {
         .then((res) => res.data)
         .catch((error) => console.log(error));
 }
+
+export function registerGenericSectionClass(userId, data = {}) {
+    return axiosInstance
+        .post(`${BACKEND_ENDPOINT}/section/class/registerSection`, data, {
+            params: { userId },
+        })
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}

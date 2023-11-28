@@ -2,23 +2,18 @@ import styles from './Dangkyhocphan.module.scss';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Select from 'react-select';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
+import { getListTermInfo } from '~/api/term/TermService';
+import { Dropdown } from 'primereact/dropdown';
+import { getListSectionInfo } from '~/api/section/SectionService';
+import { getListSectionClassInfo, registerGenericSectionClass } from '~/api/section/SectionClassService';
+import { showNotification } from '~/components/notification/NotificationService';
+import { HTTP_STATUS_OK } from '~/utils/Constants';
 
 const cx = classNames.bind(styles);
-
-const options = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' },
-    { value: 'option5', label: 'Option 5' },
-    { value: 'option6', label: 'Option 6' },
-    { value: 'option7', label: 'Option 7' },
-    { value: 'option8', label: 'Option 8' },
-    { value: 'option9', label: 'Option 9' },
-    // Thêm các option khác nếu cần
-];
 
 const courses = [
     {
@@ -35,36 +30,69 @@ const courses = [
     },
 ];
 
-const trunglichs = [
-    {
-        id: 1,
-        name: 'HIỂN THỊ LỚP HỌC PHẦN KHÔNG TRÙNG LỊCH',
-    },
-];
+const QueryKeyTerm = 'Term-Register-Options';
+const QueryKeySection = 'Section-Register';
+const QueryKeySectionClass = 'Section-Class-Register';
+const QueryKeySectionClassStudent = 'Section-Class-Student-Register';
 
 function Dangkyhocphan() {
-    const [selectedOption, setSelectedOption] = useState(options);
-    const [selectedCourse, setSelectedCourse] = useState(courses[0]);
+    const { data: termOptions } = useQuery([QueryKeyTerm, getUserId()], () => getListTermInfo(getUserId()), {
+        enabled: !!getUserId(),
+    });
+
+    const [selectedTerm, setSelectedTerm] = useState(termOptions && termOptions[0] ? termOptions[0]?.id : null);
+
+    const { data: sectionList } = useQuery(
+        [QueryKeySection, getUserId(), selectedTerm],
+        () => getListSectionInfo(getUserId(), { termId: selectedTerm }),
+        {
+            enabled: !!getUserId() && !!selectedTerm,
+        },
+    );
+
     const [selectedUpperTableRow, setSelectedUpperTableRow] = useState(null);
+
+    const { data: sectionClassTheoryList } = useQuery(
+        [QueryKeySectionClass, getUserId(), selectedUpperTableRow?.id],
+        () =>
+            getListSectionClassInfo(getUserId(), { sectionId: selectedUpperTableRow?.id, sectionClassType: 'theory' }),
+        {
+            enabled: !!getUserId() && !!selectedUpperTableRow,
+        },
+    );
+
     const [selectedLowerTableRow, setSelectedLowerTableRow] = useState(null);
 
-    const handleChange = (selectedOption) => {
-        setSelectedOption(selectedOption);
+    const { data: sectionClassList } = useQuery(
+        [QueryKeySectionClass, getUserId(), selectedLowerTableRow?.id],
+        () =>
+            getListSectionClassInfo(getUserId(), {
+                sectionId: selectedLowerTableRow?.id,
+                lecturerId: selectedLowerTableRow?.lecturerId,
+            }),
+        {
+            enabled: !!getUserId() && !!selectedLowerTableRow?.id,
+        },
+    );
 
-        const selectedCourseId = selectedOption.value;
+    const [selectedCourse, setSelectedCourse] = useState(courses[0]);
+
+    const handleChange = useCallback((selectedTerm) => {
+        setSelectedTerm(selectedTerm);
+
+        const selectedCourseId = selectedTerm.value;
         const matchingCourse = courses.find((course) => course.id === selectedCourseId);
 
         if (matchingCourse) {
             setSelectedCourse(matchingCourse);
         }
-
-        // Additional logic if needed
-    };
+    }, []);
 
     const handleCourseChange = (course) => {
         setSelectedCourse(course);
     };
 
+    // Section Select
     const handleUpperTableSelect = (row) => {
         setSelectedUpperTableRow(row);
     };
@@ -73,127 +101,39 @@ function Dangkyhocphan() {
         setSelectedLowerTableRow(row);
     };
 
-    const getTableData = () => {
-        switch (selectedCourse.id) {
-            case 1:
-                return [
-                    {
-                        id: 1,
-                        stt: 1,
-                        maMhCu: '21065',
-                        maHp: '65613456',
-                        tenMonHoc: 'Hội hoạ',
-                        tinChi: 3,
-                        batBuoc: true,
-                        hocPhan: '03251 (a)',
-                        hocPhanTuongDuong: '',
-                    },
-                ];
-            case 2:
-                return [
-                    {
-                        id: 1,
-                        stt: 1,
-                        maMhCu: '21065',
-                        maHp: '65613456',
-                        tenMonHoc: 'Hội hoạ',
-                        tinChi: 3,
-                        batBuoc: true,
-                        hocPhan: '03251 (a)',
-                        hocPhanTuongDuong: '',
-                    },
-                    {
-                        id: 2,
-                        stt: 2,
-                        maMhCu: '54513153',
-                        maHp: '3213534',
-                        tenMonHoc: 'Ca hát',
-                        tinChi: 3,
-                        batBuoc: true,
-                        hocPhan: '03251 (a)',
-                        hocPhanTuongDuong: '',
-                    },
-                ];
-            case 3:
-                return [
-                    {
-                        id: 1,
-                        stt: 1,
-                        maMhCu: '5468422',
-                        maHp: '5662',
-                        tenMonHoc: 'Đức',
-                        tinChi: 3,
-                        batBuoc: true,
-                        hocPhan: '03251 (a)',
-                        hocPhanTuongDuong: '',
-                    },
-                ];
-            default:
-                return [];
-        }
-    };
+    const { data: sectionClassStudentList, refetch } = useQuery(
+        [QueryKeySectionClassStudent, getUserId()],
+        () =>
+            getListSectionClassInfo(getUserId(), {
+                sectionId: selectedLowerTableRow?.id,
+                lecturerId: selectedLowerTableRow?.lecturerId,
+                studentId: getRefId(),
+            }),
+        {
+            enabled: !!getUserId() && !!getRefId() && !!selectedLowerTableRow?.id,
+        },
+    );
 
-    const getLowerTableData = () => {
-        if (selectedUpperTableRow) {
-            // Use the extracted information to generate lower table data
-            return [
-                {
-                    id: 1,
-                    stt: 1,
-                    maLHP: '68416446',
-                    tenLopHP: 'Cucu',
-                    lopDuKien: 'GOFJGO15A',
-                    siSoToiDa: 80,
-                    daDangKi: 0,
-                    trangThai: 'Đang lên kế hoạch',
-                },
-                {
-                    id: 2,
-                    stt: 2,
-                    maLHP: '6513156',
-                    tenLopHP: 'Kaka',
-                    lopDuKien: 'AFGIUF15A',
-                    siSoToiDa: 80,
-                    daDangKi: 0,
-                    trangThai: 'Đang lên kế hoạch',
-                },
-                // Add other rows as needed
-            ];
-        }
-        // Default data when no row is selected
-        return [];
-    };
+    const { mutate } = useMutation((toPostData) => registerGenericSectionClass(getUserId(), toPostData), {
+        onSuccess: (data) => {
+            if (!!data && data === HTTP_STATUS_OK) {
+                showNotification('success', 'Success', 'Register Successfully !!');
+                refetch();
+            }
+        },
+    });
 
-    const getScheduleData = () => {
-        if (selectedLowerTableRow) {
-            return [
-                {
-                    id: 1,
-                    stt: 1,
-                    lichHoc: 'LT - Thứ 5 (T4-T6)',
-                    nhomTH: '1',
-                    phong: 'A3.02',
-                    dayNha: 'A (CS1)',
-                    coSo: 'Cơ sở 1 (Thành phố Hồ Chí Minh)',
-                    giangVien: 'PGS Phan Thị Tố Oanh',
-                    thoiGian: '10/05/2005 - 16/11/2023',
-                },
-                {
-                    id: 1,
-                    stt: 1,
-                    lichHoc: 'LT - Thứ 5 (T4-T6)',
-                    nhomTH: '2',
-                    phong: 'A3.02',
-                    dayNha: 'A (CS1)',
-                    coSo: 'Cơ sở 1 (Thành phố Hồ Chí Minh)',
-                    giangVien: 'PGS Phan Thị Tố Oanh',
-                    thoiGian: '10/05/2005 - 16/11/2023',
-                },
-            ];
+    const handleOnSubmit = useCallback(() => {
+        if (sectionClassList && !!selectedLowerTableRow) {
+            let toPostData = {
+                sectionId: selectedLowerTableRow?.sectionId,
+                lecturerId: selectedLowerTableRow?.lecturerId,
+                studentId: getRefId(),
+            };
+
+            mutate(toPostData);
         }
-        // Default data when no row is selected
-        return [];
-    };
+    }, [mutate, sectionClassList, selectedLowerTableRow]);
 
     return (
         <div className={cx('wrapper')}>
@@ -218,16 +158,21 @@ function Dangkyhocphan() {
                     }}
                 >
                     <p style={{ fontSize: '15px', fontWeight: 'bold', marginRight: '25px' }}>Đợt đăng kí</p>
-                    <div style={{ width: '180px' }}>
-                        <Select
-                            defaultValue={selectedOption[0]} // Sử dụng defaultValue để đặt giá trị mặc định
-                            onChange={handleChange}
-                            options={options}
-                            isSearchable={true}
-                            placeholder="Chọn một option..."
-                            maxMenuHeight={250}
-                        />
-                    </div>
+                    {termOptions && (
+                        <div style={{ width: '180px' }}>
+                            <Dropdown
+                                className="p-2"
+                                value={selectedTerm || (!!termOptions[0] && termOptions[0].id)}
+                                onChange={(e) => handleChange(e?.target?.value)}
+                                options={termOptions}
+                                optionLabel="name"
+                                optionValue="id"
+                                isSearchable={true}
+                                placeholder="Chọn một option..."
+                                maxMenuHeight={250}
+                            />
+                        </div>
+                    )}
                     <div style={{ display: 'flex' }}>
                         {courses.map((course) => (
                             <div style={{ color: 'red', fontSize: '15px', fontWeight: 'bold' }} key={course.id}>
@@ -256,68 +201,71 @@ function Dangkyhocphan() {
                 <div style={{ width: '98%', marginLeft: '12px', marginTop: '25px' }}>
                     <table border="1" width={1125}>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '50px', width: '35px' }} rowspan="1"></th>
-                            <th rowspan="1">STT</th>
-                            <th rowspan="1">Mã MH cũ</th>
-                            <th rowspan="1">Mã HP</th>
-                            <th rowspan="1">Tên môn học</th>
-                            <th rowspan="1">TC</th>
-                            <th rowspan="1">Bắt buộc</th>
-                            <th style={{ width: '200px' }} rowspan="1">
+                            <th style={{ height: '50px', width: '35px' }} rowSpan="1"></th>
+                            <th rowSpan="1">ID</th>
+                            <th rowSpan="1">Mã HP</th>
+                            <th rowSpan="1">Tên môn học</th>
+                            <th rowSpan="1">TC</th>
+                            <th rowSpan="1">Bắt buộc</th>
+                            <th style={{ width: '200px' }} rowSpan="1">
                                 Học phần: học trước (a), tiên quyết (b), song hành (c)
                             </th>
-                            <th rowspan="1">Học phần tương đương</th>
                         </tr>
-                        {getTableData().map((rowData) => (
-                            <tr key={rowData.id} onClick={() => handleUpperTableSelect(rowData)}>
-                                <th>
-                                    <input
-                                        type="radio"
-                                        checked={selectedUpperTableRow && selectedUpperTableRow.id === rowData.id}
-                                    />
-                                </th>
-                                <th style={{ height: '30px' }}>{rowData.stt}</th>
-                                <th>{rowData.maMhCu}</th>
-                                <th>{rowData.maHp}</th>
-                                <th>{rowData.tenMonHoc}</th>
-                                <th>{rowData.tinChi}</th>
-                                <th>
-                                    {rowData.batBuoc ? (
-                                        <FontAwesomeIcon
-                                            style={{ color: 'green', fontSize: '20px' }}
-                                            icon={faCircleCheck}
+                        {sectionList &&
+                            sectionList?.length > 0 &&
+                            sectionList.map((rowData) => (
+                                <tr key={rowData.id} onClick={() => handleUpperTableSelect(rowData)}>
+                                    <th>
+                                        <input
+                                            type="radio"
+                                            checked={selectedUpperTableRow && selectedUpperTableRow.id === rowData.id}
                                         />
-                                    ) : (
-                                        <FontAwesomeIcon
-                                            style={{ color: 'red', fontSize: '20px' }}
-                                            icon={faCircleXmark}
-                                        />
-                                    )}
-                                </th>
-                                <th>{rowData.hocPhan}</th>
-                                <th>{rowData.hocPhanTuongDuong}</th>
-                            </tr>
-                        ))}
+                                    </th>
+                                    <th style={{ height: '30px' }}>{rowData.id}</th>
+                                    <th>{rowData.code}</th>
+                                    <th>{rowData.name}</th>
+                                    <th>{rowData.credit}</th>
+                                    <th>
+                                        {rowData.sectionType === 'elective' ? (
+                                            <FontAwesomeIcon
+                                                style={{ color: 'green', fontSize: '20px' }}
+                                                icon={faCircleCheck}
+                                            />
+                                        ) : (
+                                            <FontAwesomeIcon
+                                                style={{ color: 'red', fontSize: '20px' }}
+                                                icon={faCircleXmark}
+                                            />
+                                        )}
+                                    </th>
+                                    <th>
+                                        {rowData.requireCourse &&
+                                            rowData?.requireCourse?.length > 0 &&
+                                            rowData?.requireCourse?.map((courseId) => {
+                                                return courseId + '(b),';
+                                            })}
+                                    </th>
+                                </tr>
+                            ))}
                     </table>
                 </div>
                 <div
                     style={{
-                        width: '70%',
-                        marginLeft: '320px',
+                        width: '100%',
                         marginTop: '25px',
                         display: 'flex',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                     }}
                 >
                     <p style={{ fontSize: '17px', fontWeight: 'bold', color: '#FF8C00' }}>LỚP HỌC PHẦN CHỜ ĐĂNG KÝ</p>
-                    <div style={{ display: 'flex' }}>
+                    {/* <div style={{ display: 'flex' }}>
                         {trunglichs.map((trunglich) => (
                             <div style={{ color: 'red', fontSize: '15px', fontWeight: 'bold' }} key={trunglich.id}>
                                 <input style={{ marginLeft: '15px', marginTop: '8px' }} type="radio" />
                                 {trunglich.name}
                             </div>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
                 <div
                     style={{
@@ -328,33 +276,33 @@ function Dangkyhocphan() {
                 >
                     <table border="1" width={1125}>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '50px', width: '35px' }} rowspan="1"></th>
-                            <th rowspan="1">STT</th>
-                            <th rowspan="1">Mã LHP</th>
-                            <th rowspan="1">Tên lớp học phần</th>
-                            <th rowspan="1">Lớp dự kiến</th>
-                            <th rowspan="1">Sĩ số tối đa</th>
-                            <th rowspan="1">Đã đăng kí</th>
-                            <th rowspan="1">Trạng thái</th>
+                            <th style={{ height: '50px', width: '35px' }} rowSpan="1"></th>
+                            <th rowSpan="1">ID</th>
+                            <th rowSpan="1">Mã LHP</th>
+                            <th rowSpan="1">Tên lớp học phần</th>
+                            <th rowSpan="1">Sĩ số tối đa</th>
+                            <th rowSpan="1">Đã đăng kí</th>
+                            <th rowSpan="1">Trạng thái</th>
                         </tr>
-                        {getLowerTableData().map((rowData) => (
-                            <tr key={rowData.id}>
-                                <th>
-                                    <input
-                                        type="radio"
-                                        checked={selectedLowerTableRow && selectedLowerTableRow.id === rowData.id}
-                                        onChange={() => handleLowerTableSelect(rowData)}
-                                    />
-                                </th>
-                                <th style={{ height: '30px' }}>{rowData.stt}</th>
-                                <th>{rowData.maLHP}</th>
-                                <th>{rowData.tenLopHP}</th>
-                                <th>{rowData.lopDuKien}</th>
-                                <th>{rowData.siSoToiDa}</th>
-                                <th>{rowData.daDangKi}</th>
-                                <th>{rowData.trangThai}</th>
-                            </tr>
-                        ))}
+                        {sectionClassTheoryList &&
+                            sectionClassTheoryList?.length > 0 &&
+                            sectionClassTheoryList.map((rowData) => (
+                                <tr key={rowData.id}>
+                                    <th>
+                                        <input
+                                            type="radio"
+                                            checked={selectedLowerTableRow && selectedLowerTableRow.id === rowData.id}
+                                            onChange={() => handleLowerTableSelect(rowData)}
+                                        />
+                                    </th>
+                                    <th style={{ height: '30px' }}>{rowData.id}</th>
+                                    <th>{rowData.classCode}</th>
+                                    <th>{rowData.sectionName}</th>
+                                    <th>{rowData.numberOfStudents}</th>
+                                    <th>{rowData.registered}</th>
+                                    <th>{rowData.sectionClassStatus}</th>
+                                </tr>
+                            ))}
                     </table>
                 </div>
                 <div
@@ -373,23 +321,31 @@ function Dangkyhocphan() {
                         marginTop: '30px',
                         marginLeft: '350px',
                         display: 'flex',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                     }}
                 >
-                    <p style={{ fontSize: '15px', marginTop: '5px' }}>Nhóm thực hành</p>
-                    <div style={{ width: '180px' }}>
-                        <Select
-                            defaultValue={selectedOption[0]} // Sử dụng defaultValue để đặt giá trị mặc định
-                            onChange={handleChange}
-                            options={options}
-                            isSearchable={true}
-                            placeholder="Chọn một option..."
-                        />
-                    </div>
+                    {/* <p style={{ fontSize: '15px', marginTop: '5px' }}>Nhóm thực hành</p> */}
+                    {/* {termOptions && (
+                        <div style={{ width: '180px' }}>
+                            <Dropdown
+                                value={selectedTerm || (!!termOptions[0] && termOptions[0].id)}
+                                onChange={(e) => handleChange(e?.target?.value)}
+                                options={termOptions}
+                                optionLabel="name"
+                                optionValue="id"
+                                isSearchable={true}
+                                className="p-2"
+                                placeholder="Chọn một option..."
+                                maxMenuHeight={250}
+                            />
+                        </div>
+                    )}
                     <button style={{ width: '140px', backgroundColor: '#FF8C00' }}>
                         <p style={{ fontWeight: 'bold', color: 'white' }}>Xem lịch trùng</p>
-                    </button>
+                    </button> */}
                 </div>
+                {console.log(sectionClassStudentList)}
+                {console.log(getRefId())}
                 <div
                     style={{
                         width: '98%',
@@ -399,35 +355,34 @@ function Dangkyhocphan() {
                 >
                     <table border="1" width={1125}>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '50px' }} rowspan="1">
-                                STT
+                            <th style={{ height: '50px' }} rowSpan="1">
+                                ID
                             </th>
-                            <th rowspan="1">Lịch học</th>
-                            <th rowspan="1">Nhóm TH</th>
-                            <th rowspan="1">Phòng</th>
-                            <th rowspan="1">Dãy nhà</th>
-                            <th rowspan="1">Cơ sở</th>
-                            <th rowspan="1">Giảng viên</th>
-                            <th rowspan="1">Thời gian</th>
+                            <th rowSpan="1">Lịch học</th>
+                            <th rowSpan="1">Phòng</th>
+                            <th rowSpan="1">Giảng viên</th>
+                            <th rowSpan="1">Thời gian</th>
                             <th></th>
                         </tr>
-                        {getScheduleData().map((rowData) => (
-                            <tr key={rowData.id}>
-                                <th style={{ height: '40px' }}>{rowData.stt}</th>
-                                <th>{rowData.lichHoc}</th>
-                                <th>{rowData.nhomTH}</th>
-                                <th>{rowData.phong}</th>
-                                <th>{rowData.dayNha}</th>
-                                <th>{rowData.coSo}</th>
-                                <th>{rowData.giangVien}</th>
-                                <th>{rowData.thoiGian}</th>
-                                <th>
-                                    <button style={{ width: '70px', height: '30px', backgroundColor: '#00C0FF' }}>
-                                        <p style={{ fontWeight: 'bold', color: 'white' }}>Xem</p>
-                                    </button>
-                                </th>
-                            </tr>
-                        ))}
+                        {sectionClassList &&
+                            sectionClassList?.length > 0 &&
+                            sectionClassList.map((rowData) => (
+                                <tr key={rowData.id}>
+                                    <th style={{ height: '40px' }}>{rowData.id}</th>
+                                    <th>
+                                        {`${rowData?.sectionClassType} - 
+                                            ${rowData.dayInWeek} (${rowData.periodFrom} - ${rowData.periodTo})`}
+                                    </th>
+                                    <th>{rowData.room}</th>
+                                    <th>{rowData.lecturerName}</th>
+                                    <th>{`(${rowData.periodFrom} - ${rowData.periodTo})`}</th>
+                                    <th>
+                                        <button style={{ width: '70px', height: '30px', backgroundColor: '#00C0FF' }}>
+                                            <p style={{ fontWeight: 'bold', color: 'white' }}>Xem</p>
+                                        </button>
+                                    </th>
+                                </tr>
+                            ))}
                     </table>
                 </div>
                 <div
@@ -437,7 +392,10 @@ function Dangkyhocphan() {
                         textAlign: 'center',
                     }}
                 >
-                    <button style={{ width: '140px', backgroundColor: '#FF8C00', height: '30px' }}>
+                    <button
+                        style={{ width: '140px', backgroundColor: '#FF8C00', height: '30px' }}
+                        onClick={handleOnSubmit}
+                    >
                         <p style={{ fontWeight: 'bold', color: 'white' }}>Đăng kí môn học</p>
                     </button>
                 </div>
@@ -461,56 +419,45 @@ function Dangkyhocphan() {
                 >
                     <table border="1" width={1125}>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '50px' }} rowspan="1">
+                            <th style={{ height: '50px' }} rowSpan="1">
                                 Thao tác
                             </th>
-                            <th rowspan="1">STT</th>
-                            <th rowspan="1">Mã LHP</th>
-                            <th rowspan="1">Tên môn học</th>
-                            <th rowspan="1">Lớp học phần dự kiến</th>
-                            <th rowspan="1">Số TC</th>
-                            <th rowspan="1">Nhóm thực hành</th>
-                            <th rowspan="1">Học phí</th>
-                            <th rowspan="1">Hạn nộp</th>
-                            <th rowspan="1">Thu</th>
-                            <th rowspan="1">Trạng thái ĐK</th>
-                            <th rowspan="1">Ngày ĐK</th>
-                            <th>Trạng thái LHP</th>
+                            <th rowSpan="1">STT</th>
+                            <th rowSpan="1">Mã LHP</th>
+                            <th rowSpan="1">Tên môn học</th>
+                            <th rowSpan="1">Lớp học phần dự kiến</th>
+                            <th rowSpan="1">Số TC</th>
+                            <th rowSpan="1">Học phí</th>
+                            <th rowSpan="1">Hạn nộp</th>
+                            <th rowSpan="1">Thu</th>
+                            <th rowSpan="1">Trạng thái ĐK</th>
+                            <th rowSpan="1">Ngày ĐK</th>
+                            <th rowSpan="1">Trạng thái LHP</th>
                         </tr>
-                        <tr>
-                            <th style={{ height: '40px' }}></th>
-                            <th>1</th>
-                            <th>234534312</th>
-                            <th>Khóa luận tốt nghiệp</th>
-                            <th>DHTHHK15L</th>
-                            <th>5</th>
-                            <th></th>
-                            <th>1.000.000</th>
-                            <th>Lần 1: 16/11/2023</th>
-                            <th>
-                                <FontAwesomeIcon style={{ color: 'green', fontSize: '20px' }} icon={faCircleCheck} />
-                            </th>
-                            <th>Đăng kí học lại</th>
-                            <th>10/05/2005</th>
-                            <th>Đã khóa</th>
-                        </tr>
-                        <tr>
-                            <th style={{ height: '40px' }}></th>
-                            <th>1</th>
-                            <th>234534312</th>
-                            <th>Khóa luận tốt nghiệp</th>
-                            <th>DHTHHK15L</th>
-                            <th>5</th>
-                            <th></th>
-                            <th>1.000.000</th>
-                            <th>Lần 1: 16/11/2023</th>
-                            <th>
-                                <FontAwesomeIcon style={{ color: 'green', fontSize: '20px' }} icon={faCircleCheck} />
-                            </th>
-                            <th>Đăng kí học lại</th>
-                            <th>10/05/2005</th>
-                            <th>Đã khóa</th>
-                        </tr>
+
+                        {sectionClassStudentList &&
+                            sectionClassStudentList?.length > 0 &&
+                            sectionClassStudentList?.map((sectionClass, i) => (
+                                <tr key={i}>
+                                    <th style={{ height: '40px' }}></th>
+                                    <th>{sectionClass?.id}</th>
+                                    <th>{sectionClass?.classCode}</th>
+                                    <th>{sectionClass?.sectionName}</th>
+                                    <th>{sectionClass?.sectionName}</th>
+                                    <th>{sectionClass?.credit}</th>
+                                    <th>1.000.000</th>
+                                    <th>Lần 1: 16/11/2023</th>
+                                    <th>
+                                        <FontAwesomeIcon
+                                            style={{ color: 'green', fontSize: '20px' }}
+                                            icon={faCircleCheck}
+                                        />
+                                    </th>
+                                    <th>Đăng kí học mới</th>
+                                    <th>16/11/2023</th>
+                                    <th>Đã khóa</th>
+                                </tr>
+                            ))}
                     </table>
                 </div>
                 <div style={{ width: '100%', height: '20px' }}></div>

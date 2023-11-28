@@ -113,17 +113,17 @@ function Home() {
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Nơi sinh:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.address?.formattedAddress}</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.provinceName}</h4>
                             </div>
                         </div>
                         <div className={cx('infor1')}>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Lớp học:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.specificationClassName}</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.specializationClassName}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Khóa học:</h4>
-                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.academicYearName}</h4>
+                                <h4 style={{ marginLeft: '3px' }}>{userInfo?.schoolYear}</h4>
                             </div>
                             <div className={cx('text')}>
                                 <h4 style={{ color: 'rgba(22, 24, 35, 0.6)', fontWeight: 'normal' }}>Bậc đào tạo:</h4>

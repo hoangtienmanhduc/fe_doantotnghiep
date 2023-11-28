@@ -249,11 +249,11 @@ function Lichhoc() {
                 <table border="1" className={cx('table table-bordered table-striped')} width={908}>
                     <thead>
                         <tr style={{ backgroundColor: '#F0F8FF' }}>
-                            <th style={{ width: '70px', height: '50px' }} rowspan="1">
+                            <th style={{ width: '70px', height: '50px' }} rowSpan="1">
                                 Ca học
                             </th>
                             {columns.map((column) => (
-                                <th key={column.date} style={{ width: '130px', height: '50px' }} rowspan="1">
+                                <th key={column.date} style={{ width: '130px', height: '50px' }} rowSpan="1">
                                     <p>{column.day}</p>
                                     <p>{column.date}</p>
                                 </th>

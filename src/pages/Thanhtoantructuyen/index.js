@@ -60,13 +60,13 @@ function Thanhtoantructuyen() {
                 >
                     <table border="1" width={915}>
                         <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '50px', width: '35px' }} rowspan="1"></th>
-                            <th rowspan="1">STT</th>
-                            <th rowspan="1">Mã</th>
-                            <th rowspan="1">Nội dung thu</th>
-                            <th rowspan="1">Tín chỉ</th>
-                            <th rowspan="1">Bắt buộc</th>
-                            <th rowspan="1">Số tiền (VND)</th>
+                            <th style={{ height: '50px', width: '35px' }} rowSpan="1"></th>
+                            <th rowSpan="1">STT</th>
+                            <th rowSpan="1">Mã</th>
+                            <th rowSpan="1">Nội dung thu</th>
+                            <th rowSpan="1">Tín chỉ</th>
+                            <th rowSpan="1">Bắt buộc</th>
+                            <th rowSpan="1">Số tiền (VND)</th>
                         </tr>
                         <tr>
                             <th colspan="7">Không tìm thấy dữ liệu công nợ</th>

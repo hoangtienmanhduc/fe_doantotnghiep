@@ -51,6 +51,10 @@ export function setUserInfo({ id, username, systemRole }) {
     localStorage.setItem('systemRole', systemRole);
 }
 
+export function setRefId(refId) {
+    localStorage.setItem('refId', refId);
+}
+
 export function getUserId() {
     return !!localStorage.getItem('id') && JSON.parse(localStorage.getItem('id'));
 }
@@ -61,6 +65,9 @@ export function getUsername() {
 
 export function getSystemRole() {
     return localStorage.getItem('systemRole');
+}
+export function getRefId() {
+    return localStorage.getItem('refId');
 }
 
 // SESSION
@@ -77,7 +84,8 @@ export function removeSessionId() {
 // USER ROLE
 export const SystemRoles = {
     ADMIN: 'admin',
-    USER: 'user',
+    STUDENT: 'student',
+    LECTURER: 'lecturer',
 };
 
 export function setUserRole(userRole) {
@@ -91,6 +99,7 @@ export function removeUserRole() {
 }
 
 export function storeAllUserData(data) {
+    setRefId(data?.refId);
     setUserInfo(data?.userInfo);
     setUserToken(data?.userToken);
     setXApiKey(data?.xApiKey);

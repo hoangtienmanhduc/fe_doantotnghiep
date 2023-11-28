@@ -29,17 +29,17 @@ function PhieuTongHop() {
             >
                 <table border="1" className={cx('table table-bordered table-striped')} width={908}>
                     <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                        <th style={{ height: '50px' }} rowspan="1">
+                        <th style={{ height: '50px' }} rowSpan="1">
                             STT
                         </th>
-                        <th rowspan="1">Số phiếu</th>
-                        <th rowspan="1">Mã hóa đơn</th>
-                        <th rowspan="1">Ngày thu</th>
-                        <th rowspan="1">Số tiền</th>
-                        <th rowspan="1">Đơn vị thu</th>
-                        <th rowspan="1">HĐĐT</th>
-                        <th rowspan="1">Loại HĐĐT</th>
-                        <th rowspan="1"></th>
+                        <th rowSpan="1">Số phiếu</th>
+                        <th rowSpan="1">Mã hóa đơn</th>
+                        <th rowSpan="1">Ngày thu</th>
+                        <th rowSpan="1">Số tiền</th>
+                        <th rowSpan="1">Đơn vị thu</th>
+                        <th rowSpan="1">HĐĐT</th>
+                        <th rowSpan="1">Loại HĐĐT</th>
+                        <th rowSpan="1"></th>
                     </tr>
                     <tr>
                         <th style={{ height: '30px' }}>1</th>
