@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
 import { getPageUser } from '~/api/user/UserService';
@@ -11,23 +11,41 @@ import { useCallback } from 'react';
 import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
-import { getListAcademicYearInfo } from '~/api/academic-year/AcademicYearService';
 import { Toast } from 'primereact/toast';
-import { da } from 'date-fns/locale';
 import { separateStudentsByClass } from '~/api/specialization/SpecializationClassService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
+import { getListSchoolYear } from '~/api/student/StudentService';
 
 const QueryKey = 'Student-Management';
-const QueryKeyAcademicYear = 'Academic-Year-Options';
-
+const QueryKeySchoolYear = 'School-Year-Options';
+const initialPageable = {
+    rows: 10,
+    pageNumber: 0,
+    sortField: 'id',
+    sortOrder: -1,
+};
 const StudentManagement = () => {
+    const [pageable, setPageable] = useState({ ...initialPageable });
+
     const { data, refetch } = useQuery(
-        [QueryKey, getUserId()],
-        () => getPageUser(getUserId(), 0, 10, 'id', 0, { systemRole: 'student' }),
+        [
+            QueryKey,
+            getUserId(),
+            pageable.pageNumber,
+            pageable.rows,
+            pageable.sortField,
+            pageable.sortOrder,
+            { systemRole: 'student' },
+        ],
+        () =>
+            getPageUser(getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {
+                systemRole: 'student',
+            }),
         {
             enabled: !!getUserId(),
         },
     );
+
     const [visible, setVisible] = useState(false);
     const studentRef = useRef(null);
     const columns = [
@@ -42,6 +60,7 @@ const StudentManagement = () => {
         { field: 'specializationName', header: 'Specialization Name' },
         { field: 'specializationClassName', header: 'Specialization Class Name' },
         { field: 'typeOfEducation', header: 'Type Of Education' },
+        { field: 'schoolYear', header: 'School Year' },
         { field: 'address', header: 'Address' },
         { field: 'action', header: 'Action' },
     ];
@@ -53,18 +72,19 @@ const StudentManagement = () => {
         { field: 'lastName', header: 'Lastname' },
         { field: 'code', header: 'Code' },
         { field: 'specializationName', header: 'Specialization Name' },
+        { field: 'schoolYear', header: 'School Year' },
         { field: 'specializationClassName', header: 'Specialization Class Name' },
     ];
 
-    const { data: academicYearOptions } = useQuery(
-        [QueryKeyAcademicYear, getUserId()],
-        () => getListAcademicYearInfo(getUserId(), {}, null, true),
+    const { data: schoolYearOptions } = useQuery(
+        [QueryKeySchoolYear, getUserId()],
+        () => getListSchoolYear(getUserId()),
         { enabled: !!getUserId() },
     );
+
     const toast = useRef(null);
     const [schoolYear, setSchoolYear] = useState(null);
-    const [dataList, setDataList] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(null);
     const { mutate } = useMutation((schoolYear) => separateStudentsByClass(schoolYear), {
         onSuccess: (data) => {
             if (!!data && data === HTTP_STATUS_OK) {
@@ -78,6 +98,25 @@ const StudentManagement = () => {
         },
     });
 
+    const { data: studentSeparates, refetch: refetchSeparate } = useQuery(
+        [
+            QueryKey,
+            getUserId(),
+            pageable.pageNumber,
+            pageable.rows,
+            pageable.sortField,
+            pageable.sortOrder,
+            { systemRole: 'student', schoolYear: schoolYear },
+        ],
+        () =>
+            getPageUser(getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {
+                systemRole: 'student',
+            }),
+        {
+            enabled: !!getUserId() && !!loading,
+        },
+    );
+
     const handleOnSeparateStudent = useCallback(() => {
         if (!schoolYear) {
             toast.current.show({
@@ -87,6 +126,7 @@ const StudentManagement = () => {
             });
             return;
         }
+
         setLoading(true);
         mutate(schoolYear);
     }, [mutate, schoolYear]);
@@ -95,9 +135,9 @@ const StudentManagement = () => {
         <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
             <h2 className="text-900 font-bold">Student Management</h2>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-5xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
                 <Button
-                    className="p-5 text-5xl mr-2"
+                    className="p-5 text-xl mr-2"
                     icon="pi pi-plus"
                     rounded
                     raised
@@ -114,12 +154,48 @@ const StudentManagement = () => {
         </div>
     );
 
+    const headerSeparate = (
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
+            <h2 className="text-900 font-bold">Student Separated</h2>
+            <div className="flex align-items-center ">
+                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetchSeparate} />
+            </div>
+        </div>
+    );
+
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        if (!!getUserId() && data && !data?.last && data.content?.length > 0) {
+            queryClient.prefetchQuery(
+                [
+                    QueryKey,
+                    getUserId(),
+                    pageable.pageNumber + 1,
+                    pageable.rows,
+                    pageable.sortField,
+                    pageable.sortOrder,
+                    { systemRole: 'student' },
+                ],
+                () =>
+                    getPageUser(
+                        getUserId(),
+                        pageable?.pageNumber + 1,
+                        pageable?.rows,
+                        pageable.sortField,
+                        pageable.sortOrder,
+                        { systemRole: 'student' },
+                    ),
+            );
+        }
+    }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
+
     return (
         <React.Fragment>
-            <div className="card">
+            <div className="card col-12">
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
+                    size="large"
                     tableStyle={{ minWidth: '60rem' }}
                     className="text-2xl"
                     paginator
@@ -127,7 +203,11 @@ const StudentManagement = () => {
                     scrollHeight="400px"
                     resizableColumns
                     stripedRows
-                    rows={5}
+                    lazy
+                    rows={10}
+                    first={pageable.pageNumber * pageable.rows}
+                    onPage={(e) => setPageable({ ...pageable, pageNumber: e.page })}
+                    totalRecords={data && data.totalElements ? data.totalElements : 0}
                 >
                     {columns.map((col, i) => (
                         <Column
@@ -157,7 +237,7 @@ const StudentManagement = () => {
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-5xl"
+                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
@@ -183,10 +263,8 @@ const StudentManagement = () => {
                             <Dropdown
                                 value={schoolYear}
                                 onChange={(e) => setSchoolYear(e?.target.value)}
-                                options={academicYearOptions}
-                                optionLabel="name"
-                                optionValue="name"
-                                placeholder="Select Academic Year"
+                                options={schoolYearOptions}
+                                placeholder="Select School Year"
                                 className="w-full p-4"
                             />
                         </span>
@@ -203,9 +281,13 @@ const StudentManagement = () => {
                         />
                     </div>
                 </div>
-                {/* <div className="card">
+                <div className="card col-12">
                     <DataTable
-                        value={!!dataList && dataList.length > 0 ? dataList : []}
+                        value={
+                            !!studentSeparates && studentSeparates?.content?.length > 0 ? studentSeparates?.content : []
+                        }
+                        header={headerSeparate}
+                        size="large"
                         tableStyle={{ minWidth: '60rem' }}
                         className="text-2xl"
                         paginator
@@ -213,7 +295,13 @@ const StudentManagement = () => {
                         scrollHeight="400px"
                         resizableColumns
                         stripedRows
-                        rows={5}
+                        lazy
+                        rows={10}
+                        first={pageable.pageNumber * pageable.rows}
+                        onPage={(e) => setPageable({ ...pageable, pageNumber: e.page })}
+                        totalRecords={
+                            studentSeparates && studentSeparates.totalElements ? studentSeparates.totalElements : 0
+                        }
                     >
                         {columnsSeparate.map((col, i) => (
                             <Column
@@ -243,7 +331,7 @@ const StudentManagement = () => {
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                             <Button
                                                 text
-                                                className="p-5 text-5xl"
+                                                className="p-5 text-xl"
                                                 icon="pi pi-pencil"
                                                 rounded
                                                 raised
@@ -259,9 +347,9 @@ const StudentManagement = () => {
                             />
                         ))}
                     </DataTable>
-                </div> */}
+                </div>
             </Dialog>
-            <Toast ref={toast} />
+            <Toast ref={toast} className="p-3" />
         </React.Fragment>
     );
 };

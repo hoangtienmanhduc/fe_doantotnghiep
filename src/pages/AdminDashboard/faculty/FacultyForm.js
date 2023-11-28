@@ -82,10 +82,10 @@ const FacultyForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h1 className="m-3 font-bold">
+                <h3 className="m-3 font-bold">
                     <strong>Faculty Form</strong>
                     <hr />
-                </h1>
+                </h3>
             }
             onHide={handleHideForm}
             style={{
@@ -110,8 +110,8 @@ const FacultyForm = forwardRef((props, ref) => {
                         <h2>Logo</h2>
                         <span className="w-full">
                             <InputText
-                                value={data?.name}
-                                onChange={(e) => handleOnChange('name', e?.target.value)}
+                                value={data?.logo}
+                                onChange={(e) => handleOnChange('logo', e?.target.value)}
                                 className=" w-full p-4"
                             />
                         </span>
@@ -133,7 +133,7 @@ const FacultyForm = forwardRef((props, ref) => {
                     />
                 </div>
             </div>
-            <Toast ref={toast} />
+            <Toast ref={toast} className="p-3" />
         </Dialog>
     );
 });

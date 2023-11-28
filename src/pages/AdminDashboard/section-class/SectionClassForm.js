@@ -166,10 +166,10 @@ const SectionClassForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h1 className="m-3 font-bold">
+                <h3 className="m-3 font-bold">
                     <strong>Section Class Form</strong>
                     <hr />
-                </h1>
+                </h3>
             }
             onHide={handleHideForm}
             style={{
@@ -202,6 +202,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 onChange={(e) => handleOnChange('lecturerId', e?.target.value)}
                                 options={lecturerOptions}
                                 optionLabel="name"
+                                optionValue="id"
                                 placeholder="Select Require Lecturer"
                                 className="w-full p-4"
                             />
@@ -298,7 +299,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                     />
                 </div>
             </div>
-            <Toast ref={toast} />
+            <Toast ref={toast} className="p-3" />
         </Dialog>
     );
 });

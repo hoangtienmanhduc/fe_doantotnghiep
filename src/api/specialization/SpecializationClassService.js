@@ -10,6 +10,28 @@ export function createOrUpdateGenericSpecializationClass(userId, data = {}) {
         .catch((error) => console.log(error));
 }
 
+export function getPageSpecializationClassInfo(
+    userId,
+    pageNumber = 0,
+    pageRows = 10,
+    sortField = 'id',
+    sortOrder = -1,
+    filterRequest = {},
+) {
+    return axiosInstance
+        .post(`${BACKEND_ENDPOINT}/specialization/class/getPage`, filterRequest, {
+            params: {
+                userId,
+                pageNumber,
+                pageRows,
+                sortField,
+                sortOrder,
+            },
+        })
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}
+
 export function getListSpecializationClassInfo(
     userId,
     filterRequest = {},

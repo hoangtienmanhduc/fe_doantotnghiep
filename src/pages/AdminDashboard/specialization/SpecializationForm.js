@@ -103,10 +103,10 @@ const SpecializationForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h1 className="m-3 font-bold">
+                <h3 className="m-3 font-bold">
                     <strong>Specialization Form</strong>
                     <hr />
-                </h1>
+                </h3>
             }
             onHide={handleHideForm}
             style={{
@@ -167,7 +167,7 @@ const SpecializationForm = forwardRef((props, ref) => {
                     />
                 </div>
             </div>
-            <Toast ref={toast} />
+            <Toast ref={toast} className="p-3" />
         </Dialog>
     );
 });

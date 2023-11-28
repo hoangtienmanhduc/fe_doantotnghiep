@@ -39,7 +39,7 @@ const AdminDashboard = () => {
         <React.Fragment>
             <div className="h-screen py-5 flex justify-content-center col-12">
                 <div className="col-3 bg-white border-round-xl m-3">
-                    <h1 className="p-4 text-blue-200">Admin Dashboard</h1> <hr className="mb-3" />
+                    <h3 className="p-4 text-blue-200">Admin Dashboard</h3> <hr className="mb-3" />
                     <ul className="list-none p-0 m-0 overflow-hidden bg-blue-100">
                         {tabList.map((item) => (
                             <li
@@ -73,7 +73,7 @@ const AdminDashboard = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="col-9 bg-white border-round-xl m-3">
+                <div className="col-9 bg-white border-round-xl">
                     {activeTab === 'courseManagement' && <CouseManagement />}
                     {activeTab === 'sectionManagement' && <SectionManagement />}
                     {activeTab === 'sectionClassManagement' && <SectionClassManagement />}

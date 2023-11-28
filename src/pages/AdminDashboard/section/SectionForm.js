@@ -101,15 +101,6 @@ const SectionForm = forwardRef((props, ref) => {
             isError = true;
         }
 
-        if (!data?.credit) {
-            toast.current.show({
-                severity: 'info',
-                summary: 'Info',
-                detail: 'Credit is required !!',
-            });
-            isError = true;
-        }
-
         if (!isError) {
             const sectionData = await createOrUpdateGenericSection(getUserId(), toPostData);
 
@@ -139,10 +130,10 @@ const SectionForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h1 className="m-3 font-bold">
+                <h3 className="m-3 font-bold">
                     <strong>Section Form</strong>
                     <hr />
-                </h1>
+                </h3>
             }
             onHide={handleHideForm}
             style={{
@@ -240,7 +231,7 @@ const SectionForm = forwardRef((props, ref) => {
                     />
                 </div>
             </div>
-            <Toast ref={toast} />
+            <Toast ref={toast} className="p-3" />
         </Dialog>
     );
 });

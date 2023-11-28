@@ -10,6 +10,7 @@ import {
     setAccessToken,
 } from '../components/authentication/AuthUtils';
 import { renewToken } from '~/components/authentication/AuthEndPoint.jsx';
+import { showNotification } from '~/components/notification/NotificationService.js';
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -63,8 +64,14 @@ axiosInstance.interceptors.response.use(
                     }
                     break;
                 case 400:
+                    if (res.data && typeof res.data === 'string') {
+                        showNotification('warn', 'Warning', res.data);
+                    } else {
+                        showNotification('warn', 'Warning', 'Your request is invalid !');
+                    }
                     break;
                 case 404:
+                    // Open Page 404
                     break;
                 case 401:
                     if (res.config) {
@@ -110,14 +117,20 @@ axiosInstance.interceptors.response.use(
                     clearStorage();
                     break;
                 case 409:
+                    showNotification('info', 'Information', 'You account has been temporarily blocked !!');
                     break;
                 case 429:
+                    // Error Modal
                     break;
                 case 440:
+                    clearStorage();
+                    window.location.assign('/');
                     break;
                 case 500:
+                    showNotification('error', 'Error', 'Problem occurs. Please try again !');
                     break;
                 case 503:
+                    showNotification('info', 'Information', 'Our service is unavailable at the moment !');
                     break;
                 default:
             }

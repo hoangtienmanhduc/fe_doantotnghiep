@@ -22,7 +22,10 @@ import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-cyan/theme.css';
 import 'primeicons/primeicons.css';
 import './custom.css';
-
+import Chuongtrinhkhung from '~/pages/Chuongtrinhkhung';
+import Doimatkhau from '~/pages/Doimatkhau';
+import Thongtincanhan from '~/pages/Thongtincanhan';
+import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien';
 export const UserRoles = {
     ADMIN: 'Admin',
     LECTURER: 'Lecturer',
@@ -48,7 +51,11 @@ function App() {
             { path: '/', component: Login, layout: null },
             { path: '/lecturer', component: AdminDashboard },
             { path: '/admin', component: AdminDashboard },
+            { path: '/capnhatthongtinsinhvien', component: Capnhatthongtinsinhvien },
+            { path: '/doimatkhau', component: Doimatkhau },
             { path: '/home', component: Home },
+            { path: '/thongtincanhan', component: Thongtincanhan, layout: DefaultLayoutSidebar },
+            { path: '/chuongtrinhkhung', component: Chuongtrinhkhung, layout: DefaultLayoutSidebar },
             { path: '/lichtheotiendo', component: Lichtheotiendo },
             { path: '/ketquahoctap', component: Ketquahoctap, layout: HeaderOnly },
             { path: '/phieutonghop', component: PhieuTongHop, layout: DefaultLayoutSidebar },

@@ -16,7 +16,6 @@ import { getListAcademicYearInfo } from '~/api/academic-year/AcademicYearService
 import { getListSpecializationInfo } from '~/api/specialization/SpecializationService';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
-const QueryKeyAcademicYear = 'Academic-Year-Options';
 
 const SpecializationClassForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
@@ -35,12 +34,6 @@ const SpecializationClassForm = forwardRef((props, ref) => {
     const { data: specializationOptions } = useQuery(
         [QueryKeySpecializationOptions, getUserId()],
         () => getListSpecializationInfo(getUserId(), {}, null, true),
-        { enabled: !!getUserId() },
-    );
-
-    const { data: academicYearOptions } = useQuery(
-        [QueryKeyAcademicYear, getUserId()],
-        () => getListAcademicYearInfo(getUserId(), {}, null, true),
         { enabled: !!getUserId() },
     );
 
@@ -111,10 +104,10 @@ const SpecializationClassForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h1 className="m-3 font-bold">
+                <h3 className="m-3 font-bold">
                     <strong>Specialization Class Form</strong>
                     <hr />
-                </h1>
+                </h3>
             }
             onHide={handleHideForm}
             style={{
@@ -129,25 +122,23 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                         <h2>Specialization</h2>
                         <span className="w-full">
                             <Dropdown
-                                value={data?.lecturerId}
+                                value={data?.specializationId}
                                 onChange={(e) => handleOnChange('specializationId', e?.target.value)}
                                 options={specializationOptions}
                                 optionLabel="name"
+                                optionValue="id"
                                 placeholder="Select Require Specialization"
                                 className="w-full p-4"
                             />
                         </span>
                     </div>
                     <div className="col-12">
-                        <h2>Academic Year</h2>
+                        <h2>School Year</h2>
                         <span className="w-full">
-                            <Dropdown
-                                value={data?.lecturerId}
-                                onChange={(e) => handleOnChange('academicYearId', e?.target.value)}
-                                options={academicYearOptions}
-                                optionLabel="name"
-                                placeholder="Select Require Academic Year"
-                                className="w-full p-4"
+                            <InputText
+                                value={data?.schoolYear}
+                                onChange={(e) => handleOnChange('schoolYear', e?.target.value)}
+                                className=" w-full p-4"
                             />
                         </span>
                     </div>
@@ -178,7 +169,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                     />
                 </div>
             </div>
-            <Toast ref={toast} />
+            <Toast ref={toast} className="p-3" />
         </Dialog>
     );
 });

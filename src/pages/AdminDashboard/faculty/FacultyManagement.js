@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
 import { getPageFacultyInfo } from '~/api/faculty/FacultyService';
 import FacultyForm from './FacultyForm';
+const initialPageable = {
+    rows: 10,
+    pageNumber: 0,
+    sortField: 'id',
+    sortOrder: -1,
+};
 
 const QueryKey = 'Faculty-Management';
 
 const FacultyManagement = () => {
-    const { data, refetch } = useQuery([QueryKey, getUserId()], () => getPageFacultyInfo(getUserId()), {
-        enabled: !!getUserId(),
-    });
+    const [pageable, setPageable] = useState({ ...initialPageable });
+
+    const { data, refetch } = useQuery(
+        [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
+        () => getPageFacultyInfo(getUserId()),
+        {
+            enabled: !!getUserId(),
+        },
+    );
 
     const facultyRef = useRef(null);
     const columns = [
@@ -26,9 +38,9 @@ const FacultyManagement = () => {
         <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
             <h2 className="text-900 font-bold">Faculty Management</h2>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-5xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
                 <Button
-                    className="p-5 text-5xl"
+                    className="p-5 text-xl"
                     icon="pi pi-plus"
                     rounded
                     raised
@@ -38,13 +50,40 @@ const FacultyManagement = () => {
         </div>
     );
 
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        if (!!getUserId() && data && !data?.last && data.content?.length > 0) {
+            queryClient.prefetchQuery(
+                [
+                    QueryKey,
+                    getUserId(),
+                    pageable.pageNumber + 1,
+                    pageable.rows,
+                    pageable.sortField,
+                    pageable.sortOrder,
+                    {},
+                ],
+                () =>
+                    getPageFacultyInfo(
+                        getUserId(),
+                        pageable?.pageNumber + 1,
+                        pageable?.rows,
+                        pageable.sortField,
+                        pageable.sortOrder,
+                        {},
+                    ),
+            );
+        }
+    }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
+
     return (
         <React.Fragment>
-            <div className="card">
+            <div className="card col-12">
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
                     size="large"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     tableStyle={{ minWidth: '60rem' }}
                     className="text-2xl"
                     paginator
@@ -52,7 +91,11 @@ const FacultyManagement = () => {
                     scrollHeight="400px"
                     resizableColumns
                     stripedRows
-                    rows={5}
+                    lazy
+                    rows={10}
+                    first={pageable.pageNumber * pageable.rows}
+                    onPage={(e) => setPageable({ ...pageable, pageNumber: e.page })}
+                    totalRecords={data && data.totalElements ? data.totalElements : 0}
                 >
                     {columns.map((col, i) => (
                         <Column
@@ -76,7 +119,7 @@ const FacultyManagement = () => {
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-5xl"
+                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
