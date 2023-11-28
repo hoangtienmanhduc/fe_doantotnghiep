@@ -52,7 +52,7 @@ const MenuSidebar = () => {
         <div>
             <div style={{ width: '100%' }}>
                 <Button
-                    to="/"
+                    to="/home"
                     sidebar
                     leftIcon={<FontAwesomeIcon style={{ marginRight: '25px' }} icon={faHouseChimney} />}
                 >
@@ -91,7 +91,7 @@ const MenuSidebar = () => {
                         </Button>
                     </div>
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/capnhatthongtinsinhvien" text>
                             Đề xuất cập nhật thông tin
                         </Button>
                     </div>
@@ -124,17 +124,17 @@ const MenuSidebar = () => {
                     })}
                 >
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/ketquahoctap" text>
                             Kết quả học tập
                         </Button>
                     </div>
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/lichhoc" text>
                             Lịch theo tuấn
                         </Button>
                     </div>
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/lichtheotiendo" text>
                             Lịch theo tiến độ
                         </Button>
                     </div>
@@ -167,12 +167,12 @@ const MenuSidebar = () => {
                     })}
                 >
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/chuongtrinhkhung" text>
                             Chương trình khung
                         </Button>
                     </div>
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/dangkyhocphan" text>
                             Đăng kí học phần
                         </Button>
                     </div>
@@ -200,17 +200,17 @@ const MenuSidebar = () => {
                     })}
                 >
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/tracuucongno" text>
                             Tra cứu công nợ
                         </Button>
                     </div>
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/thanhtoantructuyen" text>
                             Thanh toán trực tuyến
                         </Button>
                     </div>
                     <div className={cx('list_item_container')}>
-                        <Button style={{ fontSize: '10px' }} to="/" text>
+                        <Button style={{ fontSize: '10px' }} to="/phieutonghop" text>
                             Phiếu thu tổng hợp
                         </Button>
                     </div>

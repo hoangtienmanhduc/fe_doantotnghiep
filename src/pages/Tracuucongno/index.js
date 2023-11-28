@@ -190,7 +190,7 @@ function Tracuucongno() {
                         marginLeft: '12px',
                     }}
                 >
-                    <h2>Thanh toán trực tuyến</h2>
+                    <h2>Tra cứu công nợ</h2>
                     <div style={{ display: 'flex' }}>
                         <p style={{ marginRight: '15px', marginTop: '5px', fontSize: '15px' }}>Học kỳ</p>
                         <div style={{ width: '150px', height: '20px' }}>

@@ -12,10 +12,11 @@ const cx = classNames.bind(styles);
 const MENU_ITEMS = [
     {
         title: 'Thông tin cá nhân',
+        to: '/thongtincanhan',
     },
     {
         title: 'Đổi mật khẩu',
-        to: '/search',
+        to: '/doimatkhau',
     },
     {
         title: 'Đăng xuất',
@@ -37,7 +38,7 @@ function Header() {
                     </button>
                 </div>
                 <div className={cx('actions')}>
-                    <Button to="/" text leftIcon={<FontAwesomeIcon icon={faHouseChimney} />}>
+                    <Button to="/home" text leftIcon={<FontAwesomeIcon icon={faHouseChimney} />}>
                         Trang chủ
                     </Button>
                     <Button text leftIcon={<FontAwesomeIcon icon={faBell} />}>
