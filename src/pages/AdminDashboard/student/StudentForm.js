@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { createOrUpdateGenericUser } from '~/api/user/UserService';
 import { typeOfEducationOptions } from './StudentConstant';
 import { getListSpecializationClassInfo } from '~/api/specialization/SpecializationClassService';
+import { Divider } from 'primereact/divider';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
 const QueryKeySpecializationClassOptions = 'Specialization-Class-Options';
@@ -110,7 +111,7 @@ const StudentForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Specialization is required!!',
+                detail: 'Chuyên ngành không được để trống!!',
             });
             isError = true;
         }
@@ -118,7 +119,7 @@ const StudentForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Firstname is required!!',
+                detail: 'Tên của sinh viên không được để trống!!',
             });
             isError = true;
         }
@@ -127,7 +128,7 @@ const StudentForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Lastname is required!!',
+                detail: 'Họ đệm của sinh viên không dược để trống!!',
             });
             isError = true;
         }
@@ -136,7 +137,7 @@ const StudentForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'CI Number is required!!',
+                detail: 'Số căn cước công dân của sinh viên không được để trống!!',
             });
             isError = true;
         }
@@ -153,10 +154,10 @@ const StudentForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update User Successful!!',
+                        detail: 'Thao tác cập nhật sinh viên thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -174,8 +175,8 @@ const StudentForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Student Form</strong>
+                <h3 className="p-3 m-0 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} sinh viên`}
                     <hr />
                 </h3>
             }
@@ -188,9 +189,12 @@ const StudentForm = forwardRef((props, ref) => {
         >
             <div className="m-3">
                 <div className="col-12">
-                    <h2>User Information</h2>
-                    <div className="col-12">
-                        <h2>Specialization</h2>
+                    <h2>
+                        Thông tin cá nhân
+                        <Divider className="bg-primary" />
+                    </h2>
+                    <div className="col-12 p-0">
+                        <p>Thuộc chuyên ngành</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.specializationId}
@@ -198,13 +202,13 @@ const StudentForm = forwardRef((props, ref) => {
                                 options={specializationOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Specialization"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn chuyên ngành của sinh viên..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Specialization Class</h2>
+                    <div className="col-12 p-0">
+                        <p>Thuộc lớp chuyên ngành</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.specializationClassId}
@@ -212,76 +216,75 @@ const StudentForm = forwardRef((props, ref) => {
                                 options={specializationClassOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Specialization Class"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn lớp chuyên ngành cho sinh viên..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Type Of Education</h2>
+                    <div className="col-12 p-0">
+                        <p>Loại hình đào tạo</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.typeOfEducation}
                                 onChange={(e) => handleOnChange('typeOfEducation', e?.target.value)}
                                 options={typeOfEducationOptions}
-                                placeholder="Select Require Type of education"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn loại hình đào tạo..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Firstname</h2>
+                    <div className="col-12 p-0">
+                        <p>Tên sinh viên</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.firstName}
+                                placeholder="Nhập tên của sinh viên..."
                                 onChange={(e) => handleOnChange('firstName', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Lastname</h2>
+                    <div className="col-12 p-0">
+                        <p>Họ đệm sinh viên</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.lastName}
+                                placeholder="Nhập họ đệm của sinh viên..."
                                 onChange={(e) => handleOnChange('lastName', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Date of birth</h2>
+                    <div className="col-12 p-0">
+                        <p>Ngày sinh</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.dob}
+                                placeholder="Nhập ngày sinh của sinh viên..."
                                 onChange={(e) => handleOnChange('dob', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>CI Number</h2>
+                    <div className="col-12 p-0">
+                        <p>Số căn cước công dân</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.CINumber}
+                                placeholder="Nhập số căn cước công dân..."
                                 onChange={(e) => handleOnChange('CINumber', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <h2>Address Information</h2>
-                    <div className="col-12">
-                        <h2>Address Line</h2>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.addressLine}
-                                onChange={(e) => handleOnChange('addressLine', e?.target.value)}
-                                className=" w-full p-4"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12">
-                        <h2>Region Name</h2>
+                    <Divider type="dashed" />
+                    <h2>
+                        Thông tin liên hệ
+                        <Divider />
+                    </h2>
+
+                    <div className="col-12 p-0">
+                        <p>Vùng sinh sống</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.regionId}
@@ -289,13 +292,13 @@ const StudentForm = forwardRef((props, ref) => {
                                 options={regionOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Region"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn vùng sinh sống..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Province Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Tỉnh</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.provinceCode}
@@ -303,13 +306,13 @@ const StudentForm = forwardRef((props, ref) => {
                                 options={provinceOptions}
                                 optionLabel="name"
                                 optionValue="code"
-                                placeholder="Select Province"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn tỉnh..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>District Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Quận</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.districtCode}
@@ -317,14 +320,14 @@ const StudentForm = forwardRef((props, ref) => {
                                 options={districtOptions}
                                 optionLabel="name"
                                 optionValue="code"
-                                placeholder="Select District"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn quận..."
+                                className="w-full"
                             />
                         </span>
                     </div>
 
-                    <div className="col-12">
-                        <h2>Ward Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Phường</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.wardCode}
@@ -332,39 +335,51 @@ const StudentForm = forwardRef((props, ref) => {
                                 options={wardOptions}
                                 optionLabel="name"
                                 optionValue="code"
-                                placeholder="Select Ward"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn phường..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Phone Number</h2>
+                    <div className="col-12 p-0">
+                        <p>Địa chỉ (Số nhà, Tổ, Khu phố, Đường)</p>
                         <span className="w-full">
                             <InputText
-                                value={data?.address?.phone}
+                                value={data?.addressLine}
+                                placeholder="Nhập địa chỉ..."
+                                onChange={(e) => handleOnChange('addressLine', e?.target.value)}
+                                className=" w-full"
+                            />
+                        </span>
+                    </div>
+                    <div className="col-12 p-0">
+                        <p>Số điện thoại</p>
+                        <span className="w-full">
+                            <InputText
+                                value={data?.phone}
+                                placeholder="Nhập số điện thoại..."
                                 onChange={(e) => handleOnChange('phone', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
+                <div className="flex col-12">
                     <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
+                        className={`col-6 p-button-lg font-bold mr-2`}
                         icon={'pi pi-send'}
                         label={'Submit'}
                         onClick={handleOnSubmit}
                     />
 
                     <Button
-                        className="col-6 py-3 p-button-lg font-bold"
+                        className="col-6 p-button-lg font-bold"
                         icon={'pi pi-send'}
                         label={'Cancel'}
                         onClick={handleHideForm}
                     />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

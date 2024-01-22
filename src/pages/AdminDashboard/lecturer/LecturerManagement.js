@@ -39,33 +39,27 @@ const LecturerManagement = () => {
 
     const lecturerRef = useRef(null);
     const columns = [
-        { field: 'username', header: 'Username' },
+        { field: 'username', header: 'Tên người dùng' },
         { field: 'email', header: 'Email' },
-        { field: 'firstName', header: 'Firstname' },
-        { field: 'lastName', header: 'Lastname' },
-        { field: 'gender', header: 'Gender' },
-        { field: 'code', header: 'Code' },
-        { field: 'dob', header: 'Date Of Birth' },
-        { field: 'cinumber', header: 'CI Number' },
-        { field: 'specializationName', header: 'Specialization Name' },
-        { field: 'title', header: 'Title' },
-        { field: 'position', header: 'position' },
-        { field: 'address', header: 'Address' },
-        { field: 'action', header: 'Action' },
+        { field: 'firstName', header: 'Họ đệm' },
+        { field: 'lastName', header: 'Tên' },
+        { field: 'gender', header: 'Giới tính' },
+        { field: 'code', header: 'Mã giảng viên' },
+        { field: 'dob', header: 'Ngày sinh' },
+        { field: 'cinumber', header: 'Số căn cước công dân' },
+        { field: 'specializationName', header: 'Thuộc chuyên ngành' },
+        { field: 'title', header: 'Chức tước' },
+        { field: 'position', header: 'Vai trò' },
+        { field: 'address', header: 'Địa chỉ' },
+        { field: 'action', header: 'Thao tác' },
     ];
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
-            <h2 className="text-900 font-bold">Lecturer Management</h2>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2x">
+            <p className="text-900 font-bold">QUẢN LÝ GIẢNG VIÊN</p>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
-                <Button
-                    className="p-5 text-xl"
-                    icon="pi pi-plus"
-                    rounded
-                    raised
-                    onClick={() => lecturerRef.current.showForm()}
-                />
+                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button className="" icon="pi pi-plus" rounded raised onClick={() => lecturerRef.current.showForm()} />
             </div>
         </div>
     );
@@ -102,12 +96,9 @@ const LecturerManagement = () => {
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
-                    size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    className="text-2xl"
                     paginator
                     scrollable
-                    scrollHeight="400px"
                     resizableColumns
                     stripedRows
                     lazy
@@ -118,7 +109,7 @@ const LecturerManagement = () => {
                 >
                     {columns.map((col, i) => (
                         <Column
-                            className="text-center p-4"
+                            className="text-center"
                             key={col.field}
                             field={col.field}
                             sortable
@@ -127,11 +118,11 @@ const LecturerManagement = () => {
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            Yes
+                                            Có
                                         </div>
                                     ) : (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            No
+                                            Không
                                         </div>
                                     )
                                 ) : col.field === 'address' ? (
@@ -144,7 +135,6 @@ const LecturerManagement = () => {
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
@@ -159,7 +149,6 @@ const LecturerManagement = () => {
                             }
                         />
                     ))}
-                    {console.log(data)}
                 </DataTable>
             </div>
             <LecturerForm ref={lecturerRef} />

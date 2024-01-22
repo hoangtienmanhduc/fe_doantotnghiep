@@ -28,24 +28,18 @@ const SpecializationManagement = () => {
 
     const specializationRef = useRef(null);
     const columns = [
-        { field: 'facultyName', header: 'Faculty Name' },
-        { field: 'name', header: 'Name' },
-        { field: 'code', header: 'Code' },
-        { field: 'action', header: 'Action' },
+        { field: 'facultyName', header: 'Khoa' },
+        { field: 'name', header: 'Tên chuyên ngành' },
+        { field: 'code', header: 'Mã chuyên ngành' },
+        { field: 'action', header: 'Thao tác' },
     ];
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
-            <h2 className="text-900 font-bold">Specialization Management</h2>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <p className="text-900 font-bold">QUẢN LÝ CHUYÊN NGÀNH</p>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
-                <Button
-                    className="p-5 text-xl"
-                    icon="pi pi-plus"
-                    rounded
-                    raised
-                    onClick={() => specializationRef.current.showForm()}
-                />
+                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button icon="pi pi-plus" rounded raised onClick={() => specializationRef.current.showForm()} />
             </div>
         </div>
     );
@@ -82,12 +76,9 @@ const SpecializationManagement = () => {
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
-                    size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    className="text-2xl"
                     paginator
                     scrollable
-                    scrollHeight="400px"
                     resizableColumns
                     stripedRows
                     lazy
@@ -98,7 +89,7 @@ const SpecializationManagement = () => {
                 >
                     {columns.map((col, i) => (
                         <Column
-                            className="text-center p-4"
+                            className="text-center"
                             key={col.field}
                             field={col.field}
                             header={col.header}
@@ -107,18 +98,17 @@ const SpecializationManagement = () => {
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            Yes
+                                            Có
                                         </div>
                                     ) : (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            No
+                                            Không
                                         </div>
                                     )
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised

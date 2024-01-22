@@ -5,7 +5,6 @@ import { Button } from 'primereact/button';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
-import { getPageUser } from '~/api/user/UserService';
 import SpecializationClassForm from './SpecializationClassForm';
 import { getPageSpecializationClassInfo } from '~/api/specialization/SpecializationClassService';
 
@@ -37,25 +36,19 @@ const SpecializationClassManagement = () => {
 
     const specializationClassRef = useRef(null);
     const columns = [
-        { field: 'specializationName', header: 'Specialization Name' },
-        { field: 'specializationCode', header: 'Specialization Code' },
-        { field: 'specializationClassName', header: 'Specialization Class Name' },
-        { field: 'schoolYear', header: 'School Year' },
-        { field: 'action', header: 'Action' },
+        { field: 'specializationName', header: 'Tên chuyên ngành' },
+        { field: 'specializationCode', header: 'Mã chuyên ngành' },
+        { field: 'name', header: 'Tên lớp chuyên ngành' },
+        { field: 'schoolYear', header: 'Niên khoá' },
+        { field: 'action', header: 'Thao tác' },
     ];
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
-            <h2 className="text-900 font-bold">Specialization Class Management</h2>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <p className="text-900 font-bold">QUẢN LÝ LỚP CHUYÊN NGÀNH</p>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
-                <Button
-                    className="p-5 text-xl"
-                    icon="pi pi-plus"
-                    rounded
-                    raised
-                    onClick={() => specializationClassRef.current.showForm()}
-                />
+                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button icon="pi pi-plus" rounded raised onClick={() => specializationClassRef.current.showForm()} />
             </div>
         </div>
     );
@@ -92,12 +85,9 @@ const SpecializationClassManagement = () => {
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
-                    size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    className="text-2xl"
                     paginator
                     scrollable
-                    scrollHeight="400px"
                     resizableColumns
                     stripedRows
                     lazy
@@ -108,7 +98,7 @@ const SpecializationClassManagement = () => {
                 >
                     {columns.map((col, i) => (
                         <Column
-                            className="text-center p-4"
+                            className="text-center"
                             key={col.field}
                             sortable
                             field={col.field}
@@ -117,18 +107,17 @@ const SpecializationClassManagement = () => {
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            Yes
+                                            Có
                                         </div>
                                     ) : (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            No
+                                            Không
                                         </div>
                                     )
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
@@ -137,7 +126,7 @@ const SpecializationClassManagement = () => {
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field]}
+                                        {rowData[col.field] ? rowData[col.field] : '-'}
                                     </div>
                                 )
                             }

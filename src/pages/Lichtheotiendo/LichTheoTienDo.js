@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import Select from 'react-select';
+import { Button } from 'primereact/button';
 
 const cx = classNames.bind(styles);
 
@@ -160,7 +161,6 @@ function Lichtheotiendo() {
                 tenGiangVien: 'ThS. Nguyễn Đức Anh',
             },
         ],
-        // Thêm các loại khác nếu cần
     };
 
     const courseData2 = {
@@ -260,7 +260,6 @@ function Lichtheotiendo() {
                 tenGiangVien: 'ThS. Nguyễn Đức Anh',
             },
         ],
-        // Thêm các loại khác nếu cần
     };
 
     const [courseData, setCourseData] = useState(courseData1);
@@ -277,7 +276,6 @@ function Lichtheotiendo() {
             case 'option2':
                 setCourseData(courseData2);
                 break;
-            // Thêm các trường hợp khác nếu cần
             default:
                 setSelectedOption(selectedOption);
                 setCourseData(courseData1);
@@ -287,49 +285,48 @@ function Lichtheotiendo() {
 
     const selectedData = courseData[selectedCourse.id];
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('container')}>
-                <div style={{ height: '10px', width: '100%' }}></div>
-                <div className={cx('header')}>
-                    <div>
+        <div>
+            <div>
+                <div className="flex justify-content-between">
+                    <div className="flex justify-content-between align-items-center col-12">
                         <h2>Lịch học, lịch thi theo tiến độ</h2>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <div style={{ display: 'flex' }}>
-                            {courses.map((course) => (
-                                <div key={course.id}>
-                                    {courseData2[course.id] && (
-                                        <input
-                                            style={{ marginLeft: '15px', marginTop: '8px' }}
-                                            type="radio"
-                                            checked={course === selectedCourse}
-                                            onChange={() => {
-                                                setSelectedCourse(course);
-                                                button(selectedOption);
-                                            }}
-                                        />
-                                    )}
-                                    {course.name}
+                        <div className="flex align-items-center">
+                            <div className="flex align-items-center justify-content-between">
+                                {courses.map((course) => (
+                                    <div key={course.id} className="m-2">
+                                        {courseData2[course.id] && (
+                                            <input
+                                                type="radio"
+                                                checked={course === selectedCourse}
+                                                onChange={() => {
+                                                    setSelectedCourse(course);
+                                                    button(selectedOption);
+                                                }}
+                                            />
+                                        )}
+                                        {course.name}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mr-2">
+                                <Select
+                                    defaultValue={selectedOption} // Set the default value for the Select component
+                                    onChange={handleChange}
+                                    options={options}
+                                    isSearchable={true}
+                                    placeholder={selectedOption.label} // Use the label as a placeholder
+                                />
+                            </div>
+                            <div className="flex align-items-center justfy-content-around">
+                                <div className="my-2 mr-2">
+                                    <Button label="Xem lịch" onClick={() => button(selectedOption)} />
                                 </div>
-                            ))}
+
+                                <div className="my-2">
+                                    <Button label="In lịch" onClick={() => button(selectedOption)} />
+                                </div>
+                            </div>
                         </div>
-                        <div style={{ width: '160px', height: '30px', marginLeft: '10px' }}>
-                            <Select
-                                defaultValue={selectedOption} // Set the default value for the Select component
-                                onChange={handleChange}
-                                options={options}
-                                isSearchable={true}
-                                placeholder={selectedOption.label} // Use the label as a placeholder
-                                maxMenuHeight={250}
-                            />
-                        </div>
-                        <button className={cx('button')} onClick={() => button(selectedOption)}>
-                            Xem lịch
-                        </button>
-                        <button className={cx('button')}>
-                            <FontAwesomeIcon style={{ marginRight: '2px' }} icon={faPrint} />
-                            In lịch
-                        </button>
                     </div>
                 </div>
                 <p style={{ textAlign: 'center' }}>

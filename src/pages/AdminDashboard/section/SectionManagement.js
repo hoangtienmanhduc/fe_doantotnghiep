@@ -28,31 +28,25 @@ const SectionManagement = () => {
 
     const sectionRef = useRef(null);
     const columns = [
-        { field: 'courseName', header: 'Course Name' },
-        { field: 'courseCode', header: 'Course Code' },
-        { field: 'termName', header: 'Term Name' },
-        { field: 'name', header: 'Name' },
-        { field: 'code', header: 'Code' },
-        { field: 'theoryPeriods', header: 'Theory Periods' },
-        { field: 'practicePeriods', header: 'Practice Periods' },
-        { field: 'sectionType', header: 'Section Type' },
-        { field: 'createdAt', header: 'Created At' },
-        { field: 'deleted', header: 'Deleted' },
-        { field: 'action', header: 'Action' },
+        { field: 'courseName', header: 'Thuộc môn học' },
+        { field: 'courseCode', header: 'Mã môn học' },
+        { field: 'termName', header: 'Thuộc học kì' },
+        { field: 'name', header: 'Tên học phần' },
+        { field: 'code', header: 'Mã học phần' },
+        { field: 'theoryPeriods', header: 'Số tiết lý thuyết' },
+        { field: 'practicePeriods', header: 'Số tiết thực hành' },
+        { field: 'sectionType', header: 'Loại học phần' },
+        { field: 'createdAt', header: 'Được tạo' },
+        { field: 'deleted', header: 'Trạng thái bị xoá' },
+        { field: 'action', header: 'Thao tác' },
     ];
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
-            <h2 className="text-900 font-bold">Sections Management</h2>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <p className="text-900 font-bold">QUẢN LÝ HỌC PHẦN</p>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
-                <Button
-                    className="p-5 text-xl"
-                    icon="pi pi-plus"
-                    rounded
-                    raised
-                    onClick={() => sectionRef.current.showForm({})}
-                />
+                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button className="" icon="pi pi-plus" rounded raised onClick={() => sectionRef.current.showForm({})} />
             </div>
         </div>
     );
@@ -89,12 +83,9 @@ const SectionManagement = () => {
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
-                    size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    className="text-2xl"
                     paginator
                     scrollable
-                    scrollHeight="400px"
                     resizableColumns
                     stripedRows
                     lazy
@@ -114,18 +105,17 @@ const SectionManagement = () => {
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            Yes
+                                            Có
                                         </div>
                                     ) : (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            No
+                                            Không
                                         </div>
                                     )
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised

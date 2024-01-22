@@ -28,34 +28,28 @@ const SectionClassManagement = () => {
 
     const sectionClassRef = useRef(null);
     const columns = [
-        { field: 'sectionName', header: 'Section Name' },
-        { field: 'sectionCode', header: 'Section Code' },
-        { field: 'lecturerName', header: 'Lecturer Name' },
-        { field: 'lecturerCode', header: 'Lecturer Code' },
-        { field: 'classCode', header: 'Class Code' },
-        { field: 'room', header: 'Room' },
-        { field: 'periodFrom', header: 'Period From' },
-        { field: 'periodTo', header: 'Period To' },
-        { field: 'numberOfStudents', header: 'Number of Students' },
-        { field: 'dayInWeek', header: 'Day in Week' },
-        { field: 'sectionClassType', header: 'Section Class Type' },
-        { field: 'startedAt', header: 'Started At' },
-        { field: 'note', header: 'Note' },
-        { field: 'action', header: 'Action' },
+        { field: 'sectionName', header: 'Học phần' },
+        { field: 'sectionCode', header: 'Mã học phần' },
+        { field: 'lecturerName', header: 'Giảng viên phụ trách' },
+        { field: 'lecturerCode', header: 'Mã giảng viên' },
+        { field: 'classCode', header: 'Mã lớp học phần' },
+        { field: 'room', header: 'Phòng học' },
+        { field: 'periodFrom', header: 'Tiết ban đầu' },
+        { field: 'periodTo', header: 'Tiết kết thúc' },
+        { field: 'numberOfStudents', header: 'Số sinh viên tối đa' },
+        { field: 'dayInWeek', header: 'Thứ trong tuần' },
+        { field: 'sectionClassType', header: 'Loại lớp học phần' },
+        { field: 'startedAt', header: 'Thời gian bắt đầu' },
+        { field: 'note', header: 'Ghi chú' },
+        { field: 'action', header: 'Thao tác' },
     ];
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
-            <h2 className="text-900 font-bold">Section Class Management</h2>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <p className="text-900 font-bold">QUẢN LÝ LỚP HỌC PHẦN</p>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
-                <Button
-                    className="p-5 text-xl"
-                    icon="pi pi-plus"
-                    rounded
-                    raised
-                    onClick={() => sectionClassRef.current.showForm()}
-                />
+                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button icon="pi pi-plus" rounded raised onClick={() => sectionClassRef.current.showForm()} />
             </div>
         </div>
     );
@@ -92,12 +86,9 @@ const SectionClassManagement = () => {
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
-                    size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    className="text-2xl"
                     paginator
                     scrollable
-                    scrollHeight="400px"
                     resizableColumns
                     stripedRows
                     lazy
@@ -108,7 +99,7 @@ const SectionClassManagement = () => {
                 >
                     {columns.map((col, i) => (
                         <Column
-                            className="text-center p-4"
+                            className="text-center"
                             key={col.field}
                             field={col.field}
                             header={col.header}
@@ -117,18 +108,17 @@ const SectionClassManagement = () => {
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            Yes
+                                            Có
                                         </div>
                                     ) : (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            No
+                                            Không
                                         </div>
                                     )
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised

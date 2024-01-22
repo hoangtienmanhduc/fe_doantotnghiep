@@ -1,19 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { DefaultLayout, DefaultLayoutSidebar, HeaderOnly } from './components/Layout';
+import { DefaultLayout, DefaultLayoutSidebar, HeaderOnly } from './components/Layout/exportSidebarAndHeader';
 import { Fragment } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Lichtheotiendo from './pages/Lichtheotiendo';
-import Ketquahoctap from './pages/Ketquahoctap';
-import PhieuTongHop from './pages/Phieutonghop';
-import Lichhoc from './pages/Lichhoc';
-import Thanhtoantructuyen from './pages/Thanhtoantructuyen';
-import Dangkyhocphan from './pages/Dangkyhocphan';
-import Ghichunhacnho from './pages/Ghichunhacnho';
-import Tracuucongno from './pages/Tracuucongno';
+import Home from './pages/Home/Home';
+import Login from './pages/Login/Login';
+import Lichtheotiendo from './pages/Lichtheotiendo/LichTheoTienDo';
+import Ketquahoctap from './pages/Ketquahoctap/KetQuaHocTap';
+import PhieuTongHop from './pages/Phieutonghop/PhieuTongHop';
+import Lichhoc from './pages/Lichhoc/LichHoc';
+import Thanhtoantructuyen from './pages/Thanhtoantructuyen/ThanhToanTrucTuyen';
+import Dangkyhocphan from './pages/Dangkyhocphan/DangKyHocPhan';
+import Ghichunhacnho from './pages/Ghichunhacnho/GhiChuNhacNho';
+import Tracuucongno from './pages/Tracuucongno/TraCuuCongNo';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import { PrimeReactProvider } from 'primereact/api';
 
@@ -22,10 +22,10 @@ import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-cyan/theme.css';
 import 'primeicons/primeicons.css';
 import './custom.css';
-import Chuongtrinhkhung from '~/pages/Chuongtrinhkhung';
-import Doimatkhau from '~/pages/Doimatkhau';
-import Thongtincanhan from '~/pages/Thongtincanhan';
-import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien';
+import Chuongtrinhkhung from '~/pages/Chuongtrinhkhung/ChuongTrinhKhung';
+import Doimatkhau from '~/pages/Doimatkhau/DoiMatKhau';
+import Thongtincanhan from '~/pages/Thongtincanhan/ThongTinCaNhan';
+import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien/CapNhatThongTinSinhVien';
 export const UserRoles = {
     ADMIN: 'Admin',
     LECTURER: 'Lecturer',

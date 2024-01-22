@@ -41,7 +41,7 @@ const FacultyForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Name is required!!',
+                detail: 'Tên khoa không được để trống!!',
             });
             isError = true;
         }
@@ -54,10 +54,10 @@ const FacultyForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Faculty Successful!!',
+                        detail: 'Thao tác cập nhật khoa thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -82,8 +82,8 @@ const FacultyForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Faculty Form</strong>
+                <h3 className="m-0 p-3 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} khoa`}
                     <hr />
                 </h3>
             }
@@ -94,46 +94,37 @@ const FacultyForm = forwardRef((props, ref) => {
             breakpoints={{ '960px': '75vw', '641px': '100vw' }}
             visible={visible}
         >
-            <div className="m-3">
+            <div>
                 <div className="col-12">
-                    <div className="col-12">
-                        <h2>Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Tên khoa</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.name}
+                                placeholder="Nhập tên khoa..."
                                 onChange={(e) => handleOnChange('name', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
                     <div className="col-12">
-                        <h2>Logo</h2>
+                        <p>Logo Khoa</p>
                         <span className="w-full">
                             <InputText
+                                placeholder="Link hình ảnh của logo..."
                                 value={data?.logo}
                                 onChange={(e) => handleOnChange('logo', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
-                    <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
-                        icon={'pi pi-send'}
-                        label={'Submit'}
-                        onClick={handleOnSubmit}
-                    />
-
-                    <Button
-                        className="col-6 py-3 p-button-lg font-bold"
-                        icon={'pi pi-send'}
-                        label={'Cancel'}
-                        onClick={handleHideForm}
-                    />
+                <div className="flex col-12">
+                    <Button className={`col-6 mr-2`} icon={'pi pi-send'} label={'Submit'} onClick={handleOnSubmit} />
+                    <Button className="col-6 " icon={'pi pi-send'} label={'Cancel'} onClick={handleHideForm} />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

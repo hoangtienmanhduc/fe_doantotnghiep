@@ -1,6 +1,7 @@
 // AUTH STATE
 export function clearStorage() {
     localStorage.clear();
+    window.location.assign('/');
 }
 export function isAuthenticated() {
     return !!getUserId() && !!getAccessToken();

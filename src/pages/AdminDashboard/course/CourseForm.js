@@ -3,6 +3,7 @@ import { da } from 'date-fns/locale';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
+import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import { Toast } from 'primereact/toast';
@@ -51,7 +52,7 @@ const CourseForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Name is required!!',
+                detail: 'Tên môn học không được để trống!!',
             });
             isError = true;
         }
@@ -60,7 +61,7 @@ const CourseForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Credit is required!!',
+                detail: 'Tín chỉ của môn học không được để trống!!',
             });
             isError = true;
         }
@@ -69,7 +70,7 @@ const CourseForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Credit should be a number!!',
+                detail: 'Tín chỉ của môn học không hợp lệ!!',
             });
             isError = true;
         }
@@ -82,10 +83,10 @@ const CourseForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Course Successful!!',
+                        detail: 'Thao tác cập nhật môn học thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -110,8 +111,8 @@ const CourseForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Course Form</strong>
+                <h3 className="m-0 p-3 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} môn học`}
                     <hr />
                 </h3>
             }
@@ -121,31 +122,34 @@ const CourseForm = forwardRef((props, ref) => {
             }}
             breakpoints={{ '960px': '75vw', '641px': '100vw' }}
             visible={visible}
+            pt={{ header: { className: 'p-0' } }}
         >
-            <div className="m-3">
+            <div>
                 <div className="col-12">
-                    <div className="col-12">
-                        <h2>Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Tên môn học</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.name}
+                                placeholder="Nhập tên môn học..."
                                 onChange={(e) => handleOnChange('name', e?.target.value)}
-                                className=" w-full p-4"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Credits</h2>
+                    <div className="col-12 p-0">
+                        <p>Số tín chỉ</p>
                         <span className="w-full">
-                            <InputText
+                            <InputNumber
                                 value={data?.credit}
-                                onChange={(e) => handleOnChange('credit', e?.target.value)}
-                                className=" w-full p-4"
+                                placeholder="Nhập số tín chỉ..."
+                                onChange={(e) => handleOnChange('credit', e?.value)}
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Require Course</h2>
+                    <div className="col-12 p-0">
+                        <p>Các học phần bắt buộc</p>
                         <span className="w-full">
                             <MultiSelect
                                 value={data?.requireCourse ? data.requireCourse : []}
@@ -153,31 +157,21 @@ const CourseForm = forwardRef((props, ref) => {
                                 options={courseOptions && courseOptions.filter((item) => item?.id !== data?.id)}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Course"
+                                placeholder="Hãy chọn học phần bắt buộc (nếu có)"
                                 maxSelectedLabels={3}
-                                className="p-4 w-full"
-                                pt={{ panel: { className: 'p-2' } }}
+                                className="w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
-                    <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
-                        icon={'pi pi-send'}
-                        label={'Submit'}
-                        onClick={handleOnSubmit}
-                    />
+                <hr />
+                <div className="flex col-12">
+                    <Button className={`col-6 mr-2`} icon={'pi pi-send'} label={'Submit'} onClick={handleOnSubmit} />
 
-                    <Button
-                        className="col-6 py-3 p-button-lg font-bold"
-                        icon={'pi pi-send'}
-                        label={'Cancel'}
-                        onClick={handleHideForm}
-                    />
+                    <Button className="col-6" icon={'pi pi-times'} label={'Cancel'} onClick={handleHideForm} />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

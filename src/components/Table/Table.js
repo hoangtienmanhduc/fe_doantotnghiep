@@ -10,15 +10,19 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { TableVirtuoso } from 'react-virtuoso';
 
 const sample = [
-    ['Chủ nghĩa Mac-Lenin', 5],
-    ['Tư tưởng hồ chí minh', 237],
-    ['Chủ nghĩa Mac-Lenin', 5],
-    ['Tư tưởng hồ chí minh', 237],
+    ['Triết Học Mác-Lênin', 5],
+    ['Tư Tưởng Hồ Chí Minh', 5],
+    ['Toán Cao Cấp 1', 5],
+    ['Toán Cao Cấp 2', 5],
+    ['Phát Triển Ứng Dụng', 5],
+    ['Lập Trình Phân Tán', 5],
+    ['Lập Trình Hướng Sự Kiện', 5],
+    ['Lập Trình Hướng Đối Tượng', 5],
 ];
 
 const theme = createTheme({
     typography: {
-        fontSize: 25, // Đặt kích thước chữ mong muốn
+        fontSize: 20, // Đặt kích thước chữ mong muốn
     },
 });
 
@@ -28,12 +32,12 @@ function createData(id, monhoc, sotinchi) {
 
 const columns = [
     {
-        width: 200,
+        width: 300,
         label: 'Môn học',
         dataKey: 'monhoc',
     },
     {
-        width: 100,
+        width: 50,
         label: 'Số tín chỉ',
         dataKey: 'sotinchi',
         numeric: true,
@@ -69,10 +73,7 @@ function Table_Home() {
         <ThemeProvider theme={theme}>
             <Paper
                 style={{
-                    height: 220,
-                    width: '95%',
-                    marginLeft: '11px',
-                    marginTop: '7px',
+                    height: 300,
                 }}
             >
                 <TableVirtuoso data={rows} components={VirtuosoTableComponents} itemContent={rowContent}>

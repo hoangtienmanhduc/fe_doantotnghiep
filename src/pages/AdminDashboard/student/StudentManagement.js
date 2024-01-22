@@ -15,6 +15,7 @@ import { Toast } from 'primereact/toast';
 import { separateStudentsByClass } from '~/api/specialization/SpecializationClassService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { getListSchoolYear } from '~/api/student/StudentService';
+import { Divider } from 'primereact/divider';
 
 const QueryKey = 'Student-Management';
 const QueryKeySchoolYear = 'School-Year-Options';
@@ -49,31 +50,31 @@ const StudentManagement = () => {
     const [visible, setVisible] = useState(false);
     const studentRef = useRef(null);
     const columns = [
-        { field: 'username', header: 'Username' },
+        { field: 'username', header: 'Tên người dùng' },
         { field: 'email', header: 'Email' },
-        { field: 'firstName', header: 'Firstname' },
-        { field: 'lastName', header: 'Lastname' },
-        { field: 'gender', header: 'Gender' },
-        { field: 'code', header: 'Code' },
-        { field: 'dob', header: 'Date Of Birth' },
-        { field: 'cinumber', header: 'CI Number' },
-        { field: 'specializationName', header: 'Specialization Name' },
-        { field: 'specializationClassName', header: 'Specialization Class Name' },
-        { field: 'typeOfEducation', header: 'Type Of Education' },
-        { field: 'schoolYear', header: 'School Year' },
-        { field: 'address', header: 'Address' },
-        { field: 'action', header: 'Action' },
+        { field: 'firstName', header: 'Tên' },
+        { field: 'lastName', header: 'Họ đệm' },
+        { field: 'gender', header: 'Giới tính' },
+        { field: 'code', header: 'Mã sinh viên' },
+        { field: 'dob', header: 'Ngày sinh' },
+        { field: 'cinumber', header: 'Số căn cước công dân' },
+        { field: 'specializationName', header: 'Thuộc chuyên ngành' },
+        { field: 'specializationClassName', header: 'Thuộc lớp chuyên ngành' },
+        { field: 'typeOfEducation', header: 'Loại hình đào tạo' },
+        { field: 'schoolYear', header: 'Niên khoá' },
+        { field: 'address', header: 'Địa chỉ' },
+        { field: 'action', header: 'Thao tác' },
     ];
 
     const columnsSeparate = [
-        { field: 'username', header: 'Username' },
+        { field: 'username', header: 'Tên người dùng' },
         { field: 'email', header: 'Email' },
-        { field: 'firstName', header: 'Firstname' },
-        { field: 'lastName', header: 'Lastname' },
-        { field: 'code', header: 'Code' },
-        { field: 'specializationName', header: 'Specialization Name' },
-        { field: 'schoolYear', header: 'School Year' },
-        { field: 'specializationClassName', header: 'Specialization Class Name' },
+        { field: 'firstName', header: 'Tên' },
+        { field: 'lastName', header: 'Họ đệm' },
+        { field: 'code', header: 'Mã sinh viên' },
+        { field: 'specializationName', header: 'Thuộc chuyên ngành' },
+        { field: 'schoolYear', header: 'Niên khoá' },
+        { field: 'specializationClassName', header: 'Thuộc lớp chuyên ngành' },
     ];
 
     const { data: schoolYearOptions } = useQuery(
@@ -92,7 +93,7 @@ const StudentManagement = () => {
                 toast.current.show({
                     severity: 'success',
                     summary: 'Success',
-                    detail: 'Separate Students Class successful !!',
+                    detail: 'Thao tác chia lớp chuyên ngành cho sinh viên thành công!!',
                 });
             }
         },
@@ -122,7 +123,7 @@ const StudentManagement = () => {
             toast.current.show({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'Please select a school year first !!!',
+                detail: 'Hãy chọn năm học cần chia lớp chuyên ngành trước!!!',
             });
             return;
         }
@@ -132,33 +133,27 @@ const StudentManagement = () => {
     }, [mutate, schoolYear]);
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
-            <h2 className="text-900 font-bold">Student Management</h2>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <p className="text-900 font-bold">QUẢN LÝ SINH VIÊN</p>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
                 <Button
-                    className="p-5 text-xl mr-2"
+                    className="mr-2"
                     icon="pi pi-plus"
                     rounded
                     raised
                     onClick={() => studentRef.current.showForm()}
                 />
-                <Button
-                    className="p-4"
-                    label="Separate Student By School Year"
-                    rounded
-                    raised
-                    onClick={() => setVisible(true)}
-                />
+                <Button label="Phân lớp chuyên ngành" rounded raised onClick={() => setVisible(true)} />
             </div>
         </div>
     );
 
     const headerSeparate = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2 p-3">
-            <h2 className="text-900 font-bold">Student Separated</h2>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <p className="text-900 font-bold">Kết quả phân lớp chuyên ngành sinh viên</p>
             <div className="flex align-items-center ">
-                <Button className="p-5 text-xl mr-2" icon="pi pi-refresh" rounded raised onClick={refetchSeparate} />
+                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetchSeparate} />
             </div>
         </div>
     );
@@ -195,12 +190,9 @@ const StudentManagement = () => {
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
-                    size="large"
                     tableStyle={{ minWidth: '60rem' }}
-                    className="text-2xl"
                     paginator
                     scrollable
-                    scrollHeight="400px"
                     resizableColumns
                     stripedRows
                     lazy
@@ -211,7 +203,7 @@ const StudentManagement = () => {
                 >
                     {columns.map((col, i) => (
                         <Column
-                            className="text-center p-4"
+                            className="text-center"
                             key={col.field}
                             field={col.field}
                             header={col.header}
@@ -220,11 +212,11 @@ const StudentManagement = () => {
                                 col.field === 'deleted' ? (
                                     rowData[col.field] ? (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            Yes
+                                            Có
                                         </div>
                                     ) : (
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                            No
+                                            Không
                                         </div>
                                     )
                                 ) : col.field === 'address' ? (
@@ -237,7 +229,6 @@ const StudentManagement = () => {
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
-                                            className="p-5 text-xl"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
@@ -255,30 +246,35 @@ const StudentManagement = () => {
                 </DataTable>
             </div>
             <StudentForm ref={studentRef} />
-            <Dialog visible={visible} style={{ width: '80vw' }} onHide={() => setVisible(false)}>
-                <div className="flex col-12 p-3">
-                    <div className="col-6">
-                        <h2>School Year</h2>
-                        <span className="w-full">
+            <Dialog
+                visible={visible}
+                style={{ width: '80vw' }}
+                pt={{ header: { className: 'p-0' } }}
+                onHide={() => setVisible(false)}
+            >
+                <div className="flex col-12">
+                    <div className="col-12">
+                        <h2>
+                            Phân lớp chuyên ngành cho sinh viên
+                            <Divider />
+                        </h2>
+                        <div className="p-inputgroup flex-1">
                             <Dropdown
                                 value={schoolYear}
                                 onChange={(e) => setSchoolYear(e?.target.value)}
                                 options={schoolYearOptions}
-                                placeholder="Select School Year"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn năm học..."
                             />
-                        </span>
-                    </div>
-                    <div className="flex justify-content-end col-6">
-                        <Button
-                            className={`p-button-lg font-bold h-full p-3`}
-                            icon={'pi pi-send'}
-                            iconPos="right"
-                            label={'Start separate students'}
-                            loading={loading}
-                            onClick={handleOnSeparateStudent}
-                            pt={{ icon: { className: 'pl-3' } }}
-                        />
+                            <Button
+                                className={`font-bold`}
+                                icon={'pi pi-send'}
+                                iconPos="right"
+                                label={'Bắt đầu phân chia lớp'}
+                                loading={loading}
+                                onClick={handleOnSeparateStudent}
+                                pt={{ icon: { className: 'pl-2' } }}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="card col-12">
@@ -287,12 +283,9 @@ const StudentManagement = () => {
                             !!studentSeparates && studentSeparates?.content?.length > 0 ? studentSeparates?.content : []
                         }
                         header={headerSeparate}
-                        size="large"
                         tableStyle={{ minWidth: '60rem' }}
-                        className="text-2xl"
                         paginator
                         scrollable
-                        scrollHeight="400px"
                         resizableColumns
                         stripedRows
                         lazy
@@ -305,7 +298,7 @@ const StudentManagement = () => {
                     >
                         {columnsSeparate.map((col, i) => (
                             <Column
-                                className="text-center p-4"
+                                className="text-center"
                                 key={col.field}
                                 field={col.field}
                                 header={col.header}
@@ -314,11 +307,11 @@ const StudentManagement = () => {
                                     col.field === 'deleted' ? (
                                         rowData[col.field] ? (
                                             <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                                Yes
+                                                Có
                                             </div>
                                         ) : (
                                             <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                                No
+                                                Không
                                             </div>
                                         )
                                     ) : col.field === 'address' ? (
@@ -331,7 +324,6 @@ const StudentManagement = () => {
                                         <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                             <Button
                                                 text
-                                                className="p-5 text-xl"
                                                 icon="pi pi-pencil"
                                                 rounded
                                                 raised
@@ -349,7 +341,7 @@ const StudentManagement = () => {
                     </DataTable>
                 </div>
             </Dialog>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </React.Fragment>
     );
 };

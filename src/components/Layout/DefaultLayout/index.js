@@ -1,15 +1,12 @@
-import Header from '~/components/Layout/components/Header';
-import styles from './DefaultLayout.module.scss';
-import classNames from 'classnames/bind';
-
-const cx = classNames.bind(styles);
+import React from 'react';
+import Header from '~/components/Layout/components/Header/Header';
 
 function DefaultLayout({ children }) {
     return (
-        <div className={cx('wrapper')}>
+        <React.Fragment>
             <Header />
-            <div className={cx('container')}>{children}</div>
-        </div>
+            <div className="col-12">{children}</div>
+        </React.Fragment>
     );
 }
 

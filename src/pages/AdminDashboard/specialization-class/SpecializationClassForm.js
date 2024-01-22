@@ -10,9 +10,7 @@ import { useRef } from 'react';
 import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { getUserId } from '~/components/authentication/AuthUtils';
-import { createOrUpdateGenericSectionClass } from '~/api/section/SectionClassService';
 import { createOrUpdateGenericSpecializationClass } from '~/api/specialization/SpecializationClassService';
-import { getListAcademicYearInfo } from '~/api/academic-year/AcademicYearService';
 import { getListSpecializationInfo } from '~/api/specialization/SpecializationService';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
@@ -49,7 +47,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Specializaion is required!!',
+                detail: 'Chuyên ngành của lớp chuyên ngành không được để trống!!',
             });
             isError = true;
         }
@@ -58,7 +56,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Academic Year is required!!',
+                detail: 'Niên khoá cho lớp chuyên ngành không được để trống!!',
             });
             isError = true;
         }
@@ -67,7 +65,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Name is required!!',
+                detail: 'Tên lớp chuyên ngành không được để trống!!',
             });
             isError = true;
         }
@@ -83,10 +81,10 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Specialization Class Successful!!',
+                        detail: 'Thao tác cập nhật lớp chuyên ngành thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -104,11 +102,12 @@ const SpecializationClassForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Specialization Class Form</strong>
+                <h3 className="m-0 p-3 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} lớp chuyên ngành`}
                     <hr />
                 </h3>
             }
+            pt={{ header: { className: 'p-0' } }}
             onHide={handleHideForm}
             style={{
                 width: '60vw',
@@ -116,10 +115,10 @@ const SpecializationClassForm = forwardRef((props, ref) => {
             breakpoints={{ '960px': '75vw', '641px': '100vw' }}
             visible={visible}
         >
-            <div className="m-3">
+            <div>
                 <div className="col-12">
-                    <div className="col-12">
-                        <h2>Specialization</h2>
+                    <div className="col-12 p-0">
+                        <p>Thuộc chuyên ngành</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.specializationId}
@@ -127,49 +126,51 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                                 options={specializationOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Specialization"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn chuyên ngành cho lớp chuyên ngành..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>School Year</h2>
+                    <div className="col-12 p-0">
+                        <p>Niên khoá của lớp</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.schoolYear}
+                                placeholder="Nhập niên khoá của lớp chuyên ngành..."
                                 onChange={(e) => handleOnChange('schoolYear', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Tên lớp học phần</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.name}
+                                placeholder="Nhập tên lớp chuyên ngành..."
                                 onChange={(e) => handleOnChange('name', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
+                <div className="flex col-12">
                     <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
+                        className={`col-6 p-button-lg font-bold mr-2`}
                         icon={'pi pi-send'}
                         label={'Submit'}
                         onClick={handleOnSubmit}
                     />
 
                     <Button
-                        className="col-6 py-3 p-button-lg font-bold"
-                        icon={'pi pi-send'}
+                        className="col-6 p-button-lg font-bold"
+                        icon={'pi pi-times'}
                         label={'Cancel'}
                         onClick={handleHideForm}
                     />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

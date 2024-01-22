@@ -9,7 +9,6 @@ import { useRef } from 'react';
 import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { getUserId } from '~/components/authentication/AuthUtils';
-import { createOrUpdateGenericSectionClass } from '~/api/section/SectionClassService';
 import { getListFacultyInfo } from '~/api/faculty/FacultyService';
 import { InputText } from 'primereact/inputtext';
 import { createOrUpdateGenericSpecialization } from '~/api/specialization/SpecializationService';
@@ -48,7 +47,7 @@ const SpecializationForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Specialization is required!!',
+                detail: 'Chuyên ngành không được để trống!!',
             });
             isError = true;
         }
@@ -57,7 +56,7 @@ const SpecializationForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Name is required!!',
+                detail: 'Tên lớp học phần không được để trống!!',
             });
             isError = true;
         }
@@ -66,7 +65,7 @@ const SpecializationForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Code is required!!',
+                detail: 'Mã lớp học phần không được để trống!!',
             });
             isError = true;
         }
@@ -82,10 +81,10 @@ const SpecializationForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Specialization Successful!!',
+                        detail: 'Thao tác cập nhật chuyên ngành thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -102,9 +101,10 @@ const SpecializationForm = forwardRef((props, ref) => {
 
     return (
         <Dialog
+            pt={{ header: { className: 'p-0' } }}
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Specialization Form</strong>
+                <h3 className="m-0 p-3 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} chuyên ngành`}
                     <hr />
                 </h3>
             }
@@ -117,41 +117,43 @@ const SpecializationForm = forwardRef((props, ref) => {
         >
             <div className="m-3">
                 <div className="col-12">
-                    <div className="col-12">
-                        <h2>Faculty</h2>
+                    <div className="col-12 p-0">
+                        <p>Khoa</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.lecturerId}
                                 onChange={(e) => handleOnChange('specializationId', e?.target.value)}
                                 options={facultyOptions}
                                 optionLabel="name"
-                                placeholder="Select Require Specialization"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn khoa cho chuyên ngành..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Tên chuyên ngành</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.name}
+                                placeholder="Nhập tên chuyên ngành..."
                                 onChange={(e) => handleOnChange('name', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Code</h2>
+                    <div className="col-12 p-0">
+                        <p>Mã chuyên ngành</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.code}
+                                placeholder="Nhập mã chuyên ngành..."
                                 onChange={(e) => handleOnChange('code', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
+                <div className="flex col-12">
                     <Button
                         className={`col-6 py-3 p-button-lg font-bold mr-2`}
                         icon={'pi pi-send'}
@@ -167,7 +169,7 @@ const SpecializationForm = forwardRef((props, ref) => {
                     />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

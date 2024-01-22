@@ -429,7 +429,6 @@ function Dangkyhocphan() {
                             <th rowSpan="1">Số TC</th>
                             <th rowSpan="1">Học phí</th>
                             <th rowSpan="1">Hạn nộp</th>
-                            <th rowSpan="1">Thu</th>
                             <th rowSpan="1">Trạng thái ĐK</th>
                             <th rowSpan="1">Ngày ĐK</th>
                             <th rowSpan="1">Trạng thái LHP</th>
@@ -445,8 +444,7 @@ function Dangkyhocphan() {
                                     <th>{sectionClass?.sectionName}</th>
                                     <th>{sectionClass?.sectionName}</th>
                                     <th>{sectionClass?.credit}</th>
-                                    <th>1.000.000</th>
-                                    <th>Lần 1: 16/11/2023</th>
+                                    <th>{sectionClass?.credit ? sectionClass?.credit * 580000 : 0}</th>
                                     <th>
                                         <FontAwesomeIcon
                                             style={{ color: 'green', fontSize: '20px' }}
@@ -455,7 +453,7 @@ function Dangkyhocphan() {
                                     </th>
                                     <th>Đăng kí học mới</th>
                                     <th>16/11/2023</th>
-                                    <th>Đã khóa</th>
+                                    <th>{`${sectionClass?.sectionClassStatus === 'open' ? 'Đang mở' : 'Đã khóa'}`}</th>
                                 </tr>
                             ))}
                     </table>

@@ -1,19 +1,13 @@
-import { isError, useQuery } from '@tanstack/react-query';
-import { da } from 'date-fns/locale';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
-import { MultiSelect } from 'primereact/multiselect';
 import { Toast } from 'primereact/toast';
 import { useState } from 'react';
-import { useMemo } from 'react';
 import { useCallback } from 'react';
 import { useRef } from 'react';
 import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { createOrUpdateGenericAcademicYear } from '~/api/academic-year/AcademicYearService';
-import { createOrUpdateGenericCourse, getListCourseInfo } from '~/api/course/CourseService';
 import { getUserId } from '~/components/authentication/AuthUtils';
 
 const AcademicYearForm = forwardRef((props, ref) => {
@@ -45,7 +39,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Name is required!!',
+                detail: 'Niên khoá của năm học không được để trống!!',
             });
             isError = true;
         }
@@ -58,10 +52,10 @@ const AcademicYearForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Academic Year Successful!!',
+                        detail: 'Thao tác cập nhật niên khoá thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -78,9 +72,10 @@ const AcademicYearForm = forwardRef((props, ref) => {
 
     return (
         <Dialog
+            pt={{ header: { className: 'p-0' } }}
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Academic Year Form</strong>
+                <h3 className="m-0 p-3 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} niên khoá`}
                     <hr />
                 </h3>
             }
@@ -91,36 +86,27 @@ const AcademicYearForm = forwardRef((props, ref) => {
             breakpoints={{ '960px': '75vw', '641px': '100vw' }}
             visible={visible}
         >
-            <div className="m-3">
+            <div>
                 <div className="col-12">
-                    <div className="col-12">
-                        <h2>Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Niên khoá năm học</p>
                         <span className="w-full">
                             <InputText
+                                placeholder="Nhập niên khoá cho năm học..."
                                 value={data?.name}
                                 onChange={(e) => handleOnChange('name', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
-                    <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
-                        icon={'pi pi-send'}
-                        label={'Submit'}
-                        onClick={handleOnSubmit}
-                    />
-
-                    <Button
-                        className="col-6 py-3 p-button-lg font-bold"
-                        icon={'pi pi-send'}
-                        label={'Cancel'}
-                        onClick={handleHideForm}
-                    />
+                <hr />
+                <div className="flex col-12 ">
+                    <Button className={`col-6 mr-2`} icon={'pi pi-send'} label={'Submit'} onClick={handleOnSubmit} />
+                    <Button className="col-6" icon={'pi pi-times'} label={'Cancel'} onClick={handleHideForm} />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

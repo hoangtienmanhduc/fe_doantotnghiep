@@ -10,12 +10,12 @@ import { useRef } from 'react';
 import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { getUserId } from '~/components/authentication/AuthUtils';
-import { createOrUpdateGenericSectionClass } from '~/api/section/SectionClassService';
 import { positionOptions, titleOptions } from './LecturerConstant';
 import { getListSpecializationInfo } from '~/api/specialization/SpecializationService';
 import { getListDistrict, getListProvince, getListRegion, getListWard } from '~/api/address/AddressService';
 import { useEffect } from 'react';
 import { createOrUpdateGenericUser } from '~/api/user/UserService';
+import { Divider } from 'primereact/divider';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
 const QueryKeyRegionOptions = 'Region-Options';
@@ -55,7 +55,7 @@ const LecturerForm = forwardRef((props, ref) => {
     const [provinceCode, setProvinceCode] = useState(null);
 
     const { data: wardOptions, isFetched: isWardFetched } = useQuery(
-        [QueryKeyWardOptions, getUserId()],
+        [QueryKeyWardOptions, getUserId(), districtCode],
         () => getListWard(districtCode),
         {
             enabled: !!getUserId() && !!districtCode,
@@ -63,7 +63,7 @@ const LecturerForm = forwardRef((props, ref) => {
     );
 
     const { data: provinceOptions, isFetched: isProvinceFetched } = useQuery(
-        [QueryKeyProvinceOptions, getUserId()],
+        [QueryKeyProvinceOptions, getUserId(), regionData],
         () => getListProvince(regionData),
         {
             enabled: !!getUserId() && !!regionData,
@@ -71,7 +71,7 @@ const LecturerForm = forwardRef((props, ref) => {
     );
 
     const { data: districtOptions, isFetched: isDistrictFetched } = useQuery(
-        [QueryKeyDistrictOptions, getUserId()],
+        [QueryKeyDistrictOptions, getUserId(), provinceCode],
         () => getListDistrict(provinceCode),
         {
             enabled: !!getUserId() && !!provinceCode,
@@ -104,7 +104,7 @@ const LecturerForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Specialization is required!!',
+                detail: 'Chuyên ngành của Giảng viên không được để trống!!',
             });
             isError = true;
         }
@@ -112,7 +112,7 @@ const LecturerForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Firstname is required!!',
+                detail: 'Họ của giảng viên không được để trống!!',
             });
             isError = true;
         }
@@ -121,7 +121,7 @@ const LecturerForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Lastname is required!!',
+                detail: 'Tên của giảng viên không được để trống!!',
             });
             isError = true;
         }
@@ -130,7 +130,7 @@ const LecturerForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'CI Number is required!!',
+                detail: 'Số căn cước công dân không được để trống!!',
             });
             isError = true;
         }
@@ -147,10 +147,10 @@ const LecturerForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update User Successful!!',
+                        detail: 'Thao tác cập nhật Giảng viên thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -168,11 +168,12 @@ const LecturerForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Lecturer Form</strong>
+                <h3 className="p-3 m-0 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} giảng viên`}
                     <hr />
                 </h3>
             }
+            pt={{ header: 'p-0' }}
             onHide={handleHideForm}
             style={{
                 width: '60vw',
@@ -182,9 +183,12 @@ const LecturerForm = forwardRef((props, ref) => {
         >
             <div className="m-3">
                 <div className="col-12">
-                    <h2 className="p-2">User Information</h2>
-                    <div className="col-12">
-                        <h2>Specialization</h2>
+                    <h2>
+                        Thông tin cá nhân
+                        <Divider className="bg-primary" />
+                    </h2>
+                    <div className="col-12 p-0">
+                        <p>Chuyên ngành đào tạo</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.specializationId}
@@ -192,89 +196,91 @@ const LecturerForm = forwardRef((props, ref) => {
                                 options={specializationOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Specialization"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn chuyên ngành đào tạo..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Title</h2>
+                    <div className="col-12 p-0">
+                        <p>Chức tước</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.title}
                                 onChange={(e) => handleOnChange('title', e?.target.value)}
                                 options={titleOptions}
-                                placeholder="Select Title"
-                                className="w-full p-4"
+                                optionLabel="label"
+                                optionValue="key"
+                                placeholder="Hãy chọn chức tước theo trình độ"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Position</h2>
+                    <div className="col-12 p-0">
+                        <p>Vai trò</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.position}
+                                optionLabel="label"
+                                optionValue="key"
                                 onChange={(e) => handleOnChange('position', e?.target.value)}
                                 options={positionOptions}
-                                placeholder="Select Position"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn vai trò"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Firstname</h2>
+                    <div className="col-12 p-0">
+                        <p>Họ đệm</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.firstName}
+                                placeholder="Nhập họ đệm của giảng viên..."
                                 onChange={(e) => handleOnChange('firstName', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Lastname</h2>
+                    <div className="col-12 p-0">
+                        <p>Tên giảng viên</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.lastName}
+                                placeholder="Nhập tên của giảng viên..."
                                 onChange={(e) => handleOnChange('lastName', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Date of birth</h2>
+                    <div className="col-12 p-0">
+                        <p>Ngày sinh</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.dob}
+                                placeholder="Nhập ngày sinh..."
                                 onChange={(e) => handleOnChange('dob', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>CI Number</h2>
+                    <div className="col-12 p-0">
+                        <p>Số căn cước công dân</p>
                         <span className="w-full">
                             <InputText
+                                placeholder="Nhập số căn cước công dân..."
                                 value={data?.cinumber}
                                 onChange={(e) => handleOnChange('cinumber', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <hr />
-                    <h2 className="p-2">Address Information</h2>
-                    <div className="col-12">
-                        <h2>Address Line</h2>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.addressLine}
-                                onChange={(e) => handleOnChange('addressLine', e?.target.value)}
-                                className=" w-full p-4"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12">
-                        <h2>Region Name</h2>
+                    <Divider type="dashed" />
+                    <h2>
+                        Thông tin liên hệ
+                        <Divider />
+                    </h2>
+
+                    <div className="col-12 p-0">
+                        <p>Vùng sinh sống</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.regionId}
@@ -282,13 +288,13 @@ const LecturerForm = forwardRef((props, ref) => {
                                 options={regionOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Region"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn vùng sinh sống..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Province Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Tỉnh</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.provinceCode}
@@ -296,13 +302,13 @@ const LecturerForm = forwardRef((props, ref) => {
                                 options={provinceOptions}
                                 optionLabel="name"
                                 optionValue="code"
-                                placeholder="Select Province"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn tỉnh..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>District Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Quận</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.districtCode}
@@ -310,14 +316,14 @@ const LecturerForm = forwardRef((props, ref) => {
                                 options={districtOptions}
                                 optionLabel="name"
                                 optionValue="code"
-                                placeholder="Select District"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn quận..."
+                                className="w-full"
                             />
                         </span>
                     </div>
 
-                    <div className="col-12">
-                        <h2>Ward Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Phường</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.wardCode}
@@ -325,39 +331,51 @@ const LecturerForm = forwardRef((props, ref) => {
                                 options={wardOptions}
                                 optionLabel="name"
                                 optionValue="code"
-                                placeholder="Select Ward"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn phường..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Phone Number</h2>
+                    <div className="col-12 p-0">
+                        <p>Địa chỉ (Số nhà, Tổ, Khu phố, Đường)</p>
+                        <span className="w-full">
+                            <InputText
+                                value={data?.addressLine}
+                                placeholder="Nhập địa chỉ..."
+                                onChange={(e) => handleOnChange('addressLine', e?.target.value)}
+                                className=" w-full"
+                            />
+                        </span>
+                    </div>
+                    <div className="col-12 p-0">
+                        <p>Số điện thoại</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.phone}
+                                placeholder="Nhập số điện thoại..."
                                 onChange={(e) => handleOnChange('phone', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
+                <div className="flex col-12">
                     <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
+                        className={`col-6 p-button-lg font-bold mr-2`}
                         icon={'pi pi-send'}
                         label={'Submit'}
                         onClick={handleOnSubmit}
                     />
 
                     <Button
-                        className="col-6 py-3 p-button-lg font-bold"
+                        className="col-6 p-button-lg font-bold"
                         icon={'pi pi-send'}
                         label={'Cancel'}
                         onClick={handleHideForm}
                     />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

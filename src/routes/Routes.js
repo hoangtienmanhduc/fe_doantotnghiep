@@ -1,18 +1,18 @@
-import Home from '~/pages/Home';
-import Lichtheotiendo from '~/pages/Lichtheotiendo';
-import Ketquahoctap from '~/pages/Ketquahoctap';
-import { DefaultLayoutSidebar, HeaderOnly } from '~/components/Layout';
-import Thanhtoantructuyen from '~/pages/Thanhtoantructuyen';
-import PhieuTongHop from '~/pages/Phieutonghop';
-import Ghichunhacnho from '~/pages/Ghichunhacnho';
-import Dangkyhocphan from '~/pages/Dangkyhocphan';
-import Lichhoc from '~/pages/Lichhoc';
-import Tracuucongno from '~/pages/Tracuucongno';
-import Login from '~/pages/Login';
-import Chuongtrinhkhung from '~/pages/Chuongtrinhkhung';
-import Doimatkhau from '~/pages/Doimatkhau';
-import Thongtincanhan from '~/pages/Thongtincanhan';
-import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien';
+import Home from '~/pages/Home/Home';
+import Lichtheotiendo from '~/pages/Lichtheotiendo/LichTheoTienDo';
+import Ketquahoctap from '~/pages/Ketquahoctap/KetQuaHocTap';
+import { DefaultLayoutSidebar, HeaderOnly } from '~/components/Layout/exportSidebarAndHeader';
+import Thanhtoantructuyen from '~/pages/Thanhtoantructuyen/ThanhToanTrucTuyen';
+import PhieuTongHop from '~/pages/Phieutonghop/PhieuTongHop';
+import Ghichunhacnho from '~/pages/Ghichunhacnho/GhiChuNhacNho';
+import Dangkyhocphan from '~/pages/Dangkyhocphan/DangKyHocPhan';
+import Lichhoc from '~/pages/Lichhoc/LichHoc';
+import Tracuucongno from '~/pages/Tracuucongno/TraCuuCongNo';
+import Login from '~/pages/Login/Login';
+import Chuongtrinhkhung from '~/pages/Chuongtrinhkhung/ChuongTrinhKhung';
+import Doimatkhau from '~/pages/Doimatkhau/DoiMatKhau';
+import Thongtincanhan from '~/pages/Thongtincanhan/ThongTinCaNhan';
+import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien/CapNhatThongTinSinhVien';
 
 //public routes
 const publicRoutes = [

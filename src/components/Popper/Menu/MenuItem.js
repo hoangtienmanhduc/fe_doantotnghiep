@@ -1,14 +1,15 @@
-import Button from '~/components/Button';
-import classNames from 'classnames/bind';
-import styles from './Menu.module.scss';
-
-const cx = classNames.bind(styles);
+import { Button } from 'primereact/button';
 
 function MenuItem({ data }) {
     return (
-        <Button className={cx('menu-item')} to={data.to}>
-            {data.title}
-        </Button>
+        <div className="p-2 col-12">
+            <Button
+                label={data.title}
+                text
+                onClick={() => window.location.assign(data.to)}
+                className="w-full text-left"
+            />
+        </div>
     );
 }
 

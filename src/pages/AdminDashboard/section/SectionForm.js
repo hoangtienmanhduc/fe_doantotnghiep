@@ -15,6 +15,7 @@ import { SectionTypeOptions } from './SectionConstant';
 import { InputNumber } from 'primereact/inputnumber';
 import { getListCourseInfo } from '~/api/course/CourseService';
 import { getListTermInfo } from '~/api/term/TermService';
+import { Divider } from 'primereact/divider';
 
 const QueryKeyCourseOptions = 'Course-Options';
 const QueryKeTermOptions = 'Term-Options';
@@ -60,7 +61,7 @@ const SectionForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Term is required!!',
+                detail: 'Học kì không được để trống!!',
             });
             isError = true;
         }
@@ -69,7 +70,7 @@ const SectionForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Course is required!!',
+                detail: 'Môn học không được để trống!!',
             });
             isError = true;
         }
@@ -78,7 +79,7 @@ const SectionForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Section Type is required!!',
+                detail: 'Loại học phần không được để trống!!',
             });
             isError = true;
         }
@@ -87,7 +88,7 @@ const SectionForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Name is required!!',
+                detail: 'Tên học phần không được để trống!!',
             });
             isError = true;
         }
@@ -96,7 +97,7 @@ const SectionForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Theory Periods is required!!',
+                detail: 'Số tiết lý thuyết không được để trống!!',
             });
             isError = true;
         }
@@ -109,10 +110,10 @@ const SectionForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Section Successful!!',
+                        detail: 'Thao tác cập nhật học phần thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -130,11 +131,12 @@ const SectionForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Section Form</strong>
+                <h3 className="p-3 m-0 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} học phần`}
                     <hr />
                 </h3>
             }
+            pt={{ header: { className: 'p-0' } }}
             onHide={handleHideForm}
             style={{
                 width: '60vw',
@@ -144,8 +146,8 @@ const SectionForm = forwardRef((props, ref) => {
         >
             <div className="m-3">
                 <div className="col-12">
-                    <div className="col-12">
-                        <h2>Term</h2>
+                    <div className="col-12 p-0">
+                        <p>Học kì</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.termId}
@@ -153,13 +155,13 @@ const SectionForm = forwardRef((props, ref) => {
                                 options={termOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Term"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn học kì cho học phần"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Course</h2>
+                    <div className="col-12 p-0">
+                        <p>Môn học</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.courseId}
@@ -167,71 +169,76 @@ const SectionForm = forwardRef((props, ref) => {
                                 options={courseOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Course"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn môn học của học phần"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Section Type</h2>
+                    <div className="col-12 p-0">
+                        <p>Loại học phần</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.sectionType}
                                 onChange={(e) => handleOnChange('sectionType', e?.target.value)}
                                 options={SectionTypeOptions}
-                                placeholder="Select Section Type"
-                                className="w-full p-4"
+                                optionLabel="label"
+                                optionValue="key"
+                                placeholder="Hãy chọn loại học phần"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Name</h2>
+                    <div className="col-12 p-0">
+                        <p>Tên học phần</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.name}
+                                placeholder="Nhập tên học phần..."
                                 onChange={(e) => handleOnChange('name', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Theory Periods</h2>
+                    <div className="col-12 p-0">
+                        <p>Số tiết lý thuyết</p>
                         <span className="w-full">
                             <InputNumber
                                 value={data?.theoryPeriods}
+                                placeholder="Nhập số tiết lý thuyết..."
                                 onChange={(e) => handleOnChange('theoryPeriods', e?.value)}
-                                className="w-full h-5rem"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Practice Periods</h2>
+                    <div className="col-12 p-0">
+                        <p>Số tiết thực hành</p>
                         <span className="w-full">
                             <InputNumber
                                 value={data?.practicePeriods}
+                                placeholder="Nhập số tiết thực hành..."
                                 onChange={(e) => handleOnChange('practicePeriods', e?.value)}
-                                className="w-full h-5rem"
+                                className="w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
+                <div className="flex col-12">
                     <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
+                        className={`col-6 p-button-lg font-bold mr-2`}
                         icon={'pi pi-send'}
                         label={'Submit'}
                         onClick={handleOnSubmit}
                     />
 
                     <Button
-                        className="col-6 py-3 p-button-lg font-bold"
-                        icon={'pi pi-send'}
+                        className="col-6 p-button-lg font-bold"
+                        icon={'pi pi-times'}
                         label={'Cancel'}
                         onClick={handleHideForm}
                     />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });

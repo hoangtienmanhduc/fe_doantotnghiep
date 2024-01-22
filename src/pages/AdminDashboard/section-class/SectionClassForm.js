@@ -61,7 +61,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Lecturer is required!!',
+                detail: 'Giảng viên không được để trống!!',
             });
             isError = true;
         }
@@ -70,7 +70,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Section is required!!',
+                detail: 'Học phần của lớp không được để trống!!',
             });
             isError = true;
         }
@@ -79,7 +79,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Section Class Type is required!!',
+                detail: 'Loại lớp học phần không được để trống!!',
             });
             isError = true;
         }
@@ -88,7 +88,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Room is required!!',
+                detail: 'Phòng học không được để trống!!',
             });
             isError = true;
         }
@@ -97,7 +97,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Period From is required!!',
+                detail: 'Tiết bắt đầu không được để trống!!',
             });
             isError = true;
         }
@@ -106,7 +106,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Period To is required!!',
+                detail: 'Tiết kết thúc không được để trống!!',
             });
             isError = true;
         }
@@ -115,7 +115,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Day In Week is required !!',
+                detail: 'Thứ trong tuần không được để trống!!',
             });
             isError = true;
         }
@@ -124,7 +124,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Number Of Students is required !!',
+                detail: 'Tổng sinh viên tối đa của lớp không được để trống!!',
             });
             isError = true;
         }
@@ -132,7 +132,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Started At is required !!',
+                detail: 'Thời gian mở lớp không được để trống!!',
             });
             isError = true;
         }
@@ -145,10 +145,10 @@ const SectionClassForm = forwardRef((props, ref) => {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Create Or Update Section Class Successful!!',
+                        detail: 'Thao tác cập nhật lớp học phần thành công!!',
                     });
                 } catch (err) {
-                    console.log('Fail to reload table');
+                    console.log('Tải lại bảng không thành công');
                 }
 
                 handleHideForm();
@@ -166,8 +166,8 @@ const SectionClassForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-3 font-bold">
-                    <strong>Section Class Form</strong>
+                <h3 className="m-0 p-3 font-bold">
+                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} lớp học phần`}
                     <hr />
                 </h3>
             }
@@ -175,13 +175,14 @@ const SectionClassForm = forwardRef((props, ref) => {
             style={{
                 width: '60vw',
             }}
+            pt={{ header: { className: 'p-0' } }}
             breakpoints={{ '960px': '75vw', '641px': '100vw' }}
             visible={visible}
         >
-            <div className="m-3">
+            <div>
                 <div className="col-12">
-                    <div className="col-12">
-                        <h2>Section</h2>
+                    <div className="col-12 p-0">
+                        <p>Học phần</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data.sectionId}
@@ -189,13 +190,13 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 options={sectionOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Section"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn học phần của lớp..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Lecturer</h2>
+                    <div className="col-12 p-0">
+                        <p>Giảng viên phụ trách</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.lecturerId}
@@ -203,103 +204,110 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 options={lecturerOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                placeholder="Select Require Lecturer"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn giảng viên phụ trách..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Section Class Type</h2>
+                    <div className="col-12 p-0">
+                        <p>Loại lớp học phần</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.sectionClassType}
                                 onChange={(e) => handleOnChange('sectionClassType', e?.target.value)}
                                 options={SectionClassTypeOptions}
-                                placeholder="Select Section Class Type"
-                                className="w-full p-4"
+                                optionLabel="label"
+                                optionValue="key"
+                                placeholder="Hãy chọn loại lớp học phần..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Room</h2>
+                    <div className="col-12 p-0">
+                        <p>Phòng học</p>
                         <span className="w-full">
                             <InputText
                                 value={data?.room}
+                                placeholder="Nhập phòng học..."
                                 onChange={(e) => handleOnChange('room', e?.target.value)}
-                                className=" w-full p-4"
+                                className=" w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Period From</h2>
+                    <div className="col-12 p-0">
+                        <p>Tiết bắt đầu</p>
                         <span className="w-full">
                             <InputNumber
                                 value={data?.periodFrom}
+                                placeholder="Nhập tiết bắt đầu tiết học..."
                                 onChange={(e) => handleOnChange('periodFrom', e?.value)}
-                                className="w-full h-5rem"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Period To</h2>
+                    <div className="col-12 p-0">
+                        <p>Tiết kết thúc</p>
                         <span className="w-full">
                             <InputNumber
                                 value={data?.periodTo}
+                                placeholder="Nhập tiết kết thúc tiết học..."
                                 onChange={(e) => handleOnChange('periodTo', e?.value)}
-                                className="w-full h-5rem"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Day In Week</h2>
+                    <div className="col-12 p-0">
+                        <p>Thứ trong tuần</p>
                         <span className="w-full">
                             <Dropdown
                                 value={data?.dayInWeek}
                                 onChange={(e) => handleOnChange('dayInWeek', e?.target.value)}
                                 options={dayInWeekOptions}
-                                placeholder="Select Day in Week"
-                                className="w-full p-4"
+                                placeholder="Hãy chọn thứ trong tuần..."
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Number Of Students</h2>
+                    <div className="col-12 p-0">
+                        <p>Sinh viên tối đa cho lớp học</p>
                         <span className="w-full">
                             <InputNumber
                                 value={data?.numberOfStudents}
+                                placeholder="Nhập sinh viên tối đa cho lớp học"
                                 onChange={(e) => handleOnChange('numberOfStudents', e?.value)}
-                                className="w-full h-5rem"
+                                className="w-full"
                             />
                         </span>
                     </div>
-                    <div className="col-12">
-                        <h2>Start at</h2>
+                    <div className="col-12 p-0">
+                        <p>Thời gian bắt đầu lớp học</p>
                         <span className="w-full">
                             <Calendar
                                 value={data?.startedAt}
+                                placeholder="Hãy chọn thời gian bắt đầu tiết học..."
                                 onChange={(e) => handleOnChange('startedAt', e?.value)}
-                                className="w-full h-5rem"
+                                className="w-full"
                             />
                         </span>
                     </div>
                 </div>
-                <div className="flex col-12 py-3">
+                <div className="flex col-12">
                     <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
+                        className={`col-6 p-button-lg font-bold mr-2`}
                         icon={'pi pi-send'}
                         label={'Submit'}
                         onClick={handleOnSubmit}
                     />
 
                     <Button
-                        className="col-6 py-3 p-button-lg font-bold"
+                        className="col-6 p-button-lg font-bold"
                         icon={'pi pi-send'}
                         label={'Cancel'}
                         onClick={handleHideForm}
                     />
                 </div>
             </div>
-            <Toast ref={toast} className="p-3" />
+            <Toast ref={toast} />
         </Dialog>
     );
 });
