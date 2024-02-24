@@ -12,6 +12,7 @@ import { getUserId } from '~/components/authentication/AuthUtils';
 import { InputMask } from 'primereact/inputmask';
 import { Calendar } from 'primereact/calendar';
 import { Divider } from 'primereact/divider';
+import moment from 'moment';
 
 const AcademicYearForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
@@ -33,35 +34,121 @@ const AcademicYearForm = forwardRef((props, ref) => {
     }, []);
 
     const handleOnSubmit = useCallback(async () => {
-        let toPostData = {
-            ...data,
-        };
-
+        debugger;
         let isError = false;
-        if (!data?.name) {
+        if (!data?.academicYearName) {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Niên khoá của năm học không được để trống!!',
+                detail: 'Tên niên khoá của năm học không được để trống!!',
             });
             isError = true;
         }
 
-        if (!isError) {
-            const courseData = await createOrUpdateGenericAcademicYear(getUserId(), toPostData);
-            if (!!courseData?.id) {
-                try {
-                    toast.current.show({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: 'Thao tác cập nhật niên khoá thành công!!',
-                    });
-                } catch (err) {
-                    console.log('Tải lại bảng không thành công');
-                }
+        if (!data?.firstTermName) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Tên của học kỳ đầu không được để trống!!',
+            });
+            isError = true;
+        }
 
-                handleHideForm();
+        if (!data?.firstTermStart) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Thời gian bắt đầu của học kỳ đầu không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.firstTermEnd) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Thời gian kết thúc của học kỳ đầu không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.secondTermName) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Tên của học kỳ hai không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.secondTermStart) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Thời gian bắt đầu của học kỳ hai không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.secondTermEnd) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Thời gian kết thúc của học kỳ hai không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.thirdTermName) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Tên của học kỳ ba không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.thirdTermStart) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Thời gian bắt đầu của học kỳ ba không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (!data?.thirdTermEnd) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Thời gian kết thúc của học kỳ ba không được để trống!!',
+            });
+            isError = true;
+        }
+
+        if (isError) {
+            return;
+        }
+
+        const toPostData = {
+            id: data?.id ? data.id : null,
+            name: data?.academicYearName,
+            ...data,
+        };
+
+        const courseData = await createOrUpdateGenericAcademicYear(getUserId(), toPostData);
+        if (!!courseData?.id) {
+            try {
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Thao tác cập nhật niên khoá thành công!!',
+                });
+            } catch (err) {
+                console.log('Tải lại bảng không thành công');
             }
+
+            handleHideForm();
         }
     }, [data, handleHideForm]);
 
@@ -77,7 +164,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
             <Dialog
                 pt={{ header: { className: 'p-0' } }}
                 header={
-                    <h3 className="m-0 p-3 font-bold">
+                    <h3 className="m-0 pb-0 p-3 font-bold">
                         {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} niên khoá`}
                         <hr />
                     </h3>
@@ -104,38 +191,11 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                     className="w-full"
                                     id="school-year"
                                     mask="9999-9999"
-                                    placeholder="9999-9999"
-                                    value={data?.name}
-                                    onChange={(e) => handleOnChange('name', e?.target.value)}
+                                    placeholder="20xx-20xx"
+                                    value={data?.academicYearName}
+                                    onChange={(e) => handleOnChange('academicYearName', e.target.value)}
                                 ></InputMask>
                             </span>
-                        </div>
-                        <div className="flex justify-content-between align-items-center col-12 p-0">
-                            <div className="col-5 p-0">
-                                <p>Thời gian bắt đầu năm học</p>
-                                <span className="w-full">
-                                    <Calendar
-                                        className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('academicYearStartTime', e?.target.value)}
-                                    />
-                                </span>
-                            </div>
-                            <Divider align="center" layout="vertical">
-                                <span className="p-tag">Đến</span>
-                            </Divider>
-                            <div className="col-5 p-0">
-                                <p>Thời gian kết thúc năm học</p>
-                                <span className="w-full">
-                                    <InputMask
-                                        className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('academicYearEndTime', e?.target.value)}
-                                    ></InputMask>
-                                </span>
-                            </div>
                         </div>
                         <Divider align="left">
                             <div className="inline-flex align-items-center">
@@ -144,12 +204,14 @@ const AcademicYearForm = forwardRef((props, ref) => {
                             </div>
                         </Divider>
                         <div className="col-12 p-0">
-                            <p>Tên học kỳ 1</p>
+                            <p>
+                                <strong>Tên học kỳ 1</strong>
+                            </p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.name}
+                                    value={data?.firstTermName}
                                     placeholder="Nhập tên học kỳ I... "
-                                    onChange={(e) => handleOnChange('name', e?.target.value)}
+                                    onChange={(e) => setData({ ...data, firstTermName: e.target.value })}
                                     className="w-full"
                                 />
                             </span>
@@ -159,10 +221,10 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                 <p>Thời gian bắt đầu học kỳ 1</p>
                                 <span className="w-full">
                                     <Calendar
+                                        placeholder="Nhập thời gian bắt đầu học kỳ 1"
                                         className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('termOneStartTime', e?.target.value)}
+                                        value={moment(data.firstTermStart, 'dd/MM/yyyy').toDate() || null}
+                                        onChange={(e) => setData({ ...data, firstTermStart: e.value })}
                                     />
                                 </span>
                             </div>
@@ -172,23 +234,25 @@ const AcademicYearForm = forwardRef((props, ref) => {
                             <div className="col-5 p-0">
                                 <p>Thời gian kết thúc học kỳ 1</p>
                                 <span className="w-full">
-                                    <InputMask
+                                    <Calendar
+                                        placeholder="Nhập thời gian kết thúc học kỳ 1"
                                         className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('termOneEndTime', e?.target.value)}
-                                    ></InputMask>
+                                        value={moment(data.firstTermEnd, 'dd/MM/yyyy').toDate() || null}
+                                        onChange={(e) => setData({ ...data, firstTermEnd: e.value })}
+                                    ></Calendar>
                                 </span>
                             </div>
                         </div>
                         <div className="col-12 p-0">
-                            <p>Tên học kỳ 2</p>
+                            <p>
+                                <strong>Tên học kỳ 2</strong>
+                            </p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.name}
+                                    value={data?.secondTermName}
                                     placeholder="Nhập tên học kỳ II... "
-                                    onChange={(e) => handleOnChange('name', e?.target.value)}
                                     className="w-full"
+                                    onChange={(e) => setData({ ...data, secondTermName: e.target.value })}
                                 />
                             </span>
                         </div>
@@ -197,10 +261,10 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                 <p>Thời gian bắt đầu học kỳ 2</p>
                                 <span className="w-full">
                                     <Calendar
+                                        placeholder="Nhập thời gian bắt đầu học kỳ 2"
                                         className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('termTwoStartTime', e?.target.value)}
+                                        value={moment(data.secondTermStart, 'dd/MM/yyyy').toDate() || null}
+                                        onChange={(e) => setData({ ...data, secondTermStart: e.value })}
                                     />
                                 </span>
                             </div>
@@ -210,23 +274,25 @@ const AcademicYearForm = forwardRef((props, ref) => {
                             <div className="col-5 p-0">
                                 <p>Thời gian kết thúc học kỳ 2</p>
                                 <span className="w-full">
-                                    <InputMask
+                                    <Calendar
+                                        placeholder="Nhập thời gian kết thúc học kỳ 2"
                                         className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('termTwoEndTime', e?.target.value)}
-                                    ></InputMask>
+                                        value={moment(data.secondTermEnd, 'dd/MM/yyyy').toDate() || null}
+                                        onChange={(e) => setData({ ...data, secondTermEnd: e.value })}
+                                    ></Calendar>
                                 </span>
                             </div>
                         </div>
                         <div className="col-12 p-0">
-                            <p>Tên học kỳ 3</p>
+                            <p>
+                                <strong>Tên học kỳ 3</strong>
+                            </p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.name}
+                                    value={data?.thirdTermName}
                                     placeholder="Nhập tên học kỳ III... "
-                                    onChange={(e) => handleOnChange('name', e?.target.value)}
                                     className="w-full"
+                                    onChange={(e) => setData({ ...data, thirdTermName: e.target.value })}
                                 />
                             </span>
                         </div>
@@ -236,9 +302,9 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                 <span className="w-full">
                                     <Calendar
                                         className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('termThreeStartTime', e?.target.value)}
+                                        placeholder="Nhập thời gian bắt đầu học kỳ 3"
+                                        value={moment(data.thirdTermStart, 'dd/MM/yyyy').toDate() || null}
+                                        onChange={(e) => setData({ ...data, thirdTermStart: e.value })}
                                     />
                                 </span>
                             </div>
@@ -248,12 +314,12 @@ const AcademicYearForm = forwardRef((props, ref) => {
                             <div className="col-5 p-0">
                                 <p>Thời gian kết thúc học kỳ 3</p>
                                 <span className="w-full">
-                                    <InputMask
+                                    <Calendar
+                                        placeholder="Nhập thời gian kết thúc học kỳ 3"
                                         className="w-full"
-                                        showTime
-                                        hourFormat="24"
-                                        onChange={(e) => handleOnChange('termThreeEndTime', e?.target.value)}
-                                    ></InputMask>
+                                        value={moment(data.thirdTermEnd, 'dd/MM/yyyy').toDate() || null}
+                                        onChange={(e) => setData({ ...data, thirdTermEnd: e.value })}
+                                    ></Calendar>
                                 </span>
                             </div>
                         </div>

@@ -30,7 +30,16 @@ const AcademicYearManagement = () => {
 
     const academicRef = useRef(null);
     const columns = [
-        { field: 'name', header: 'Niên khoá' },
+        { field: 'academicYearName', header: 'Niên khoá' },
+        { field: 'firstTermName', header: 'Tên học kỳ 1' },
+        { field: 'firstTermStart', header: 'Thời gian bắt đầu HK1' },
+        { field: 'firstTermEnd', header: 'Thời gian kết thúc HK1' },
+        { field: 'secondTermName', header: 'Tên học kỳ 2' },
+        { field: 'secondTermStart', header: 'Thời gian bắt đầu HK2' },
+        { field: 'secondTermEnd', header: 'Thời gian kết thúc HK2' },
+        { field: 'thirdTermName', header: 'Tên học kỳ 3' },
+        { field: 'thirdTermStart', header: 'Thời gian bắt đầu HK3' },
+        { field: 'thirdTermEnd', header: 'Thời gian kết thúc HK3' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -140,7 +149,6 @@ const AcademicYearManagement = () => {
                                             raised
                                             onClick={() => academicRef.current.showForm(rowData)}
                                         />
-                                        <Button text icon="pi pi-times" rounded raised onClick={deleteConfirm} />
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
