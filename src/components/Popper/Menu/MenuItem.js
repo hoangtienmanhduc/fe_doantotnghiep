@@ -6,7 +6,12 @@ function MenuItem({ data }) {
             <Button
                 label={data.title}
                 text
-                onClick={() => window.location.assign(data.to)}
+                onClick={() => {
+                    if (!!data?.command) {
+                        data.command();
+                    }
+                    window.location.assign(data.to);
+                }}
                 className="w-full text-left"
             />
         </div>

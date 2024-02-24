@@ -26,6 +26,7 @@ import Chuongtrinhkhung from '~/pages/Chuongtrinhkhung/ChuongTrinhKhung';
 import Doimatkhau from '~/pages/Doimatkhau/DoiMatKhau';
 import Thongtincanhan from '~/pages/Thongtincanhan/ThongTinCaNhan';
 import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien/CapNhatThongTinSinhVien';
+import { getAccessToken } from './components/authentication/AuthUtils';
 export const UserRoles = {
     ADMIN: 'Admin',
     LECTURER: 'Lecturer',
@@ -48,22 +49,77 @@ function App() {
 
     const routes = useMemo(() => {
         return [
-            { path: '/', component: Login, layout: null },
-            { path: '/lecturer', component: AdminDashboard },
-            { path: '/admin', component: AdminDashboard },
-            { path: '/capnhatthongtinsinhvien', component: Capnhatthongtinsinhvien },
-            { path: '/doimatkhau', component: Doimatkhau },
-            { path: '/home', component: Home },
-            { path: '/thongtincanhan', component: Thongtincanhan, layout: DefaultLayoutSidebar },
-            { path: '/chuongtrinhkhung', component: Chuongtrinhkhung, layout: DefaultLayoutSidebar },
-            { path: '/lichtheotiendo', component: Lichtheotiendo },
-            { path: '/ketquahoctap', component: Ketquahoctap, layout: HeaderOnly },
-            { path: '/phieutonghop', component: PhieuTongHop, layout: DefaultLayoutSidebar },
-            { path: '/lichhoc', component: Lichhoc, layout: DefaultLayoutSidebar },
-            { path: '/thanhtoantructuyen', component: Thanhtoantructuyen, layout: DefaultLayoutSidebar },
-            { path: '/ghichunhacnho', component: Ghichunhacnho, layout: DefaultLayoutSidebar },
-            { path: '/dangkyhocphan', component: Dangkyhocphan },
-            { path: '/tracuucongno', component: Tracuucongno, layout: HeaderOnly },
+            { path: '/', component: !getAccessToken() ? Login : Home, layout: !getAccessToken() && null },
+            {
+                path: '/lecturer',
+                component: !getAccessToken() ? Login : AdminDashboard,
+                layout: !getAccessToken() && null,
+            },
+            {
+                path: '/admin',
+                component: !getAccessToken() ? Login : AdminDashboard,
+                layout: !getAccessToken() && null,
+            },
+            {
+                path: '/capnhatthongtinsinhvien',
+                component: !getAccessToken() ? Login : Capnhatthongtinsinhvien,
+                layout: !getAccessToken() && null,
+            },
+            {
+                path: '/doimatkhau',
+                component: !getAccessToken() ? Login : Doimatkhau,
+                layout: !getAccessToken() && null,
+            },
+            {
+                path: '/thongtincanhan',
+                component: !getAccessToken() ? Login : Thongtincanhan,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/chuongtrinhkhung',
+                component: !getAccessToken() ? Login : Chuongtrinhkhung,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/lichtheotiendo',
+                component: !getAccessToken() ? Login : Lichtheotiendo,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/ketquahoctap',
+                component: !getAccessToken() ? Login : Ketquahoctap,
+                layout: !getAccessToken() ? null : HeaderOnly,
+            },
+            {
+                path: '/phieutonghop',
+                component: !getAccessToken() ? Login : PhieuTongHop,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/lichhoc',
+                component: !getAccessToken() ? Login : Lichhoc,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/thanhtoantructuyen',
+                component: !getAccessToken() ? Login : Thanhtoantructuyen,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/ghichunhacnho',
+                component: !getAccessToken() ? Login : Ghichunhacnho,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/dangkyhocphan',
+                component: !getAccessToken() ? Login : Dangkyhocphan,
+                layout: !getAccessToken() && null,
+            },
+            {
+                path: '/tracuucongno',
+                component: !getAccessToken() ? Login : Tracuucongno,
+                layout: !getAccessToken() ? null : HeaderOnly,
+            },
         ];
     }, []);
 

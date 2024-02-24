@@ -4,6 +4,7 @@ import React from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
+import { clearStorage } from '~/components/authentication/AuthUtils';
 
 const MENU_ITEMS = [
     {
@@ -15,7 +16,12 @@ const MENU_ITEMS = [
         to: '/doimatkhau',
     },
     {
+        title: 'Giao diện quản lý',
+        to: '/admin',
+    },
+    {
         title: 'Đăng xuất',
+        command: () => clearStorage(),
         to: '/',
     },
 ];
@@ -39,7 +45,7 @@ function Header() {
                         <div className="flex justify-content-between align-items-center">
                             <div className="p-2">
                                 <Button
-                                    onClick={() => window.location.assign('/home')}
+                                    onClick={() => window.location.assign('/')}
                                     text
                                     icon="pi pi-home"
                                     label="Trang chủ"

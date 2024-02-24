@@ -15,21 +15,21 @@ import { Button } from 'primereact/button';
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('academicYearManagement');
     const tabList = [
-        { key: 'academicYearManagement', label: 'Academic Year Management', icon: 'pi pi-th-large', component: '' },
-        { key: 'facultyManagement', label: 'Faculty Management', icon: 'pi pi-th-large', component: '' },
-        { key: 'specializationManagement', label: 'Specialization Management', icon: 'pi pi-th-large', component: '' },
+        { key: 'academicYearManagement', label: 'QUẢN LÝ NIÊN KHOÁ', icon: 'pi pi-th-large' },
+        { key: 'facultyManagement', label: 'QUẢN LÝ KHOA', icon: 'pi pi-th-large' },
+        { key: 'specializationManagement', label: 'QUẢN LÝ CHUYÊN NGÀNH', icon: 'pi pi-th-large' },
         {
             key: 'specializationClassManagement',
-            label: 'Specialization Class Management',
+            label: 'QUẢN LÝ LỚP CHUYÊN NGÀNH',
             icon: 'pi pi-th-large',
             component: '',
         },
-        { key: 'courseManagement', label: 'Course Management', icon: 'pi pi-tag', component: CouseManagement },
-        { key: 'sectionManagement', label: 'Section Management', icon: 'pi pi-tags', component: '' },
-        { key: 'sectionClassManagement', label: 'Section Class Management', icon: 'pi pi-tablet', component: '' },
+        { key: 'courseManagement', label: 'QUẢN LÝ MÔN HỌC', icon: 'pi pi-tag' },
+        { key: 'sectionManagement', label: 'QUẢN LÝ HỌC PHẦN', icon: 'pi pi-tags' },
+        { key: 'sectionClassManagement', label: 'QUẢN LÝ LỚP HỌC PHẦN', icon: 'pi pi-tablet' },
 
-        { key: 'studentManagement', label: 'Student Management', icon: 'pi pi-user', component: '' },
-        { key: 'lecturerManagement', label: 'Lecturer Management', icon: 'pi pi-users', component: '' },
+        { key: 'studentManagement', label: 'QUẢN LÝ SINH VIÊN', icon: 'pi pi-user' },
+        { key: 'lecturerManagement', label: 'QUẢN LÝ GIẢNG VIÊN', icon: 'pi pi-users' },
     ];
 
     const handleOnClick = useCallback((item) => {
@@ -40,7 +40,7 @@ const AdminDashboard = () => {
         <React.Fragment>
             <div className="w-full">
                 <div className="flex">
-                    <div className="col-3 bg-white border-round-xl ">
+                    <div className="col-3 bg-white border-round-xl">
                         <h2 className="text-cyan-200 text-center">QUẢN LÝ HỆ THỐNG</h2> <hr className="mb-3" />
                         <ul className="flex flex-column list-none p-0 m-0 overflow-hidden h-full">
                             {tabList.map((item) => (

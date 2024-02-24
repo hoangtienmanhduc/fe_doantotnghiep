@@ -7,6 +7,8 @@ import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
 import AcademicYearForm from './AcademicYearForm';
 import { getPageAcademicYearInfo } from '~/api/academic-year/AcademicYearService';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
 
 const QueryKey = 'Academic-Year-Management';
 const initialPageable = {
@@ -17,7 +19,7 @@ const initialPageable = {
 };
 const AcademicYearManagement = () => {
     const [pageable, setPageable] = useState({ ...initialPageable });
-
+    const toast = useRef();
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
         () => getPageAcademicYearInfo(getUserId()),
@@ -68,6 +70,31 @@ const AcademicYearManagement = () => {
         }
     }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
 
+    const accept = () => {
+        toast.current.show({
+            severity: 'info',
+            summary: 'Confirmed',
+            detail: 'Xoá niên khoá thành công !!',
+            life: 3000,
+        });
+    };
+
+    const reject = () => {
+        toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'Huỷ xoá niên khoá', life: 3000 });
+    };
+
+    const deleteConfirm = () => {
+        confirmDialog({
+            message: 'Bạn có chắc xoá niên khoá này không?',
+            header: 'Xác nhân xoá',
+            icon: 'pi pi-info-circle',
+            defaultFocus: 'reject',
+            acceptClassName: 'p-button-danger',
+            accept,
+            reject,
+        });
+    };
+
     return (
         <React.Fragment>
             <div className="col-12">
@@ -106,12 +133,14 @@ const AcademicYearManagement = () => {
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
+                                            className="mr-2"
                                             text
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
                                             onClick={() => academicRef.current.showForm(rowData)}
                                         />
+                                        <Button text icon="pi pi-times" rounded raised onClick={deleteConfirm} />
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
@@ -124,6 +153,8 @@ const AcademicYearManagement = () => {
                 </DataTable>
             </div>
             <AcademicYearForm ref={academicRef} />
+            <ConfirmDialog />
+            <Toast ref={toast} />
         </React.Fragment>
     );
 };
