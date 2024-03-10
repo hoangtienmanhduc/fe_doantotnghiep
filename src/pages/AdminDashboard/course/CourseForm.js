@@ -166,9 +166,9 @@ const CourseForm = forwardRef((props, ref) => {
                 </div>
                 <hr />
                 <div className="flex col-12">
-                    <Button className={`col-6 mr-2`} icon={'pi pi-send'} label={'Submit'} onClick={handleOnSubmit} />
+                    <Button className={`col-6 mr-2`} icon={'pi pi-send'} label={'Xác nhận'} onClick={handleOnSubmit} />
 
-                    <Button className="col-6" icon={'pi pi-times'} label={'Cancel'} onClick={handleHideForm} />
+                    <Button className="col-6" icon={'pi pi-times'} label={'Huỷ bỏ'} onClick={handleHideForm} />
                 </div>
             </div>
             <Toast ref={toast} />

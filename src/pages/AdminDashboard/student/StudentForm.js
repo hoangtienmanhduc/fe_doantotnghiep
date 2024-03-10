@@ -367,14 +367,14 @@ const StudentForm = forwardRef((props, ref) => {
                     <Button
                         className={`col-6 p-button-lg font-bold mr-2`}
                         icon={'pi pi-send'}
-                        label={'Submit'}
+                        label={'Xác nhận'}
                         onClick={handleOnSubmit}
                     />
 
                     <Button
                         className="col-6 p-button-lg font-bold"
                         icon={'pi pi-send'}
-                        label={'Cancel'}
+                        label={'Huỷ bỏ'}
                         onClick={handleHideForm}
                     />
                 </div>

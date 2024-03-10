@@ -74,6 +74,7 @@ const SpecializationForm = forwardRef((props, ref) => {
             let toPostData = {
                 ...data,
             };
+            debugger;
             const specializationData = await createOrUpdateGenericSpecialization(getUserId(), toPostData);
 
             if (specializationData?.id) {
@@ -100,77 +101,81 @@ const SpecializationForm = forwardRef((props, ref) => {
     );
 
     return (
-        <Dialog
-            pt={{ header: { className: 'p-0' } }}
-            header={
-                <h3 className="m-0 p-3 font-bold">
-                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} chuyên ngành`}
+        <>
+            <Dialog
+                pt={{ header: { className: 'p-0' } }}
+                header={
+                    <h3 className="m-0 pb-0 p-3 font-bold">
+                        {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} chuyên ngành`}
+                        <hr />
+                    </h3>
+                }
+                onHide={handleHideForm}
+                style={{
+                    width: '60vw',
+                }}
+                breakpoints={{ '960px': '75vw', '641px': '100vw' }}
+                visible={visible}
+            >
+                <div>
+                    <div className="col-12 p-0">
+                        <div className="col-12 p-0">
+                            <p>Khoa</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.facultyId}
+                                    onChange={(e) => handleOnChange('specializationId', e?.target.value)}
+                                    options={facultyOptions}
+                                    optionLabel="name"
+                                    optionValue="id"
+                                    placeholder="Hãy chọn khoa cho chuyên ngành..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Tên chuyên ngành</p>
+                            <span className="w-full">
+                                <InputText
+                                    value={data?.name}
+                                    placeholder="Nhập tên chuyên ngành..."
+                                    onChange={(e) => handleOnChange('name', e?.target.value)}
+                                    className=" w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Mã chuyên ngành</p>
+                            <span className="w-full">
+                                <InputText
+                                    value={data?.code}
+                                    placeholder="Nhập mã chuyên ngành..."
+                                    onChange={(e) => handleOnChange('code', e?.target.value)}
+                                    className=" w-full"
+                                />
+                            </span>
+                        </div>
+                    </div>
                     <hr />
-                </h3>
-            }
-            onHide={handleHideForm}
-            style={{
-                width: '60vw',
-            }}
-            breakpoints={{ '960px': '75vw', '641px': '100vw' }}
-            visible={visible}
-        >
-            <div className="m-3">
-                <div className="col-12">
-                    <div className="col-12 p-0">
-                        <p>Khoa</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.lecturerId}
-                                onChange={(e) => handleOnChange('specializationId', e?.target.value)}
-                                options={facultyOptions}
-                                optionLabel="name"
-                                placeholder="Hãy chọn khoa cho chuyên ngành..."
-                                className="w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Tên chuyên ngành</p>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.name}
-                                placeholder="Nhập tên chuyên ngành..."
-                                onChange={(e) => handleOnChange('name', e?.target.value)}
-                                className=" w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Mã chuyên ngành</p>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.code}
-                                placeholder="Nhập mã chuyên ngành..."
-                                onChange={(e) => handleOnChange('code', e?.target.value)}
-                                className=" w-full"
-                            />
-                        </span>
-                    </div>
-                </div>
-                <div className="flex col-12">
-                    <Button
-                        className={`col-6 py-3 p-button-lg font-bold mr-2`}
-                        icon={'pi pi-send'}
-                        label={'Submit'}
-                        onClick={handleOnSubmit}
-                    />
+                    <div className="flex col-12">
+                        <Button
+                            className={`col-6 py-2 p-button-lg font-bold mr-2`}
+                            icon={'pi pi-send'}
+                            label={'Xác nhận'}
+                            onClick={handleOnSubmit}
+                        />
 
-                    <Button
-                        className="col-6 py-3 p-button-lg font-bold"
-                        icon={'pi pi-send'}
-                        label={'Cancel'}
-                        onClick={handleHideForm}
-                    />
+                        <Button
+                            className="col-6 py-2 p-button-lg font-bold"
+                            icon={'pi pi-times'}
+                            label={'Huỷ bỏ'}
+                            onClick={handleHideForm}
+                        />
+                    </div>
                 </div>
-            </div>
+            </Dialog>
             <Toast ref={toast} />
-        </Dialog>
+        </>
     );
 });
 export default SpecializationForm;

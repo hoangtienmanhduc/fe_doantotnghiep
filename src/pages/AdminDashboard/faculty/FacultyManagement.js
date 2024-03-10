@@ -7,6 +7,7 @@ import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
 import { getPageFacultyInfo } from '~/api/faculty/FacultyService';
 import FacultyForm from './FacultyForm';
+import moment from 'moment';
 const initialPageable = {
     rows: 10,
     pageNumber: 0,
@@ -29,8 +30,13 @@ const FacultyManagement = () => {
 
     const facultyRef = useRef(null);
     const columns = [
+        { field: 'code', header: 'Mã khoa' },
         { field: 'name', header: 'Tên khoa' },
-        { field: 'logo', header: 'Hình ảnh' },
+        { field: 'establishmentDate', header: 'Ngày thành lập' },
+        { field: 'logo', header: 'Logo' },
+        { field: 'headName', header: 'Tên trưởng khoa' },
+        { field: 'headEmail', header: 'Email trưởng khoa' },
+        { field: 'headPhone', header: 'Số điện thoại trưởng khoa' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -116,9 +122,23 @@ const FacultyManagement = () => {
                                             onClick={() => facultyRef.current.showForm(rowData)}
                                         />
                                     </div>
+                                ) : col.field === 'logo' ? (
+                                    rowData[col.field] ? (
+                                        <div className="flex justify-content-center" style={{ width: '100%' }}>
+                                            <div className="p-1 border-round-lg bg-gray-50 hover:bg-white">
+                                                <img src={rowData[col.field]} height={50} width={50} alt={'logo'} />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        '-'
+                                    )
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field] ? rowData[col.field] : '-'}
+                                        {rowData[col.field]
+                                            ? col.field !== 'establishmentDate'
+                                                ? rowData[col.field]
+                                                : moment(rowData[col.field]).format('DD/MM/yyyy')
+                                            : '-'}
                                     </div>
                                 )
                             }
