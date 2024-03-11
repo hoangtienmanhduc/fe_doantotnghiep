@@ -13,6 +13,7 @@ import { InputMask } from 'primereact/inputmask';
 import { Calendar } from 'primereact/calendar';
 import { Divider } from 'primereact/divider';
 import moment from 'moment';
+import { InputNumber } from 'primereact/inputnumber';
 
 const AcademicYearForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
@@ -272,6 +273,17 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                 />
                             </span>
                         </div>
+                        <div className="col-12 p-0">
+                            <p>Chi phí một tín chỉ</p>
+                            <span className="w-full">
+                                <InputNumber
+                                    value={data?.costFirstTerm}
+                                    placeholder="Nhập số chi phí một tín chỉ (Bắt buộc)"
+                                    onChange={(e) => handleOnChange('costFirstTerm', e?.value)}
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
                         <div className="flex justify-content-between align-items-center col-12 p-0">
                             <div className="col-5 p-0">
                                 <p>Thời gian bắt đầu học kỳ 1</p>
@@ -320,6 +332,17 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                 />
                             </span>
                         </div>
+                        <div className="col-12 p-0">
+                            <p>Chi phí một tín chỉ</p>
+                            <span className="w-full">
+                                <InputNumber
+                                    value={data?.costSecondTerm}
+                                    placeholder="Nhập số chi phí một tín chỉ (Bắt buộc)"
+                                    onChange={(e) => handleOnChange('costSecondTerm', e?.value)}
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
                         <div className="flex justify-content-between align-items-center col-12 p-0">
                             <div className="col-5 p-0">
                                 <p>Thời gian bắt đầu học kỳ 2</p>
@@ -365,6 +388,17 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                     placeholder="Nhập tên học kỳ III... "
                                     className="w-full"
                                     onChange={(e) => setData({ ...data, thirdTermName: e.target.value })}
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Chi phí một tín chỉ</p>
+                            <span className="w-full">
+                                <InputNumber
+                                    value={data?.costThirdTerm}
+                                    placeholder="Nhập số chi phí một tín chỉ (Bắt buộc)"
+                                    onChange={(e) => handleOnChange('costThirdTerm', e?.value)}
+                                    className="w-full"
                                 />
                             </span>
                         </div>

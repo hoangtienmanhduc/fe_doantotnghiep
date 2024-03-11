@@ -17,6 +17,10 @@ import { createOrUpdateGenericUser } from '~/api/user/UserService';
 import { typeOfEducationOptions } from './StudentConstant';
 import { getListSpecializationClassInfo } from '~/api/specialization/SpecializationClassService';
 import { Divider } from 'primereact/divider';
+import { Calendar } from 'primereact/calendar';
+import moment from 'moment';
+import { InputNumber } from 'primereact/inputnumber';
+import { InputMask } from 'primereact/inputmask';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
 const QueryKeySpecializationClassOptions = 'Specialization-Class-Options';
@@ -175,7 +179,7 @@ const StudentForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="p-3 m-0 font-bold">
+                <h3 className="p-3 pb-0 m-0 font-bold">
                     {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} sinh viên`}
                     <hr />
                 </h3>
@@ -184,10 +188,11 @@ const StudentForm = forwardRef((props, ref) => {
             style={{
                 width: '60vw',
             }}
+            pt={{ header: { className: 'p-0' } }}
             breakpoints={{ '960px': '75vw', '641px': '100vw' }}
             visible={visible}
         >
-            <div className="m-3">
+            <div>
                 <div className="col-12">
                     <h2>
                         Thông tin cá nhân
@@ -258,23 +263,25 @@ const StudentForm = forwardRef((props, ref) => {
                     <div className="col-12 p-0">
                         <p>Ngày sinh</p>
                         <span className="w-full">
-                            <InputText
-                                value={data?.dob}
-                                placeholder="Nhập ngày sinh của sinh viên..."
-                                onChange={(e) => handleOnChange('dob', e?.target.value)}
-                                className=" w-full"
+                            <Calendar
+                                placeholder="Chọn ngày sinh của sinh viên"
+                                className="w-full"
+                                value={data?.dob ? moment(data?.dob, 'dd/MM/yyyy').toDate() : new Date()}
+                                onChange={(e) => setData({ ...data, dob: e.value })}
                             />
                         </span>
                     </div>
                     <div className="col-12 p-0">
                         <p>Số căn cước công dân</p>
                         <span className="w-full">
-                            <InputText
-                                value={data?.CINumber}
-                                placeholder="Nhập số căn cước công dân..."
-                                onChange={(e) => handleOnChange('CINumber', e?.target.value)}
-                                className=" w-full"
-                            />
+                            <InputMask
+                                className="w-full"
+                                id="school-year"
+                                mask="9999999999"
+                                placeholder="Nhập số căn cước công dân"
+                                value={data?.CINumber || ''}
+                                onChange={(e) => handleOnChange('CINumber', e.target.value)}
+                            ></InputMask>
                         </span>
                     </div>
                     <Divider type="dashed" />
@@ -354,12 +361,14 @@ const StudentForm = forwardRef((props, ref) => {
                     <div className="col-12 p-0">
                         <p>Số điện thoại</p>
                         <span className="w-full">
-                            <InputText
-                                value={data?.phone}
-                                placeholder="Nhập số điện thoại..."
-                                onChange={(e) => handleOnChange('phone', e?.target.value)}
-                                className=" w-full"
-                            />
+                            <InputMask
+                                className="w-full"
+                                id="school-year"
+                                mask="99 9999 9999"
+                                placeholder="Nhập số điện thoại"
+                                value={data?.phone || ''}
+                                onChange={(e) => handleOnChange('phone', e.target.value)}
+                            ></InputMask>
                         </span>
                     </div>
                 </div>

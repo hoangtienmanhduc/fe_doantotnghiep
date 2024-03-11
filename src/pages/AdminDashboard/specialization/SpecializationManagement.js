@@ -20,7 +20,15 @@ const SpecializationManagement = () => {
 
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
-        () => getPageSpecializationInfo(getUserId()),
+        () =>
+            getPageSpecializationInfo(
+                getUserId(),
+                pageable?.pageNumber,
+                pageable?.rows,
+                pageable.sortField,
+                pageable.sortOrder,
+                {},
+            ),
         {
             enabled: !!getUserId(),
         },

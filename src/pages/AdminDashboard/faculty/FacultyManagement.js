@@ -22,7 +22,15 @@ const FacultyManagement = () => {
 
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
-        () => getPageFacultyInfo(getUserId()),
+        () =>
+            getPageFacultyInfo(
+                getUserId(),
+                pageable?.pageNumber,
+                pageable?.rows,
+                pageable.sortField,
+                pageable.sortOrder,
+                {},
+            ),
         {
             enabled: !!getUserId(),
         },
@@ -78,6 +86,7 @@ const FacultyManagement = () => {
 
     return (
         <React.Fragment>
+            {console.log(data)}
             <div className="card col-12">
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}

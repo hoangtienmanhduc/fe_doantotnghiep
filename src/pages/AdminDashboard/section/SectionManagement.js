@@ -28,9 +28,9 @@ const SectionManagement = () => {
 
     const sectionRef = useRef(null);
     const columns = [
+        { field: 'termName', header: 'Thuộc học kì' },
         { field: 'courseName', header: 'Thuộc môn học' },
         { field: 'courseCode', header: 'Mã môn học' },
-        { field: 'termName', header: 'Thuộc học kì' },
         { field: 'name', header: 'Tên học phần' },
         { field: 'code', header: 'Mã học phần' },
         { field: 'theoryPeriods', header: 'Số tiết lý thuyết' },
@@ -121,6 +121,18 @@ const SectionManagement = () => {
                                             raised
                                             onClick={() => sectionRef.current.showForm(rowData)}
                                         />
+                                    </div>
+                                ) : col.field === 'createdAt' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {new Date(rowData[col.field]).toLocaleDateString()}
+                                    </div>
+                                ) : col.field === 'sectionType' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] === 'Elective'
+                                            ? 'Tự chọn'
+                                            : rowData[col.field] === 'Compulsory'
+                                            ? 'Bắt buộc'
+                                            : '-'}
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>

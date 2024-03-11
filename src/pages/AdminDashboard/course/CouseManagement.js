@@ -31,6 +31,8 @@ const CouseManagement = () => {
         { field: 'code', header: 'Mã môn học' },
         { field: 'name', header: 'Tên môn học' },
         { field: 'credit', header: 'Số tín chỉ' },
+        { field: 'description', header: 'Mô tả' },
+        { field: 'courseType', header: 'Loại môn học' },
         { field: 'createdAt', header: 'Được tạo' },
         { field: 'deleted', header: 'Trạng thái bị xoá' },
         { field: 'action', header: 'Thao tác' },
@@ -116,6 +118,20 @@ const CouseManagement = () => {
                                             raised
                                             onClick={() => courseRef.current.showForm(rowData)}
                                         />
+                                    </div>
+                                ) : col.field === 'createdAt' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {new Date(rowData[col.field]).toLocaleDateString()}
+                                    </div>
+                                ) : col.field === 'courseType' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] === 'study_first'
+                                            ? 'Học trước'
+                                            : rowData[col.field] === 'prerequisite'
+                                            ? 'Tiên quyết'
+                                            : rowData[col.field] === 'parallel'
+                                            ? 'Song hành'
+                                            : '-'}
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>

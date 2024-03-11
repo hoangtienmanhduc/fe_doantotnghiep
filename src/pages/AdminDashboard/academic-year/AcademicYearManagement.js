@@ -22,7 +22,15 @@ const AcademicYearManagement = () => {
     const toast = useRef();
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
-        () => getPageAcademicYearInfo(getUserId()),
+        () =>
+            getPageAcademicYearInfo(
+                getUserId(),
+                pageable?.pageNumber,
+                pageable?.rows,
+                pageable.sortField,
+                pageable.sortOrder,
+                {},
+            ),
         {
             enabled: !!getUserId(),
         },

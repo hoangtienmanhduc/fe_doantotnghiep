@@ -166,7 +166,7 @@ const SectionClassForm = forwardRef((props, ref) => {
     return (
         <Dialog
             header={
-                <h3 className="m-0 p-3 font-bold">
+                <h3 className="m-0 p-3 pb-0 font-bold">
                     {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} lớp học phần`}
                     <hr />
                 </h3>
@@ -180,7 +180,7 @@ const SectionClassForm = forwardRef((props, ref) => {
             visible={visible}
         >
             <div>
-                <div className="col-12">
+                <div className="col-12 p-0">
                     <div className="col-12 p-0">
                         <p>Học phần</p>
                         <span className="w-full">
