@@ -28,11 +28,11 @@ const CouseManagement = () => {
 
     const courseRef = useRef(null);
     const columns = [
+        { field: 'specializationName', header: 'Tên chuyên ngành' },
         { field: 'code', header: 'Mã môn học' },
         { field: 'name', header: 'Tên môn học' },
         { field: 'credit', header: 'Số tín chỉ' },
         { field: 'description', header: 'Mô tả' },
-        { field: 'courseType', header: 'Loại môn học' },
         { field: 'createdAt', header: 'Được tạo' },
         { field: 'deleted', header: 'Trạng thái bị xoá' },
         { field: 'action', header: 'Thao tác' },
@@ -132,6 +132,10 @@ const CouseManagement = () => {
                                             : rowData[col.field] === 'parallel'
                                             ? 'Song hành'
                                             : '-'}
+                                    </div>
+                                ) : col.field === 'specializationCode' || col.field === 'specializationName' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] ? rowData[col.field] : 'Không có'}
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>

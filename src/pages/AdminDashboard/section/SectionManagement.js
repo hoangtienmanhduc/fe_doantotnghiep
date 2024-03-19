@@ -28,13 +28,17 @@ const SectionManagement = () => {
 
     const sectionRef = useRef(null);
     const columns = [
-        { field: 'termName', header: 'Thuộc học kì' },
-        { field: 'courseName', header: 'Thuộc môn học' },
-        { field: 'courseCode', header: 'Mã môn học' },
+        { field: 'specializationName', header: 'Tên chuyên ngành' },
+        { field: 'specializationCode', header: 'Mã chuyên ngành' },
         { field: 'name', header: 'Tên học phần' },
         { field: 'code', header: 'Mã học phần' },
-        { field: 'theoryPeriods', header: 'Số tiết lý thuyết' },
-        { field: 'practicePeriods', header: 'Số tiết thực hành' },
+        { field: 'description', header: 'Mô tả' },
+        { field: 'theory', header: 'Hệ số tiết lý thuyết' },
+        { field: 'practice', header: 'Hệ số tiết thực hành' },
+        { field: 'discussionExercises', header: 'Hệ số tiết thảo luận bài tập' },
+        { field: 'selfLearning', header: 'Hệ số thời gian tự học' },
+        { field: 'credits', header: 'Tín chỉ học tập' },
+        { field: 'costCredits', header: 'Tín chỉ học phí' },
         { field: 'sectionType', header: 'Loại học phần' },
         { field: 'createdAt', header: 'Được tạo' },
         { field: 'deleted', header: 'Trạng thái bị xoá' },
@@ -128,9 +132,9 @@ const SectionManagement = () => {
                                     </div>
                                 ) : col.field === 'sectionType' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field] === 'Elective'
+                                        {rowData[col.field] === 'elective'
                                             ? 'Tự chọn'
-                                            : rowData[col.field] === 'Compulsory'
+                                            : rowData[col.field] === 'compulsory'
                                             ? 'Bắt buộc'
                                             : '-'}
                                     </div>

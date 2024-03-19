@@ -82,16 +82,16 @@ function Home() {
             <div className="col-12 grid align-items-stretch p-0 mb-3">
                 <div className="xs:col-6 sm:col-6 md:col-6 col-12 h-full">
                     <h2>
-                        Thông tin sinh viên
+                        <i className="pi pi-user mr-2"></i>Thông tin sinh viên
                         <hr />
                     </h2>
 
+                    <div className="flex flex-column align-items-start col-12">
+                        <Image src="https://i.imgur.com/FnS0hfi.jpg" className={cx('user-avata')} alt="name" />
+                        <Button text>Xem chi tiết</Button>
+                    </div>
                     <div className="flex align-items-center h-full">
-                        <div className="flex flex-column align-items-center col-6">
-                            <Image src="https://i.imgur.com/FnS0hfi.jpg" className={cx('user-avata')} alt="name" />
-                            <Button text>Xem chi tiết</Button>
-                        </div>
-                        <div className="flex justify-content-between col-6">
+                        <div className="flex justify-content-between col-12">
                             <div>
                                 <span className="flex align-items-center">
                                     <p className="text-600 font-semibold mr-2">MSSV:</p>
@@ -141,12 +141,12 @@ function Home() {
                 </div>
                 <div className="xs:col-6 sm:col-6 md:col-6 col-12 h-full">
                     <h2>
-                        Nhắc nhở mới, chưa xem <i className="pi pi-bell"></i>
+                        <i className="pi pi-bell mr-2"></i>Nhắc nhở mới, chưa xem
                         <hr />
                     </h2>
-                    <div className="flex col-12 p-0 m-0 justify-content-around gap-2 align-items-center">
-                        <div className="col-6 bg-blue-200 border-round flex flex-column align-items-center">
-                            <h2 className=" flex align-items-center text-blue-400">
+                    <div className="h-full flex flex-column col-12 p-0 m-0 justify-content-around gap-2 align-items-center">
+                        <div className="col-12 bg-blue-100 border-round flex flex-column align-items-center">
+                            <h2 className="flex align-items-center text-blue-400">
                                 Lịch học trong tuần <i className="pi pi-calendar text-3xl ml-3"></i>
                             </h2>
                             <span className="text-blue-500 text-3xl mb-3">
@@ -159,7 +159,7 @@ function Home() {
                                 onClick={() => {}}
                             />
                         </div>
-                        <div className="col-6 bg-orange-200 border-round flex flex-column align-items-center">
+                        <div className="col-12 bg-orange-100 border-round flex flex-column align-items-center">
                             <h2 className=" flex align-items-center text-orange-400">
                                 Lịch thi trong tuần <i className="pi pi-calendar-plus text-3xl ml-3"></i>
                             </h2>
@@ -176,7 +176,7 @@ function Home() {
                     </div>
                 </div>
             </div>
-            <div className="flex align-items-stretch justify-content-between gap-2 w-full m-0 overflow-x-auto">
+            <div className="grid align-items-stretch justify-content-between gap-2 w-full m-0">
                 <div
                     style={{
                         backgroundColor: 'white',
@@ -184,13 +184,13 @@ function Home() {
                     }}
                 >
                     <Button
-                        style={{ fontWeight: 'normal', display: 'inline-block' }}
+                        style={{ fontWeight: 'normal' }}
                         primary
                         onClick={() => window.location.assign('/lichhoc')}
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faCalendarDays}
@@ -209,14 +209,13 @@ function Home() {
                     <Button
                         style={{
                             fontWeight: 'normal',
-                            display: 'inline-block',
                         }}
                         onClick={() => window.location.assign('/ketquahoctap')}
                         primary
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faChartColumn}
@@ -233,13 +232,13 @@ function Home() {
                     }}
                 >
                     <Button
-                        style={{ fontWeight: 'normal', display: 'inline-block' }}
+                        style={{ fontWeight: 'normal' }}
                         primary
                         onClick={() => window.location.assign('/dangkyhocphan')}
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faLayerGroup}
@@ -256,13 +255,13 @@ function Home() {
                     }}
                 >
                     <Button
-                        style={{ fontWeight: 'normal', display: 'inline-block' }}
+                        style={{ fontWeight: 'normal' }}
                         primary
                         onClick={() => window.location.assign('/tracuucongno')}
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faDollarSign}
@@ -279,13 +278,13 @@ function Home() {
                     }}
                 >
                     <Button
-                        style={{ fontWeight: 'normal', display: 'inline-block' }}
+                        style={{ fontWeight: 'normal' }}
                         primary
                         onClick={() => window.location.assign('/thanhtoantructuyen')}
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faFileInvoiceDollar}
@@ -302,13 +301,13 @@ function Home() {
                     }}
                 >
                     <Button
-                        style={{ fontWeight: 'normal', display: 'inline-block' }}
+                        style={{ fontWeight: 'normal' }}
                         primary
                         onClick={() => window.location.assign('/phieutonghop')}
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faFileInvoice}
@@ -325,13 +324,13 @@ function Home() {
                     }}
                 >
                     <Button
-                        style={{ fontWeight: 'normal', display: 'inline-block' }}
+                        style={{ fontWeight: 'normal' }}
                         primary
                         onClick={() => window.location.assign('/lichtheotiendo')}
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faCalendarMinus}
@@ -348,13 +347,13 @@ function Home() {
                     }}
                 >
                     <Button
-                        style={{ fontWeight: 'normal', display: 'inline-block' }}
+                        style={{ fontWeight: 'normal' }}
                         primary
                         onClick={() => window.location.assign('/ghichunhacnho')}
                         leftIcon={
                             <FontAwesomeIcon
                                 style={{
-                                    fontSize: '25px',
+                                    fontSize: '10rem',
                                     color: '#4da1e8',
                                 }}
                                 icon={faEnvelopeOpenText}
@@ -366,7 +365,7 @@ function Home() {
                 </div>
             </div>
             <hr />
-            <div className="grid col-12 surface-50 border-round p-0 m-0">
+            {/* <div className="grid col-12 surface-50 border-round p-0 m-0">
                 <div className="col-4">
                     <div className="flex align-items-center justify-content-between mb-3">
                         <h2 className="mr-3">Thông tin sinh viên</h2>
@@ -423,7 +422,7 @@ function Home() {
                         <Table_Home />
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

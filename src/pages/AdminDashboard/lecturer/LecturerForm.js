@@ -191,7 +191,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Chuyên ngành đào tạo</p>
                         <span className="w-full">
                             <Dropdown
-                                value={data?.specializationId}
+                                value={data?.specializationId || null}
                                 onChange={(e) => handleOnChange('specializationId', e?.target.value)}
                                 options={specializationOptions}
                                 optionLabel="name"
@@ -205,7 +205,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Chức tước</p>
                         <span className="w-full">
                             <Dropdown
-                                value={data?.title}
+                                value={data?.title || null}
                                 onChange={(e) => handleOnChange('title', e?.target.value)}
                                 options={titleOptions}
                                 optionLabel="label"
@@ -219,7 +219,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Vai trò</p>
                         <span className="w-full">
                             <Dropdown
-                                value={data?.position}
+                                value={data?.position || null}
                                 optionLabel="label"
                                 optionValue="key"
                                 onChange={(e) => handleOnChange('position', e?.target.value)}
@@ -233,7 +233,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Họ đệm</p>
                         <span className="w-full">
                             <InputText
-                                value={data?.firstName}
+                                value={data?.firstName || ''}
                                 placeholder="Nhập họ đệm của giảng viên..."
                                 onChange={(e) => handleOnChange('firstName', e?.target.value)}
                                 className=" w-full"
@@ -244,7 +244,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Tên giảng viên</p>
                         <span className="w-full">
                             <InputText
-                                value={data?.lastName}
+                                value={data?.lastName || ''}
                                 placeholder="Nhập tên của giảng viên..."
                                 onChange={(e) => handleOnChange('lastName', e?.target.value)}
                                 className=" w-full"
@@ -255,7 +255,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Ngày sinh</p>
                         <span className="w-full">
                             <InputText
-                                value={data?.dob}
+                                value={data?.dob || ''}
                                 placeholder="Nhập ngày sinh..."
                                 onChange={(e) => handleOnChange('dob', e?.target.value)}
                                 className=" w-full"
@@ -267,7 +267,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <span className="w-full">
                             <InputText
                                 placeholder="Nhập số căn cước công dân..."
-                                value={data?.cinumber}
+                                value={data?.cinumber || ''}
                                 onChange={(e) => handleOnChange('cinumber', e?.target.value)}
                                 className=" w-full"
                             />
@@ -283,7 +283,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Vùng sinh sống</p>
                         <span className="w-full">
                             <Dropdown
-                                value={data?.regionId}
+                                value={data?.regionId || null}
                                 onChange={(e) => handleOnChange('regionId', e?.target.value)}
                                 options={regionOptions}
                                 optionLabel="name"
@@ -297,7 +297,7 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Tỉnh</p>
                         <span className="w-full">
                             <Dropdown
-                                value={data?.provinceCode}
+                                value={data?.provinceCode || null}
                                 onChange={(e) => handleOnChange('provinceCode', e?.target.value)}
                                 options={provinceOptions}
                                 optionLabel="name"

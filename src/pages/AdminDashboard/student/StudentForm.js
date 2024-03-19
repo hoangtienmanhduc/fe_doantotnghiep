@@ -46,12 +46,18 @@ const StudentForm = forwardRef((props, ref) => {
     const { data: specializationOptions } = useQuery(
         [QueryKeySpecializationOptions, getUserId()],
         () => getListSpecializationInfo(getUserId(), {}, null, true),
-        { enabled: !!getUserId() },
+        { enabled: !!getUserId() && !!visible },
     );
     const { data: specializationClassOptions } = useQuery(
         [QueryKeySpecializationClassOptions, getUserId()],
-        () => getListSpecializationClassInfo(getUserId(), {}, null, true),
-        { enabled: !!getUserId() },
+        () =>
+            getListSpecializationClassInfo(
+                getUserId(),
+                { specializationId: !!data?.specializationId ? data.specializationId : null },
+                null,
+                true,
+            ),
+        { enabled: !!getUserId() && !!visible && !!data?.specializationId },
     );
 
     const { data: regionOptions, isFetched: isRegionFetched } = useQuery(
@@ -177,219 +183,223 @@ const StudentForm = forwardRef((props, ref) => {
     );
 
     return (
-        <Dialog
-            header={
-                <h3 className="p-3 pb-0 m-0 font-bold">
-                    {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} sinh viên`}
-                    <hr />
-                </h3>
-            }
-            onHide={handleHideForm}
-            style={{
-                width: '60vw',
-            }}
-            pt={{ header: { className: 'p-0' } }}
-            breakpoints={{ '960px': '75vw', '641px': '100vw' }}
-            visible={visible}
-        >
-            <div>
-                <div className="col-12">
-                    <h2>
-                        Thông tin cá nhân
-                        <Divider className="bg-primary" />
-                    </h2>
-                    <div className="col-12 p-0">
-                        <p>Thuộc chuyên ngành</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.specializationId}
-                                onChange={(e) => handleOnChange('specializationId', e?.target.value)}
-                                options={specializationOptions}
-                                optionLabel="name"
-                                optionValue="id"
-                                placeholder="Hãy chọn chuyên ngành của sinh viên..."
-                                className="w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Thuộc lớp chuyên ngành</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.specializationClassId}
-                                onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
-                                options={specializationClassOptions}
-                                optionLabel="name"
-                                optionValue="id"
-                                placeholder="Hãy chọn lớp chuyên ngành cho sinh viên..."
-                                className="w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Loại hình đào tạo</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.typeOfEducation}
-                                onChange={(e) => handleOnChange('typeOfEducation', e?.target.value)}
-                                options={typeOfEducationOptions}
-                                placeholder="Hãy chọn loại hình đào tạo..."
-                                className="w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Tên sinh viên</p>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.firstName}
-                                placeholder="Nhập tên của sinh viên..."
-                                onChange={(e) => handleOnChange('firstName', e?.target.value)}
-                                className=" w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Họ đệm sinh viên</p>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.lastName}
-                                placeholder="Nhập họ đệm của sinh viên..."
-                                onChange={(e) => handleOnChange('lastName', e?.target.value)}
-                                className=" w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Ngày sinh</p>
-                        <span className="w-full">
-                            <Calendar
-                                placeholder="Chọn ngày sinh của sinh viên"
-                                className="w-full"
-                                value={data?.dob ? moment(data?.dob, 'dd/MM/yyyy').toDate() : new Date()}
-                                onChange={(e) => setData({ ...data, dob: e.value })}
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Số căn cước công dân</p>
-                        <span className="w-full">
-                            <InputMask
-                                className="w-full"
-                                id="school-year"
-                                mask="9999999999"
-                                placeholder="Nhập số căn cước công dân"
-                                value={data?.CINumber || ''}
-                                onChange={(e) => handleOnChange('CINumber', e.target.value)}
-                            ></InputMask>
-                        </span>
-                    </div>
-                    <Divider type="dashed" />
-                    <h2>
-                        Thông tin liên hệ
-                        <Divider />
-                    </h2>
+        <>
+            <Dialog
+                header={
+                    <h3 className="p-3 pb-0 m-0 font-bold">
+                        {`${!!data?.id ? 'Cập nhật thông tin' : 'Thêm mới'} sinh viên`}
+                        <hr />
+                    </h3>
+                }
+                onHide={handleHideForm}
+                style={{
+                    width: '60vw',
+                }}
+                pt={{ header: { className: 'p-0' } }}
+                breakpoints={{ '960px': '75vw', '641px': '100vw' }}
+                visible={visible}
+            >
+                <div>
+                    <div className="col-12">
+                        <h2>
+                            Thông tin cá nhân
+                            <Divider className="bg-primary" />
+                        </h2>
+                        <div className="col-12 p-0">
+                            <p>Thuộc chuyên ngành</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.specializationId}
+                                    onChange={(e) => handleOnChange('specializationId', e?.target.value)}
+                                    options={specializationOptions}
+                                    optionLabel="name"
+                                    optionValue="id"
+                                    placeholder="Hãy chọn chuyên ngành của sinh viên..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Thuộc lớp chuyên ngành</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.specializationClassId}
+                                    onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
+                                    options={specializationClassOptions}
+                                    optionLabel="name"
+                                    optionValue="id"
+                                    placeholder="Hãy chọn lớp chuyên ngành cho sinh viên..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Loại hình đào tạo</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.typeOfEducation}
+                                    onChange={(e) => handleOnChange('typeOfEducation', e?.target.value)}
+                                    options={typeOfEducationOptions}
+                                    optionLabel="label"
+                                    optionValue="key"
+                                    placeholder="Hãy chọn loại hình đào tạo..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Tên sinh viên</p>
+                            <span className="w-full">
+                                <InputText
+                                    value={data?.firstName}
+                                    placeholder="Nhập tên của sinh viên..."
+                                    onChange={(e) => handleOnChange('firstName', e?.target.value)}
+                                    className=" w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Họ đệm sinh viên</p>
+                            <span className="w-full">
+                                <InputText
+                                    value={data?.lastName}
+                                    placeholder="Nhập họ đệm của sinh viên..."
+                                    onChange={(e) => handleOnChange('lastName', e?.target.value)}
+                                    className=" w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Ngày sinh</p>
+                            <span className="w-full">
+                                <Calendar
+                                    placeholder="Chọn ngày sinh của sinh viên"
+                                    className="w-full"
+                                    value={data?.dob ? moment(data?.dob, 'dd/MM/yyyy').toDate() : new Date()}
+                                    onChange={(e) => setData({ ...data, dob: e.value })}
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Số căn cước công dân</p>
+                            <span className="w-full">
+                                <InputMask
+                                    className="w-full"
+                                    id="school-year"
+                                    mask="9999999999"
+                                    placeholder="Nhập số căn cước công dân"
+                                    value={data?.CINumber || ''}
+                                    onChange={(e) => handleOnChange('CINumber', e.target.value)}
+                                ></InputMask>
+                            </span>
+                        </div>
+                        <Divider type="dashed" />
+                        <h2>
+                            Thông tin liên hệ
+                            <Divider />
+                        </h2>
 
-                    <div className="col-12 p-0">
-                        <p>Vùng sinh sống</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.regionId}
-                                onChange={(e) => handleOnChange('regionId', e?.target.value)}
-                                options={regionOptions}
-                                optionLabel="name"
-                                optionValue="id"
-                                placeholder="Hãy chọn vùng sinh sống..."
-                                className="w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Tỉnh</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.provinceCode}
-                                onChange={(e) => handleOnChange('provinceCode', e?.target.value)}
-                                options={provinceOptions}
-                                optionLabel="name"
-                                optionValue="code"
-                                placeholder="Hãy chọn tỉnh..."
-                                className="w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Quận</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.districtCode}
-                                onChange={(e) => handleOnChange('districtCode', e?.target.value)}
-                                options={districtOptions}
-                                optionLabel="name"
-                                optionValue="code"
-                                placeholder="Hãy chọn quận..."
-                                className="w-full"
-                            />
-                        </span>
-                    </div>
+                        <div className="col-12 p-0">
+                            <p>Vùng sinh sống</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.regionId}
+                                    onChange={(e) => handleOnChange('regionId', e?.target.value)}
+                                    options={regionOptions}
+                                    optionLabel="name"
+                                    optionValue="id"
+                                    placeholder="Hãy chọn vùng sinh sống..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Tỉnh</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.provinceCode}
+                                    onChange={(e) => handleOnChange('provinceCode', e?.target.value)}
+                                    options={provinceOptions}
+                                    optionLabel="name"
+                                    optionValue="code"
+                                    placeholder="Hãy chọn tỉnh..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Quận</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.districtCode}
+                                    onChange={(e) => handleOnChange('districtCode', e?.target.value)}
+                                    options={districtOptions}
+                                    optionLabel="name"
+                                    optionValue="code"
+                                    placeholder="Hãy chọn quận..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
 
-                    <div className="col-12 p-0">
-                        <p>Phường</p>
-                        <span className="w-full">
-                            <Dropdown
-                                value={data?.wardCode}
-                                onChange={(e) => handleOnChange('wardCode', e?.target.value)}
-                                options={wardOptions}
-                                optionLabel="name"
-                                optionValue="code"
-                                placeholder="Hãy chọn phường..."
-                                className="w-full"
-                            />
-                        </span>
+                        <div className="col-12 p-0">
+                            <p>Phường</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.wardCode}
+                                    onChange={(e) => handleOnChange('wardCode', e?.target.value)}
+                                    options={wardOptions}
+                                    optionLabel="name"
+                                    optionValue="code"
+                                    placeholder="Hãy chọn phường..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Địa chỉ (Số nhà, Tổ, Khu phố, Đường)</p>
+                            <span className="w-full">
+                                <InputText
+                                    value={data?.addressLine}
+                                    placeholder="Nhập địa chỉ..."
+                                    onChange={(e) => handleOnChange('addressLine', e?.target.value)}
+                                    className=" w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Số điện thoại</p>
+                            <span className="w-full">
+                                <InputMask
+                                    className="w-full"
+                                    id="school-year"
+                                    mask="99 9999 9999"
+                                    placeholder="Nhập số điện thoại"
+                                    value={data?.phone || ''}
+                                    onChange={(e) => handleOnChange('phone', e.target.value)}
+                                ></InputMask>
+                            </span>
+                        </div>
                     </div>
-                    <div className="col-12 p-0">
-                        <p>Địa chỉ (Số nhà, Tổ, Khu phố, Đường)</p>
-                        <span className="w-full">
-                            <InputText
-                                value={data?.addressLine}
-                                placeholder="Nhập địa chỉ..."
-                                onChange={(e) => handleOnChange('addressLine', e?.target.value)}
-                                className=" w-full"
-                            />
-                        </span>
-                    </div>
-                    <div className="col-12 p-0">
-                        <p>Số điện thoại</p>
-                        <span className="w-full">
-                            <InputMask
-                                className="w-full"
-                                id="school-year"
-                                mask="99 9999 9999"
-                                placeholder="Nhập số điện thoại"
-                                value={data?.phone || ''}
-                                onChange={(e) => handleOnChange('phone', e.target.value)}
-                            ></InputMask>
-                        </span>
+                    <div className="flex col-12">
+                        <Button
+                            className={`col-6 p-button-lg font-bold mr-2`}
+                            icon={'pi pi-send'}
+                            label={'Xác nhận'}
+                            onClick={handleOnSubmit}
+                        />
+
+                        <Button
+                            className="col-6 p-button-lg font-bold"
+                            icon={'pi pi-send'}
+                            label={'Huỷ bỏ'}
+                            onClick={handleHideForm}
+                        />
                     </div>
                 </div>
-                <div className="flex col-12">
-                    <Button
-                        className={`col-6 p-button-lg font-bold mr-2`}
-                        icon={'pi pi-send'}
-                        label={'Xác nhận'}
-                        onClick={handleOnSubmit}
-                    />
-
-                    <Button
-                        className="col-6 p-button-lg font-bold"
-                        icon={'pi pi-send'}
-                        label={'Huỷ bỏ'}
-                        onClick={handleHideForm}
-                    />
-                </div>
-            </div>
+            </Dialog>
             <Toast ref={toast} />
-        </Dialog>
+        </>
     );
 });
 export default StudentForm;

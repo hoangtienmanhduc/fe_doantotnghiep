@@ -2,30 +2,33 @@ import styles from './Dangkyhocphan.module.scss';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { useCallback, useState } from 'react';
-import Select from 'react-select';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useCallback, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
 import { getListTermInfo } from '~/api/term/TermService';
 import { Dropdown } from 'primereact/dropdown';
 import { getListSectionInfo } from '~/api/section/SectionService';
-import { getListSectionClassInfo, registerGenericSectionClass } from '~/api/section/SectionClassService';
+import {
+    getListSectionClassInfo,
+    getListStudentSectionClassInfo,
+    registerGenericSectionClass,
+} from '~/api/section/SectionClassService';
 import { showNotification } from '~/components/notification/NotificationService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
-
-const cx = classNames.bind(styles);
+import { RadioButton } from 'primereact/radiobutton';
+import { convertDayInWeek } from '~/utils/Utils';
 
 const courses = [
     {
-        id: 1,
+        key: 'new_learning',
         name: 'HỌC MỚI',
     },
     {
-        id: 2,
+        key: 'learn_again',
         name: 'HỌC LẠI',
     },
     {
-        id: 3,
+        key: 'learn_improve',
         name: 'HỌC CẢI THIỆN',
     },
 ];
@@ -35,82 +38,63 @@ const QueryKeySection = 'Section-Register';
 const QueryKeySectionClass = 'Section-Class-Register';
 const QueryKeySectionClassStudent = 'Section-Class-Student-Register';
 
-function Dangkyhocphan() {
+const Dangkyhocphan = () => {
+    // State
+    const [selectedSection, setSelectedSection] = useState(null);
+    const [selectedSectionClass, setSelectedSectionClass] = useState(null);
+    const [selectedCourse, setSelectedCourse] = useState(courses[0].key);
+    const [selectedTerm, setSelectedTerm] = useState(null);
+    const [selectTimeAndPlaceTheory, setSelectTimeAndPlaceTheory] = useState(null);
+    const [selectTimeAndPlacePractice, setSelectTimeAndPlacePractice] = useState(null);
+
+    // Use Query
     const { data: termOptions } = useQuery([QueryKeyTerm, getUserId()], () => getListTermInfo(getUserId()), {
         enabled: !!getUserId(),
     });
 
-    const [selectedTerm, setSelectedTerm] = useState(termOptions && termOptions[0] ? termOptions[0]?.id : null);
-
     const { data: sectionList } = useQuery(
         [QueryKeySection, getUserId(), selectedTerm],
+
         () => getListSectionInfo(getUserId(), { termId: selectedTerm }),
         {
             enabled: !!getUserId() && !!selectedTerm,
         },
     );
 
-    const [selectedUpperTableRow, setSelectedUpperTableRow] = useState(null);
-
     const { data: sectionClassTheoryList } = useQuery(
-        [QueryKeySectionClass, getUserId(), selectedUpperTableRow?.id],
+        [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
         () =>
-            getListSectionClassInfo(getUserId(), { sectionId: selectedUpperTableRow?.id, sectionClassType: 'theory' }),
+            getListSectionClassInfo(getUserId(), {
+                sectionId: selectedSection?.id,
+                sectionClassType: 'theory',
+                termId: selectedTerm,
+            }),
         {
-            enabled: !!getUserId() && !!selectedUpperTableRow,
+            enabled: !!getUserId() && !!selectedTerm && !!selectedSection?.id,
         },
     );
-
-    const [selectedLowerTableRow, setSelectedLowerTableRow] = useState(null);
 
     const { data: sectionClassList } = useQuery(
-        [QueryKeySectionClass, getUserId(), selectedLowerTableRow?.id],
+        [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id],
         () =>
             getListSectionClassInfo(getUserId(), {
-                sectionId: selectedLowerTableRow?.id,
-                lecturerId: selectedLowerTableRow?.lecturerId,
+                sectionId: selectedSection?.id,
+                sectionClassId: selectedSectionClass?.id,
             }),
         {
-            enabled: !!getUserId() && !!selectedLowerTableRow?.id,
+            enabled: !!getUserId() && !!selectedSection?.id && !!selectedSectionClass?.id,
         },
     );
 
-    const [selectedCourse, setSelectedCourse] = useState(courses[0]);
-
-    const handleChange = useCallback((selectedTerm) => {
-        setSelectedTerm(selectedTerm);
-
-        const selectedCourseId = selectedTerm.value;
-        const matchingCourse = courses.find((course) => course.id === selectedCourseId);
-
-        if (matchingCourse) {
-            setSelectedCourse(matchingCourse);
-        }
-    }, []);
-
-    const handleCourseChange = (course) => {
-        setSelectedCourse(course);
-    };
-
-    // Section Select
-    const handleUpperTableSelect = (row) => {
-        setSelectedUpperTableRow(row);
-    };
-
-    const handleLowerTableSelect = (row) => {
-        setSelectedLowerTableRow(row);
-    };
-
     const { data: sectionClassStudentList, refetch } = useQuery(
-        [QueryKeySectionClassStudent, getUserId()],
+        [QueryKeySectionClassStudent, getUserId(), selectedTerm],
         () =>
-            getListSectionClassInfo(getUserId(), {
-                sectionId: selectedLowerTableRow?.id,
-                lecturerId: selectedLowerTableRow?.lecturerId,
+            getListStudentSectionClassInfo(getUserId(), {
                 studentId: getRefId(),
+                termId: selectedTerm,
             }),
         {
-            enabled: !!getUserId() && !!getRefId() && !!selectedLowerTableRow?.id,
+            enabled: !!getRefId() && !!selectedTerm,
         },
     );
 
@@ -123,209 +107,302 @@ function Dangkyhocphan() {
         },
     });
 
-    const handleOnSubmit = useCallback(() => {
-        if (sectionClassList && !!selectedLowerTableRow) {
-            let toPostData = {
-                sectionId: selectedLowerTableRow?.sectionId,
-                lecturerId: selectedLowerTableRow?.lecturerId,
-                studentId: getRefId(),
-            };
+    // Handle
+    const handleChange = useCallback((selectedTerm) => {
+        setSelectedTerm(selectedTerm);
 
-            mutate(toPostData);
+        const selectedCourseId = selectedTerm.value;
+        const matchingCourse = courses.find((course) => course.id === selectedCourseId);
+
+        if (matchingCourse) {
+            setSelectedCourse(matchingCourse);
         }
-    }, [mutate, sectionClassList, selectedLowerTableRow]);
+    }, []);
+
+    const handleOnSubmit = useCallback(() => {
+        if (!selectedSection) {
+            showNotification('error', 'Lỗi', 'Hãy chọn học phần muốn đăng ký !!');
+            return;
+        }
+
+        if (!selectedSectionClass) {
+            showNotification('error', 'Lỗi', 'Hãy chọn lớp học phần muốn đăng ký !!');
+            return;
+        }
+
+        if (!!selectedSection && selectedSection?.practice > 0) {
+            if (!selectTimeAndPlacePractice) {
+                showNotification('error', 'Lỗi', 'Hãy chọn lớp thực hành cho lớp học phần muốn đăng ký !!');
+                return;
+            }
+        }
+
+        let toPostData = {
+            sectionId: selectedSection?.id,
+
+            sectionClassPracticeId: selectTimeAndPlacePractice?.sectionClassId,
+            timeAndPlacePracticeId: selectTimeAndPlacePractice?.id,
+
+            sectionClassTheoryId: selectTimeAndPlaceTheory?.sectionClassId,
+            timeAndPlaceTheoryId: selectTimeAndPlaceTheory?.id,
+        };
+
+        mutate(toPostData);
+    }, [
+        mutate,
+        selectTimeAndPlacePractice,
+        selectTimeAndPlaceTheory?.id,
+        selectTimeAndPlaceTheory?.sectionClassId,
+        selectedSection,
+        selectedSectionClass,
+    ]);
 
     return (
-        <div className={cx('wrapper')}>
-            <div style={{}}>
-                <div
-                    style={{
-                        width: '100%',
-                        textAlign: 'center',
-                        marginTop: '15px',
-                    }}
-                >
-                    <h1 style={{ color: '#006994' }}>ĐĂNG KÝ HỌC PHẦN</h1>
-                </div>
-                <div
-                    style={{
-                        width: '80%',
-                        height: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginLeft: '180px',
-                        marginTop: '15px',
-                    }}
-                >
-                    <p style={{ fontSize: '15px', fontWeight: 'bold', marginRight: '25px' }}>Đợt đăng kí</p>
+        <React.Fragment>
+            <div
+                style={{
+                    textAlign: 'center',
+                    marginTop: '15px',
+                }}
+            >
+                <h1 style={{ color: '#006994' }}>ĐĂNG KÝ HỌC PHẦN</h1>
+            </div>
+            <div className="w-full grid align-items-center justify-content-around">
+                <div className="grid align-items-center sm:col-12 xs:col-12 md:col-6 lg:col-6">
+                    <h2 style={{ textAlign: 'center', marginRight: '25px' }}>Đợt đăng kí</h2>
                     {termOptions && (
-                        <div style={{ width: '180px' }}>
+                        <div style={{ width: '28rem' }}>
                             <Dropdown
-                                className="p-2"
-                                value={selectedTerm || (!!termOptions[0] && termOptions[0].id)}
+                                className="p-2 w-full"
+                                value={selectedTerm || null}
                                 onChange={(e) => handleChange(e?.target?.value)}
                                 options={termOptions}
                                 optionLabel="name"
                                 optionValue="id"
-                                isSearchable={true}
-                                placeholder="Chọn một option..."
-                                maxMenuHeight={250}
+                                placeholder="Hãy chọn học kỳ bạn muốn đăng ký học phần"
                             />
                         </div>
                     )}
-                    <div style={{ display: 'flex' }}>
-                        {courses.map((course) => (
-                            <div style={{ color: 'red', fontSize: '15px', fontWeight: 'bold' }} key={course.id}>
-                                <input
-                                    style={{ marginLeft: '15px', marginTop: '8px' }}
-                                    type="radio"
-                                    checked={selectedCourse.id === course.id}
-                                    onChange={() => handleCourseChange(course)}
-                                />
-                                {course.name}
-                            </div>
-                        ))}
+                </div>
+                <div className="flex flex-wrap gap-3 sm:col-12 xs:col-12 md:col-6 lg:col-6">
+                    <div className="flex align-items-center">
+                        <RadioButton
+                            inputId="hocmoi"
+                            name="loaiDangKy"
+                            value="new_learning"
+                            onChange={(e) => setSelectedCourse(e.value)}
+                            checked={selectedCourse === 'new_learning'}
+                        />
+                        <label htmlFor="hocmoi" className="ml-2">
+                            HỌC MỚI
+                        </label>
+                    </div>
+                    <div className="flex align-items-center">
+                        <RadioButton
+                            inputId="hoclai"
+                            name="loaiDangKy"
+                            value="learn_again"
+                            onChange={(e) => setSelectedCourse(e.value)}
+                            checked={selectedCourse === 'learn_again'}
+                        />
+                        <label htmlFor="hoclai" className="ml-2">
+                            HỌC LẠI
+                        </label>
+                    </div>
+                    <div className="flex align-items-center">
+                        <RadioButton
+                            inputId="hoccaithien"
+                            name="loaiDangKy"
+                            value="learn_improve"
+                            onChange={(e) => setSelectedCourse(e.value)}
+                            checked={selectedCourse === 'learn_improve'}
+                        />
+                        <label htmlFor="hoccaithien" className="ml-2">
+                            HỌC CẢI THIỆN
+                        </label>
                     </div>
                 </div>
-                <div
-                    style={{
-                        width: '100%',
-                        textAlign: 'center',
-                        marginTop: '25px',
-                    }}
-                >
-                    <p style={{ fontSize: '17px', fontWeight: 'bold', color: '#FF8C00' }}>
-                        MÔN HỌC PHẦN ĐANG CHỜ ĐĂNG KÍ
-                    </p>
-                </div>
-                <div style={{ width: '98%', marginLeft: '12px', marginTop: '25px' }}>
-                    <table border="1" width={1125}>
-                        <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '50px', width: '35px' }} rowSpan="1"></th>
-                            <th rowSpan="1">ID</th>
+            </div>
+
+            {/* LỚP HỌC PHẦN CHỜ ĐĂNG KÝ */}
+            <div
+                style={{
+                    width: '100%',
+                    textAlign: 'center',
+                }}
+            >
+                <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#FF8C00' }}>MÔN HỌC PHẦN ĐANG CHỜ ĐĂNG KÍ</p>
+            </div>
+            <div style={{ marginTop: '25px' }}>
+                <table border="1" className="w-full">
+                    <thead>
+                        <tr className="bg-primary">
+                            <th rowSpan="1">Thuộc chuyên ngành</th>
                             <th rowSpan="1">Mã HP</th>
-                            <th rowSpan="1">Tên môn học</th>
-                            <th rowSpan="1">TC</th>
+                            <th rowSpan="1">Tên môn học / Học phần</th>
+                            <th rowSpan="1">Tín chỉ học tập</th>
+                            <th rowSpan="1">Tín chỉ chi phí</th>
+                            <th rowSpan="1">Số chỉ lý thuyết</th>
+                            <th rowSpan="1">Số chỉ thực hành</th>
                             <th rowSpan="1">Bắt buộc</th>
                             <th style={{ width: '200px' }} rowSpan="1">
                                 Học phần: học trước (a), tiên quyết (b), song hành (c)
                             </th>
                         </tr>
-                        {sectionList &&
-                            sectionList?.length > 0 &&
-                            sectionList.map((rowData) => (
-                                <tr key={rowData.id} onClick={() => handleUpperTableSelect(rowData)}>
-                                    <th>
-                                        <input
-                                            type="radio"
-                                            checked={selectedUpperTableRow && selectedUpperTableRow.id === rowData.id}
-                                        />
-                                    </th>
-                                    <th style={{ height: '30px' }}>{rowData.id}</th>
+                    </thead>
+                    {sectionList &&
+                        sectionList?.length > 0 &&
+                        sectionList.map((rowData) => (
+                            <tbody key={rowData.id}>
+                                <tr
+                                    onClick={() => {
+                                        setSelectedSection(rowData);
+                                        setSelectedSectionClass(null);
+                                    }}
+                                    className={`cursor-pointer ${
+                                        rowData?.id === selectedSection?.id ? 'bg-yellow-300' : ''
+                                    }`}
+                                >
+                                    <th style={{ height: '3rem' }}>{rowData.specializationName}</th>
                                     <th>{rowData.code}</th>
                                     <th>{rowData.name}</th>
-                                    <th>{rowData.credit}</th>
+                                    <th>{rowData.credits}</th>
+                                    <th>{rowData.costCredits}</th>
+                                    <th>{rowData.theory}</th>
+                                    <th>{rowData.practice}</th>
                                     <th>
                                         {rowData.sectionType === 'elective' ? (
-                                            <FontAwesomeIcon
-                                                style={{ color: 'green', fontSize: '20px' }}
-                                                icon={faCircleCheck}
-                                            />
-                                        ) : (
                                             <FontAwesomeIcon
                                                 style={{ color: 'red', fontSize: '20px' }}
                                                 icon={faCircleXmark}
                                             />
+                                        ) : (
+                                            <FontAwesomeIcon
+                                                style={{ color: 'green', fontSize: '20px' }}
+                                                icon={faCircleCheck}
+                                            />
                                         )}
                                     </th>
                                     <th>
-                                        {rowData.requireCourse &&
-                                            rowData?.requireCourse?.length > 0 &&
-                                            rowData?.requireCourse?.map((courseId) => {
-                                                return courseId + '(b),';
-                                            })}
+                                        {rowData.requireSection &&
+                                        rowData?.requireSection?.studyFirst &&
+                                        rowData?.requireSection?.studyFirst?.length > 0
+                                            ? rowData?.requireSection?.studyFirst.map((sectionCode) => {
+                                                  return (
+                                                      <div key={sectionCode}>
+                                                          {sectionCode + ' (a)'} <br />
+                                                      </div>
+                                                  );
+                                              })
+                                            : ''}
+                                        {rowData.requireSection &&
+                                        rowData?.requireSection?.prerequisite &&
+                                        rowData?.requireSection?.prerequisite?.length > 0
+                                            ? rowData?.requireSection?.prerequisite.map((sectionCode) => {
+                                                  return (
+                                                      <div key={sectionCode}>
+                                                          {sectionCode + ' (b)'} <br />
+                                                      </div>
+                                                  );
+                                              })
+                                            : ''}
+                                        {rowData.requireSection &&
+                                        rowData?.requireSection?.parallel &&
+                                        rowData?.requireSection?.parallel?.length > 0
+                                            ? rowData?.requireSection?.parallel.map((sectionCode) => {
+                                                  return (
+                                                      <div key={sectionCode}>
+                                                          {sectionCode + ' (c)'} <br />
+                                                      </div>
+                                                  );
+                                              })
+                                            : ''}
                                     </th>
                                 </tr>
-                            ))}
-                    </table>
-                </div>
-                <div
-                    style={{
-                        width: '100%',
-                        marginTop: '25px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <p style={{ fontSize: '17px', fontWeight: 'bold', color: '#FF8C00' }}>LỚP HỌC PHẦN CHỜ ĐĂNG KÝ</p>
-                    {/* <div style={{ display: 'flex' }}>
-                        {trunglichs.map((trunglich) => (
-                            <div style={{ color: 'red', fontSize: '15px', fontWeight: 'bold' }} key={trunglich.id}>
-                                <input style={{ marginLeft: '15px', marginTop: '8px' }} type="radio" />
-                                {trunglich.name}
-                            </div>
+                            </tbody>
                         ))}
-                    </div> */}
-                </div>
-                <div
-                    style={{
-                        width: '98%',
-                        marginLeft: '12px',
-                        marginTop: '25px',
-                    }}
-                >
-                    <table border="1" width={1125}>
-                        <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '50px', width: '35px' }} rowSpan="1"></th>
-                            <th rowSpan="1">ID</th>
+                </table>
+            </div>
+            <hr />
+
+            {/* LỚP HỌC PHẦN CHỜ ĐĂNG KÝ */}
+            <div
+                style={{
+                    width: '100%',
+                    marginTop: '25px',
+                    textAlign: 'center',
+                }}
+            >
+                <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#FF8C00' }}>LỚP HỌC PHẦN CHỜ ĐĂNG KÝ</p>
+            </div>
+            <div
+                style={{
+                    marginTop: '25px',
+                }}
+            >
+                <table border="1" className="w-full">
+                    <thead>
+                        <tr className="bg-primary">
                             <th rowSpan="1">Mã LHP</th>
                             <th rowSpan="1">Tên lớp học phần</th>
+                            <th rowSpan="1">Giảng viên giảng dạy</th>
+                            <th rowSpan="1">Mã giảng viên</th>
                             <th rowSpan="1">Sĩ số tối đa</th>
                             <th rowSpan="1">Đã đăng kí</th>
                             <th rowSpan="1">Trạng thái</th>
                         </tr>
-                        {sectionClassTheoryList &&
-                            sectionClassTheoryList?.length > 0 &&
-                            sectionClassTheoryList.map((rowData) => (
-                                <tr key={rowData.id}>
+                    </thead>
+                    {sectionClassTheoryList &&
+                        sectionClassTheoryList?.length > 0 &&
+                        sectionClassTheoryList.map((rowData) => (
+                            <tbody key={rowData.id}>
+                                <tr
+                                    onClick={() => {
+                                        setSelectedSectionClass(rowData);
+                                    }}
+                                    className={`cursor-pointer ${
+                                        rowData?.id === selectedSectionClass?.id ? 'bg-yellow-300' : ''
+                                    }`}
+                                >
+                                    <th style={{ height: '3rem' }}>{rowData?.code}</th>
+                                    <th>{rowData?.name}</th>
+                                    <th>{rowData?.lecturerName}</th>
+                                    <th>{rowData?.lecturerCode}</th>
+                                    <th>{rowData?.numberOfStudents}</th>
+                                    <th>{rowData?.registered ? rowData?.registered : 0}</th>
                                     <th>
-                                        <input
-                                            type="radio"
-                                            checked={selectedLowerTableRow && selectedLowerTableRow.id === rowData.id}
-                                            onChange={() => handleLowerTableSelect(rowData)}
-                                        />
+                                        {!!rowData?.sectionClassStatus
+                                            ? rowData?.sectionClassStatus === 'open'
+                                                ? 'Đang mở'
+                                                : 'Đã đóng'
+                                            : ''}
                                     </th>
-                                    <th style={{ height: '30px' }}>{rowData.id}</th>
-                                    <th>{rowData.classCode}</th>
-                                    <th>{rowData.sectionName}</th>
-                                    <th>{rowData.numberOfStudents}</th>
-                                    <th>{rowData.registered}</th>
-                                    <th>{rowData.sectionClassStatus}</th>
                                 </tr>
-                            ))}
-                    </table>
-                </div>
-                <div
-                    style={{
-                        width: '100%',
-                        textAlign: 'center',
-                        marginTop: '20px',
-                    }}
-                >
-                    <p style={{ fontSize: '17px', fontWeight: 'bold', color: '#FF8C00' }}>CHI TIẾT LỚP HỌC PHẦN</p>
-                </div>
-                <div
-                    style={{
-                        width: '40%',
-                        textAlign: 'center',
-                        marginTop: '30px',
-                        marginLeft: '350px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}
-                >
-                    {/* <p style={{ fontSize: '15px', marginTop: '5px' }}>Nhóm thực hành</p> */}
-                    {/* {termOptions && (
+                            </tbody>
+                        ))}
+                </table>
+            </div>
+            <hr />
+
+            {/* CHI TIẾT LỚP HỌC PHẦN */}
+            <div
+                style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    marginTop: '20px',
+                }}
+            >
+                <p style={{ fontSize: '17px', fontWeight: 'bold', color: '#FF8C00' }}>CHI TIẾT LỚP HỌC PHẦN</p>
+            </div>
+            <div
+                style={{
+                    textAlign: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                {/* <p style={{ fontSize: '15px', marginTop: '5px' }}>Nhóm thực hành</p> */}
+                {/* {termOptions && (
                         <div style={{ width: '180px' }}>
                             <Dropdown
                                 value={selectedTerm || (!!termOptions[0] && termOptions[0].id)}
@@ -336,156 +413,195 @@ function Dangkyhocphan() {
                                 isSearchable={true}
                                 className="p-2"
                                 placeholder="Chọn một option..."
-                                maxMenuHeight={250}
                             />
                         </div>
                     )}
                     <button style={{ width: '140px', backgroundColor: '#FF8C00' }}>
                         <p style={{ fontWeight: 'bold', color: 'white' }}>Xem lịch trùng</p>
                     </button> */}
-                </div>
-                {console.log(sectionClassStudentList)}
-                {console.log(getRefId())}
-                <div
-                    style={{
-                        width: '98%',
-                        marginLeft: '12px',
-                        marginTop: '15px',
-                    }}
-                >
-                    <table border="1" width={1125}>
-                        <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
+            </div>
+            <div
+                style={{
+                    marginTop: '15px',
+                }}
+            >
+                <table border="1" className="w-full">
+                    <thead>
+                        <tr className="bg-primary">
                             <th style={{ height: '50px' }} rowSpan="1">
-                                ID
+                                Lịch học
                             </th>
-                            <th rowSpan="1">Lịch học</th>
-                            <th rowSpan="1">Phòng</th>
+                            <th rowSpan="1">Phòng học</th>
                             <th rowSpan="1">Giảng viên</th>
-                            <th rowSpan="1">Thời gian</th>
-                            <th></th>
+                            <th rowSpan="1">Tiết bắt đầu</th>
+                            <th rowSpan="1">Tiết kết thúc</th>
+                            {/* <th rowSpan="1">Thao tác</th> */}
                         </tr>
-                        {sectionClassList &&
-                            sectionClassList?.length > 0 &&
-                            sectionClassList.map((rowData) => (
-                                <tr key={rowData.id}>
-                                    <th style={{ height: '40px' }}>{rowData.id}</th>
-                                    <th>
-                                        {`${rowData?.sectionClassType} - 
-                                            ${rowData.dayInWeek} (${rowData.periodFrom} - ${rowData.periodTo})`}
-                                    </th>
-                                    <th>{rowData.room}</th>
-                                    <th>{rowData.lecturerName}</th>
-                                    <th>{`(${rowData.periodFrom} - ${rowData.periodTo})`}</th>
-                                    <th>
-                                        <button style={{ width: '70px', height: '30px', backgroundColor: '#00C0FF' }}>
-                                            <p style={{ fontWeight: 'bold', color: 'white' }}>Xem</p>
-                                        </button>
-                                    </th>
-                                </tr>
-                            ))}
-                    </table>
-                </div>
-                <div
-                    style={{
-                        width: '100%',
-                        marginTop: '25px',
-                        textAlign: 'center',
-                    }}
-                >
-                    <button
-                        style={{ width: '140px', backgroundColor: '#FF8C00', height: '30px' }}
-                        onClick={handleOnSubmit}
-                    >
-                        <p style={{ fontWeight: 'bold', color: 'white' }}>Đăng kí môn học</p>
-                    </button>
-                </div>
-                <div
-                    style={{
-                        width: '100%',
-                        textAlign: 'center',
-                        marginTop: '20px',
-                    }}
-                >
-                    <p style={{ fontSize: '17px', fontWeight: 'bold', color: '#FF8C00' }}>
-                        LỚP HỌC PHẦN ĐÃ ĐĂNG KÍ TRONG HỌC KÌ NÀY
-                    </p>
-                </div>
-                <div
-                    style={{
-                        width: '98%',
-                        marginLeft: '12px',
-                        marginTop: '15px',
-                    }}
-                >
-                    <table border="1" width={1125}>
-                        <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
+                    </thead>
+                    {sectionClassList &&
+                        sectionClassList?.length > 0 &&
+                        sectionClassList.map((rowData) => {
+                            return (
+                                rowData?.timeAndPlaces &&
+                                rowData?.timeAndPlaces?.length > 0 &&
+                                rowData?.timeAndPlaces.map((timeAndPlace) => {
+                                    return (
+                                        <tbody key={rowData?.id + '-' + timeAndPlace?.id}>
+                                            <tr
+                                                onClick={() => {
+                                                    if (rowData?.sectionClassType === 'theory') {
+                                                        if (selectTimeAndPlaceTheory?.id === timeAndPlace?.id) {
+                                                            setSelectTimeAndPlaceTheory(null);
+                                                        } else {
+                                                            setSelectTimeAndPlaceTheory(timeAndPlace);
+                                                        }
+                                                    } else {
+                                                        if (selectTimeAndPlacePractice?.id === timeAndPlace?.id) {
+                                                            setSelectTimeAndPlacePractice(null);
+                                                        } else {
+                                                            setSelectTimeAndPlacePractice(timeAndPlace);
+                                                        }
+                                                    }
+                                                }}
+                                                className={`cursor-pointer ${
+                                                    rowData?.sectionClassType === 'theory'
+                                                        ? selectTimeAndPlaceTheory?.id === timeAndPlace?.id
+                                                            ? 'bg-yellow-300'
+                                                            : ''
+                                                        : selectTimeAndPlacePractice?.id === timeAndPlace?.id
+                                                        ? 'bg-yellow-300'
+                                                        : ''
+                                                }`}
+                                            >
+                                                <th style={{ height: '3rem' }}>
+                                                    {`${
+                                                        rowData?.sectionClassType === 'theory'
+                                                            ? 'Lý thuyết'
+                                                            : 'Thực hành'
+                                                    } (${convertDayInWeek(timeAndPlace.dayOfTheWeek)})`}
+                                                </th>
+                                                <th>{timeAndPlace.room}</th>
+                                                <th>{rowData.lecturerName}</th>
+                                                <th>{`${timeAndPlace.periodStart}`}</th>
+                                                <th>{`${timeAndPlace.periodEnd}`}</th>
+                                            </tr>
+                                        </tbody>
+                                    );
+                                })
+                            );
+                        })}
+                </table>
+            </div>
+            <hr />
+            <div
+                style={{
+                    width: '100%',
+                    marginTop: '25px',
+                    textAlign: 'center',
+                }}
+            >
+                {/* <Button /> */}
+                <button style={{ backgroundColor: '#FF8C00' }} onClick={handleOnSubmit}>
+                    <p style={{ fontWeight: 'bold', color: 'white' }}>Đăng kí môn học</p>
+                </button>
+            </div>
+            <hr />
+            <div
+                style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    marginTop: '20px',
+                }}
+            >
+                <p style={{ fontSize: '17px', fontWeight: 'bold', color: '#FF8C00' }}>
+                    LỚP HỌC PHẦN ĐÃ ĐĂNG KÍ TRONG HỌC KÌ NÀY
+                </p>
+            </div>
+            <hr />
+            <div
+                style={{
+                    marginTop: '15px',
+                }}
+            >
+                <table border="1" className="w-full">
+                    <thead>
+                        <tr className="bg-primary">
                             <th style={{ height: '50px' }} rowSpan="1">
-                                Thao tác
+                                Mã LHP
                             </th>
-                            <th rowSpan="1">STT</th>
-                            <th rowSpan="1">Mã LHP</th>
-                            <th rowSpan="1">Tên môn học</th>
-                            <th rowSpan="1">Lớp học phần dự kiến</th>
-                            <th rowSpan="1">Số TC</th>
+                            <th rowSpan="1">Tên môn học / Học phần</th>
+                            <th rowSpan="1">Số TC học tập</th>
+                            <th rowSpan="1">Số TC chi phí</th>
                             <th rowSpan="1">Học phí</th>
                             <th rowSpan="1">Hạn nộp</th>
-                            <th rowSpan="1">Trạng thái ĐK</th>
+                            <th rowSpan="1">Loại ĐK</th>
                             <th rowSpan="1">Ngày ĐK</th>
                             <th rowSpan="1">Trạng thái LHP</th>
+                            <th rowSpan="1">Trạng thái ĐK</th>
                         </tr>
+                    </thead>
+                    {sectionClassStudentList &&
+                        sectionClassStudentList?.length > 0 &&
+                        sectionClassStudentList?.map((studentSectionClass, i) => (
+                            <tbody key={studentSectionClass?.id}>
+                                <tr>
+                                    <th style={{ height: '40px' }}>{studentSectionClass?.sectionClassCode}</th>
+                                    <th>{studentSectionClass?.sectionName}</th>
+                                    <th>{studentSectionClass?.credits}</th>
+                                    <th>{studentSectionClass?.costCredits}</th>
+                                    <th>{studentSectionClass?.total} VND</th>
+                                    <th>{'-'}</th>
 
-                        {sectionClassStudentList &&
-                            sectionClassStudentList?.length > 0 &&
-                            sectionClassStudentList?.map((sectionClass, i) => (
-                                <tr key={i}>
-                                    <th style={{ height: '40px' }}></th>
-                                    <th>{sectionClass?.id}</th>
-                                    <th>{sectionClass?.classCode}</th>
-                                    <th>{sectionClass?.sectionName}</th>
-                                    <th>{sectionClass?.sectionName}</th>
-                                    <th>{sectionClass?.credit}</th>
-                                    <th>{sectionClass?.credit ? sectionClass?.credit * 580000 : 0}</th>
                                     <th>
-                                        <FontAwesomeIcon
-                                            style={{ color: 'green', fontSize: '20px' }}
-                                            icon={faCircleCheck}
-                                        />
+                                        {studentSectionClass?.type === 'new_learning'
+                                            ? 'Đăng kí học mới'
+                                            : studentSectionClass?.type === 'again_learning'
+                                            ? 'Đăng ký học lại'
+                                            : studentSectionClass?.type === 'improve_learning'
+                                            ? 'Đăng ký học cải thiện'
+                                            : '-'}
                                     </th>
-                                    <th>Đăng kí học mới</th>
-                                    <th>16/11/2023</th>
-                                    <th>{`${sectionClass?.sectionClassStatus === 'open' ? 'Đang mở' : 'Đã khóa'}`}</th>
+                                    <th>{new Date(studentSectionClass?.createdAt).toLocaleDateString()}</th>
+                                    <th>{`${
+                                        studentSectionClass?.sectionClassStatus === 'open' ? 'Đang mở' : 'Đã khóa'
+                                    }`}</th>
+                                    <th>
+                                        {studentSectionClass?.status === 'registered'
+                                            ? 'Đã đăng ký'
+                                            : studentSectionClass?.status === 'canceled'
+                                            ? 'Đã huỷ'
+                                            : 'Đang chờ'}
+                                    </th>
                                 </tr>
-                            ))}
-                    </table>
-                </div>
-                <div style={{ width: '100%', height: '20px' }}></div>
-                <div
-                    style={{
-                        width: '98%',
-                        marginTop: '10px',
-                        backgroundColor: '#82CAFA',
-                        marginLeft: '12px',
-                        justifyContent: 'space-between',
-                        display: 'flex',
-                    }}
-                >
-                    <div style={{ marginLeft: '15px' }}>
-                        <p>TRƯỜNG ĐẠI HỌC ĐỨC THUẬN</p>
-                        <p>Địa chỉ: 182 Lê Đức Thọ - Phường 15 - Gò Vấp</p>
-                        <p>Điện thoại: 1235646310</p>
-                        <p>FAX: 1532315630</p>
-                        <p>Email:dhdt@gmail.com</p>
-                    </div>
-                    <div style={{ marginRight: '15px' }}>
-                        <p>Thống kê truy cập</p>
-                        <p>Lượt truy cập: 13532</p>
-                        <p>Đang online: 512</p>
-                    </div>
-                </div>
-                <div style={{ width: '100%', height: '20px' }}></div>
+                            </tbody>
+                        ))}
+                </table>
             </div>
-        </div>
+            <hr />
+            <div
+                style={{
+                    width: '100%',
+                    marginTop: '10px',
+                    backgroundColor: '#82CAFA',
+                    justifyContent: 'space-between',
+                    display: 'flex',
+                }}
+            >
+                <div style={{ marginLeft: '15px' }}>
+                    <p>TRƯỜNG ĐẠI HỌC ĐỨC THUẬN</p>
+                    <p>Địa chỉ: 182 Lê Đức Thọ - Phường 15 - Gò Vấp</p>
+                    <p>Điện thoại: 1235646310</p>
+                    <p>FAX: 1532315630</p>
+                    <p>Email:dhdt@gmail.com</p>
+                </div>
+                <div style={{ marginRight: '15px' }}>
+                    <p>Thống kê truy cập</p>
+                    <p>Lượt truy cập: 13532</p>
+                    <p>Đang online: 512</p>
+                </div>
+            </div>
+        </React.Fragment>
     );
-}
+};
 
 export default Dangkyhocphan;

@@ -86,7 +86,7 @@ function Login() {
                         } else if (data?.userRole === UserRoles.LECTURER) {
                             window.location.assign('/lecturer');
                         } else {
-                            window.location.assign('/home');
+                            window.location.assign('/');
                         }
                     } else {
                         toast.current.show({

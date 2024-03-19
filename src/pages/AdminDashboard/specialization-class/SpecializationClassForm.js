@@ -15,8 +15,10 @@ import { getListSpecializationInfo } from '~/api/specialization/SpecializationSe
 import { InputMask } from 'primereact/inputmask';
 import { Calendar } from 'primereact/calendar';
 import moment from 'moment';
+import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
+const QueryKeyLecturerOptions = 'Lecturer-Options';
 
 const SpecializationClassForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
@@ -35,6 +37,12 @@ const SpecializationClassForm = forwardRef((props, ref) => {
     const { data: specializationOptions } = useQuery(
         [QueryKeySpecializationOptions, getUserId()],
         () => getListSpecializationInfo(getUserId(), {}, null, true),
+        { enabled: !!getUserId() },
+    );
+
+    const { data: lecturerOptions } = useQuery(
+        [QueryKeyLecturerOptions, getUserId()],
+        () => getListLecturerInfo(getUserId(), {}, null, true),
         { enabled: !!getUserId() },
     );
 
@@ -122,6 +130,20 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                                 optionLabel="name"
                                 optionValue="id"
                                 placeholder="Hãy chọn chuyên ngành cho lớp chuyên ngành..."
+                                className="w-full"
+                            />
+                        </span>
+                    </div>
+                    <div className="col-12 p-0">
+                        <p>Giảng viên chủ nhiệm lớp</p>
+                        <span className="w-full">
+                            <Dropdown
+                                value={data?.lecturerId || null}
+                                onChange={(e) => handleOnChange('lecturerId', e?.target.value)}
+                                options={lecturerOptions}
+                                optionLabel="fullName"
+                                optionValue="id"
+                                placeholder="Hãy chọn giảng viên chủ nhiệm cho lớp chuyên ngành..."
                                 className="w-full"
                             />
                         </span>

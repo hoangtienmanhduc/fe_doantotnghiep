@@ -32,15 +32,12 @@ const SectionClassManagement = () => {
         { field: 'sectionCode', header: 'Mã học phần' },
         { field: 'lecturerName', header: 'Giảng viên phụ trách' },
         { field: 'lecturerCode', header: 'Mã giảng viên' },
-        { field: 'classCode', header: 'Mã lớp học phần' },
-        { field: 'room', header: 'Phòng học' },
-        { field: 'periodFrom', header: 'Tiết ban đầu' },
-        { field: 'periodTo', header: 'Tiết kết thúc' },
+        { field: 'code', header: 'Mã lớp học phần' },
+        { field: 'name', header: 'Tên lớp học phần' },
         { field: 'numberOfStudents', header: 'Số sinh viên tối đa' },
-        { field: 'dayInWeek', header: 'Thứ trong tuần' },
         { field: 'sectionClassType', header: 'Loại lớp học phần' },
-        { field: 'startedAt', header: 'Thời gian bắt đầu' },
         { field: 'note', header: 'Ghi chú' },
+        { field: 'sectionClassStatus', header: 'Tình trạng lớp học phần' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -124,6 +121,14 @@ const SectionClassManagement = () => {
                                             raised
                                             onClick={() => sectionClassRef.current.showForm(rowData)}
                                         />
+                                    </div>
+                                ) : col.field === 'sectionClassType' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] === 'theory' ? 'Lý thuyết' : 'Thực hành'}
+                                    </div>
+                                ) : col.field === 'sectionClassStatus' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] === 'open' ? 'Đang mở' : 'Đã đóng'}
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
