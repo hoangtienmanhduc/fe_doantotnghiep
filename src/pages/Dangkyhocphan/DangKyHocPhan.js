@@ -18,17 +18,17 @@ import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { RadioButton } from 'primereact/radiobutton';
 import { convertDayInWeek } from '~/utils/Utils';
 
-const courses = [
+const registrationType = [
     {
         key: 'new_learning',
         name: 'HỌC MỚI',
     },
     {
-        key: 'learn_again',
+        key: 'again_learning',
         name: 'HỌC LẠI',
     },
     {
-        key: 'learn_improve',
+        key: 'improve_learning',
         name: 'HỌC CẢI THIỆN',
     },
 ];
@@ -42,7 +42,7 @@ const Dangkyhocphan = () => {
     // State
     const [selectedSection, setSelectedSection] = useState(null);
     const [selectedSectionClass, setSelectedSectionClass] = useState(null);
-    const [selectedCourse, setSelectedCourse] = useState(courses[0].key);
+    const [selectedRegistration, setSelectedRegistration] = useState(registrationType[0].key);
     const [selectedTerm, setSelectedTerm] = useState(null);
     const [selectTimeAndPlaceTheory, setSelectTimeAndPlaceTheory] = useState(null);
     const [selectTimeAndPlacePractice, setSelectTimeAndPlacePractice] = useState(null);
@@ -55,14 +55,14 @@ const Dangkyhocphan = () => {
     const { data: sectionList } = useQuery(
         [QueryKeySection, getUserId(), selectedTerm],
 
-        () => getListSectionInfo(getUserId(), { termId: selectedTerm }),
+        () => getListSectionInfo(getUserId(), { termId: selectedTerm, studentId: getRefId() }),
         {
             enabled: !!getUserId() && !!selectedTerm,
         },
     );
 
     const { data: sectionClassTheoryList } = useQuery(
-        [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
+        [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id, selectedTerm],
         () =>
             getListSectionClassInfo(getUserId(), {
                 sectionId: selectedSection?.id,
@@ -82,7 +82,7 @@ const Dangkyhocphan = () => {
                 sectionClassId: selectedSectionClass?.id,
             }),
         {
-            enabled: !!getUserId() && !!selectedSection?.id && !!selectedSectionClass?.id,
+            enabled: !!getUserId() && !!selectedSectionClass?.id,
         },
     );
 
@@ -106,18 +106,6 @@ const Dangkyhocphan = () => {
             }
         },
     });
-
-    // Handle
-    const handleChange = useCallback((selectedTerm) => {
-        setSelectedTerm(selectedTerm);
-
-        const selectedCourseId = selectedTerm.value;
-        const matchingCourse = courses.find((course) => course.id === selectedCourseId);
-
-        if (matchingCourse) {
-            setSelectedCourse(matchingCourse);
-        }
-    }, []);
 
     const handleOnSubmit = useCallback(() => {
         if (!selectedSection) {
@@ -145,11 +133,15 @@ const Dangkyhocphan = () => {
 
             sectionClassTheoryId: selectTimeAndPlaceTheory?.sectionClassId,
             timeAndPlaceTheoryId: selectTimeAndPlaceTheory?.id,
+
+            registrationType: selectedRegistration,
+            registrationStatus: 'registered',
         };
 
         mutate(toPostData);
     }, [
         mutate,
+        selectedRegistration,
         selectTimeAndPlacePractice,
         selectTimeAndPlaceTheory?.id,
         selectTimeAndPlaceTheory?.sectionClassId,
@@ -175,7 +167,7 @@ const Dangkyhocphan = () => {
                             <Dropdown
                                 className="p-2 w-full"
                                 value={selectedTerm || null}
-                                onChange={(e) => handleChange(e?.target?.value)}
+                                onChange={(e) => setSelectedTerm(e?.target?.value)}
                                 options={termOptions}
                                 optionLabel="name"
                                 optionValue="id"
@@ -190,8 +182,8 @@ const Dangkyhocphan = () => {
                             inputId="hocmoi"
                             name="loaiDangKy"
                             value="new_learning"
-                            onChange={(e) => setSelectedCourse(e.value)}
-                            checked={selectedCourse === 'new_learning'}
+                            onChange={(e) => setSelectedRegistration(e.value)}
+                            checked={selectedRegistration === 'new_learning'}
                         />
                         <label htmlFor="hocmoi" className="ml-2">
                             HỌC MỚI
@@ -201,9 +193,9 @@ const Dangkyhocphan = () => {
                         <RadioButton
                             inputId="hoclai"
                             name="loaiDangKy"
-                            value="learn_again"
-                            onChange={(e) => setSelectedCourse(e.value)}
-                            checked={selectedCourse === 'learn_again'}
+                            value="again_learning"
+                            onChange={(e) => setSelectedRegistration(e.value)}
+                            checked={selectedRegistration === 'again_learning'}
                         />
                         <label htmlFor="hoclai" className="ml-2">
                             HỌC LẠI
@@ -213,9 +205,9 @@ const Dangkyhocphan = () => {
                         <RadioButton
                             inputId="hoccaithien"
                             name="loaiDangKy"
-                            value="learn_improve"
-                            onChange={(e) => setSelectedCourse(e.value)}
-                            checked={selectedCourse === 'learn_improve'}
+                            value="improve_learning"
+                            onChange={(e) => setSelectedRegistration(e.value)}
+                            checked={selectedRegistration === 'improve_learning'}
                         />
                         <label htmlFor="hoccaithien" className="ml-2">
                             HỌC CẢI THIỆN
@@ -258,6 +250,9 @@ const Dangkyhocphan = () => {
                                     onClick={() => {
                                         setSelectedSection(rowData);
                                         setSelectedSectionClass(null);
+                                        setSelectTimeAndPlacePractice(null);
+                                        setSelectedRegistration(null);
+                                        setSelectTimeAndPlaceTheory(null);
                                     }}
                                     className={`cursor-pointer ${
                                         rowData?.id === selectedSection?.id ? 'bg-yellow-300' : ''
@@ -359,6 +354,9 @@ const Dangkyhocphan = () => {
                                 <tr
                                     onClick={() => {
                                         setSelectedSectionClass(rowData);
+                                        setSelectTimeAndPlacePractice(null);
+                                        setSelectedRegistration(null);
+                                        setSelectTimeAndPlaceTheory(null);
                                     }}
                                     className={`cursor-pointer ${
                                         rowData?.id === selectedSectionClass?.id ? 'bg-yellow-300' : ''
@@ -438,7 +436,8 @@ const Dangkyhocphan = () => {
                             {/* <th rowSpan="1">Thao tác</th> */}
                         </tr>
                     </thead>
-                    {sectionClassList &&
+                    {!!selectedSectionClass?.id &&
+                        sectionClassList &&
                         sectionClassList?.length > 0 &&
                         sectionClassList.map((rowData) => {
                             return (

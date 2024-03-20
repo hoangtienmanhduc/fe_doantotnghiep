@@ -6,7 +6,7 @@ function DefaultLayoutSidebar({ children }) {
         <div>
             <Header />
             <div className="flex col-12 justify-content-center aling-items-center overflow-x-auto">
-                <div className="col-2">
+                <div className="col-2 border-1 border-300 border-round-md">
                     <MenuSidebar />
                 </div>
                 <div className="col-10">{children}</div>

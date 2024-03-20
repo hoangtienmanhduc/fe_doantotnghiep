@@ -1,137 +1,145 @@
 import React, { useState } from 'react';
-import classNames from 'classnames/bind';
-import styles from './MenuSidebar.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faAngleDown,
-    faCheckToSlot,
-    faDisplay,
-    faGraduationCap,
-    faHouseChimney,
-    faMoneyCheckDollar,
-} from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'primereact/button';
-
-const cx = classNames.bind(styles);
 
 const MenuSidebar = () => {
     return (
         <React.Fragment>
-            {/* <div style={{ width: '100%' }}>
-                <Button
-                    to="/home"
-                    sidebar
-                    leftIcon={<FontAwesomeIcon style={{ marginRight: '25px' }} icon={faHouseChimney} />}
-                >
-                    Trang chủ
-                </Button>
-            </div>
-            <div className={cx('accordion_container')}>
-                <div className={cx('accordion')}>
-                    <Button style={{ fontSize: '12px' }} label="THÔNG TIN CHUNG" icon="pi pi-screen" />
+            <div className="mb-2">
+                <div className="w-full flex justify-content-start align-items-center bg-primary text-white border-round-xl p-2">
+                    <i className="pi pi-info mr-2 p-2 border-circle bg-white text-primary"></i>
+                    <p className="font-semibold m-0 text-sm">THÔNG TIN CHUNG</p>
                 </div>
-                <div>
-                    <div className="">
-                        <Button to="/" text label="Thông tin sinh viên" />
-                    </div>
-                    <div className="">
-                        <Button to="/" text label="Ghi chú nhắc nhở" />
-                    </div>
-                    <div className="">
-                        <Button to="/capnhatthongtinsinhvien" text label="Đề xuất cập nhật thông tin" />
-                    </div>
-                    <div className="">
-                        <Button to="/" text label="Cập nhật thông tin ngân hàng" />
-                    </div>
-                </div>
-            </div>
-            <div className={cx('accordion_container')}>
-                <div className={cx('accordion')}>
-                    <button style={{ fontSize: '12px' }} type="button" className={cx('accordion_title')}>
-                        <FontAwesomeIcon
-                            style={{ marginRight: '8px', fontSize: '15px', marginLeft: '5px' }}
-                            icon={faGraduationCap}
+                <div className="flex flex-column justify-content-center align-items-center gap-2">
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/')}
+                            text
+                            label="Thông tin sinh viên"
                         />
-                        HỌC TẬP
-                        <FontAwesomeIcon style={{ marginLeft: '82px', fontSize: '15px' }} icon={faAngleDown} />
-                    </button>
-                </div>
-                <div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/ketquahoctap" text>
-                            Kết quả học tập
-                        </Button>
                     </div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/lichhoc" text>
-                            Lịch theo tuấn
-                        </Button>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/')}
+                            text
+                            label="Ghi chú nhắc nhở"
+                        />
                     </div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/lichtheotiendo" text>
-                            Lịch theo tiến độ
-                        </Button>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/capnhatthongtinsinhvien')}
+                            text
+                            label="Đề xuất cập nhật thông tin"
+                        />
                     </div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/" text>
-                            Lịch học lớp danh nghĩa
-                        </Button>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/')}
+                            text
+                            label="Cập nhật thông tin ngân hàng"
+                        />
                     </div>
                 </div>
             </div>
-            <div className={cx('accordion_container')}>
-                <div className={cx('accordion')}>
-                    <button style={{ fontSize: '12px' }} type="button" className={cx('accordion_title')}>
-                        <FontAwesomeIcon
-                            style={{ marginRight: '8px', fontSize: '15px', marginLeft: '5px' }}
-                            icon={faCheckToSlot}
-                        />
-                        ĐĂNG KÝ HỌC PHẦN
-                        <FontAwesomeIcon style={{ marginLeft: '17px', fontSize: '15px' }} icon={faAngleDown} />
-                    </button>
+            <div className="mb-2">
+                <div className="w-full flex justify-content-start align-items-center bg-primary text-white border-round-xl p-2">
+                    <i className="pi pi-book mr-2 p-2 border-circle bg-white text-primary"></i>
+                    <p className="font-semibold m-0 text-sm">HỌC TẬP</p>
                 </div>
-                <div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/chuongtrinhkhung" text>
-                            Chương trình khung
-                        </Button>
+                <div className="flex flex-column justify-content-center align-items-center gap-2">
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/ketquahoctap')}
+                            text
+                            label="Kết quả học tập"
+                        />
                     </div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/dangkyhocphan" text>
-                            Đăng kí học phần
-                        </Button>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/lichhoc')}
+                            text
+                            label="Lịch theo tuấn"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/lichtheotiendo')}
+                            text
+                            label="Lịch theo tiến độ"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/')}
+                            text
+                            label="Lịch học lớp danh nghĩa"
+                        />
                     </div>
                 </div>
             </div>
-            <div className={cx('accordion_container')}>
-                <div className={cx('accordion')}>
-                    <button style={{ fontSize: '12px' }} type="button" className={cx('accordion_title')}>
-                        <FontAwesomeIcon
-                            style={{ marginRight: '8px', fontSize: '15px', marginLeft: '5px' }}
-                            icon={faMoneyCheckDollar}
+            <div className="mb-2">
+                <div className="w-full flex justify-content-start align-items-center bg-primary text-white border-round-xl p-2">
+                    <i className="pi pi-check mr-2 p-2 border-circle bg-white text-primary"></i>
+                    <p className="font-semibold m-0 text-sm">ĐĂNG KÝ HỌC PHẦN</p>
+                </div>
+                <div className="flex flex-column justify-content-center align-items-center gap-2">
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/chuongtrinhkhung')}
+                            text
+                            label="Chương trình khung"
                         />
-                        HỌC PHÍ
-                        <FontAwesomeIcon style={{ marginLeft: '85px', fontSize: '15px' }} icon={faAngleDown} />
-                    </button>
-                </div>
-                <div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/tracuucongno" text>
-                            Tra cứu công nợ
-                        </Button>
                     </div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/thanhtoantructuyen" text>
-                            Thanh toán trực tuyến
-                        </Button>
-                    </div>
-                    <div className="">
-                        <Button style={{ fontSize: '10px' }} to="/phieutonghop" text>
-                            Phiếu thu tổng hợp
-                        </Button>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/dangkyhocphan')}
+                            text
+                            label="Đăng kí học phần"
+                        />
                     </div>
                 </div>
-            </div> */}
+            </div>
+            <div className="mb-2">
+                <div className="w-full flex justify-content-start align-items-center bg-primary text-white border-round-xl p-2">
+                    <i className="pi pi-dollar mr-2 p-2 border-circle bg-white text-primary"></i>
+                    <p className="font-semibold m-0 text-sm">HỌC PHÍ</p>
+                </div>
+                <div className="flex flex-column justify-content-center align-items-center gap-2">
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/tracuucongno')}
+                            text
+                            label="Tra cứu công nợ"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/thanhtoantructuyen')}
+                            text
+                            label="Thanh toán trực tuyến"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <Button
+                            className="w-full"
+                            onClick={() => window.location.assign('/phieutonghop')}
+                            text
+                            label="Phiếu thu tổng hợp"
+                        />
+                    </div>
+                </div>
+            </div>
         </React.Fragment>
     );
 };

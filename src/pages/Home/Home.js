@@ -21,6 +21,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { getUserInfo } from '~/api/user/UserService';
 import { Button } from 'primereact/button';
+import { Avatar } from 'primereact/avatar';
+import { Divider } from 'primereact/divider';
 
 const cx = classNames.bind(styles);
 
@@ -78,62 +80,80 @@ function Home() {
         setSelectedOption(selectedOption);
     };
     return (
-        <div className="w-full">
-            <div className="col-12 grid align-items-stretch p-0 mb-3">
+        <div className="w-full mt-3">
+            <div className="col-12 flex flex-wrap align-items-stretch p-0 mb-3 surface-200 border-1 border-round-xl border-200">
                 <div className="xs:col-6 sm:col-6 md:col-6 col-12 h-full">
                     <h2>
                         <i className="pi pi-user mr-2"></i>Thông tin sinh viên
                         <hr />
                     </h2>
 
-                    <div className="flex flex-column align-items-start col-12">
-                        <Image src="https://i.imgur.com/FnS0hfi.jpg" className={cx('user-avata')} alt="name" />
-                        <Button text>Xem chi tiết</Button>
+                    <div className="flex flex-column align-items-center justify-content-center col-12">
+                        <Avatar className="bg-primary text-white" icon="pi pi-user" size="xlarge" shape="circle" />
+                        {/* <Image src="https://i.imgur.com/FnS0hfi.jpg" className={cx('user-avata')} alt="name" /> */}
+                        <Button className="my-2" text label="Xem chi tiết" />
                     </div>
                     <div className="flex align-items-center h-full">
-                        <div className="flex justify-content-between col-12">
-                            <div>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">MSSV:</p>
-                                    <p>{userInfo?.code}</p>
+                        <div className="flex justify-content-around align-items-end col-12">
+                            <div className="">
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">MSSV:</h3>
+                                    <p className="m-0">{userInfo?.code}</p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Họ tên:</p>
-                                    <p>{userInfo?.firstName + ' ' + userInfo?.lastName}</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Họ tên:</h3>
+                                    <p className="m-0">
+                                        {userInfo?.firstName ? userInfo.firstName : ' '}
+                                        {userInfo?.lastName ? userInfo.lastName : ''}
+                                    </p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Giới tính:</p>
-                                    <p>{userInfo?.gender}</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Giới tính:</h3>
+                                    <p className="m-0">
+                                        {userInfo?.gender === 'unknown'
+                                            ? 'Chưa đặt'
+                                            : userInfo?.gender === 'male'
+                                            ? 'Nam'
+                                            : userInfo?.gender === 'female'
+                                            ? 'Nữ'
+                                            : '-'}
+                                    </p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Ngày sinh:</p>
-                                    <p>{userInfo?.dob}</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Ngày sinh:</h3>
+                                    <p className="m-0">{userInfo?.dob}</p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Nơi sinh:</p>
-                                    <p>{userInfo?.provinceName}</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Nơi sinh:</h3>
+                                    <p className="m-0">{userInfo?.provinceName}</p>
                                 </span>
                             </div>
-                            <div>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Lớp học:</p>
-                                    <p>{userInfo?.specializationClassName}</p>
+                            <div className="">
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Lớp học:</h3>
+                                    <p className="m-0">{userInfo?.specializationClassName}</p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Khóa học:</p>
-                                    <p>{userInfo?.schoolYear}</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Khóa học:</h3>
+                                    <p className="m-0">{userInfo?.schoolYear}</p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Bậc đào tạo:</p>
-                                    <p>Đại học</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Bậc đào tạo:</h3>
+                                    <p className="m-0">Đại học</p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Loại hình đào tạo:</p>
-                                    <p>{userInfo?.typeOfEducation}</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Loại hình đào tạo:</h3>
+                                    <p className="m-0">
+                                        {userInfo?.typeOfEducation === 'general_program'
+                                            ? 'Hệ đại trà'
+                                            : userInfo?.typeOfEducation === 'high_quality_program'
+                                            ? 'Hệ chất lượng cao'
+                                            : '-'}
+                                    </p>
                                 </span>
-                                <span className="flex align-items-center">
-                                    <p className="text-600 font-semibold mr-2">Ngành:</p>
-                                    <p>{userInfo?.specializationName}</p>
+                                <span className="mb-2 flex align-items-center">
+                                    <h3 className="text-primary m-0 text-600 font-semibold mr-2">Ngành:</h3>
+                                    <p className="m-0">{userInfo?.specializationName}</p>
                                 </span>
                             </div>
                         </div>
@@ -176,7 +196,7 @@ function Home() {
                     </div>
                 </div>
             </div>
-            <div className="grid align-items-stretch justify-content-between gap-2 w-full m-0">
+            <div className="grid align-items-stretch justify-content-start gap-2 w-full m-0">
                 <div
                     style={{
                         backgroundColor: 'white',
@@ -271,7 +291,7 @@ function Home() {
                         Tra cứu công nợ
                     </Button>
                 </div>
-                <div
+                {/* <div
                     style={{
                         backgroundColor: 'white',
                         borderRadius: '5px',
@@ -362,9 +382,8 @@ function Home() {
                     >
                         Nhắc nhở
                     </Button>
-                </div>
+                </div> */}
             </div>
-            <hr />
             {/* <div className="grid col-12 surface-50 border-round p-0 m-0">
                 <div className="col-4">
                     <div className="flex align-items-center justify-content-between mb-3">

@@ -4,21 +4,41 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { startOfWeek, endOfWeek, addDays, format, isSameDay, subWeeks } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { useQuery } from '@tanstack/react-query';
-import { getUserId } from '~/components/authentication/AuthUtils';
-import { getListScheduleInfo } from '~/api/schedule/ScheduleSevice';
+import { getRefId, getSystemRole, getUserId } from '~/components/authentication/AuthUtils';
 import { InputText } from 'primereact/inputtext';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
+import { getListRegistration } from '~/api/registration/RegistrationService';
+import { getListScheduleInfo } from '~/api/schedule/ScheduleSevice';
 
 const QueryKey = 'Schedule-List';
+const QueryKeyRegistration = 'Registration-List';
 
 const Lichhoc = () => {
     // Date
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedSchedule, setSelectedSchedule] = useState(0);
-    const { data: scheduleDataList } = useQuery([QueryKey, getUserId()], () => getListScheduleInfo(getUserId(), {}), {
-        enabled: !!getUserId(),
-    });
+    const { data } = useQuery(
+        [QueryKeyRegistration, getUserId()],
+        () =>
+            getListRegistration(getUserId(), {
+                studentId: getRefId(),
+            }),
+        {
+            enabled: !!getUserId() && !!getRefId(),
+        },
+    );
+
+    const { data: scheduleDataList } = useQuery(
+        [QueryKey, getUserId()],
+        () =>
+            getListScheduleInfo(getUserId(), {
+                sectionClassIds: data.map((item) => item?.sectionClassId),
+            }),
+        {
+            enabled: !!getUserId() && !!getRefId() && !!data && data?.length > 0,
+        },
+    );
 
     const currentDateFormatted = format(selectedDate, 'dd/MM/yyyy');
 
@@ -29,52 +49,74 @@ const Lichhoc = () => {
         </span>
     );
 
-    const dayOfWeekList = useMemo(
-        (dateNow) => {
-            const startDate = startOfWeek(dateNow, { weekStartsOn: 1 });
-            const endDate = endOfWeek(dateNow, { weekStartsOn: 1 });
+    const dayOfWeekList = useMemo(() => {
+        const startDate = startOfWeek(selectedDate, { weekStartsOn: 1 });
+        const endDate = endOfWeek(selectedDate, { weekStartsOn: 1 });
+        let newColumns = [];
+        let currentDate = startDate;
+        let tempData = scheduleDataList && scheduleDataList?.length > 0 ? [...scheduleDataList] : [];
+        while (currentDate <= endDate) {
+            const day = format(currentDate, 'dd/MM/yyyy');
+            let compareDate = addDays(currentDate, 1);
 
-            let newColumns = [];
-            const currentDate = startDate;
-            
-            while (currentDate <= endDate) {
-                const day = format(currentDate, 'dd/MM/yyyy');
-                const dayScheduleItems = scheduleDataList.filter((item) =>
-                    isSameDay(Date.parse(item.learningDate), currentDate),
+            if (scheduleDataList && scheduleDataList?.length > 0) {
+                const dayScheduleItems = tempData?.filter((item) =>
+                    isSameDay(new Date(item.learningDate), compareDate),
                 );
+
                 newColumns.push({
                     day: format(currentDate, 'iiii', { locale: vi }),
                     date: day,
+
                     scheduleItems: dayScheduleItems,
                 });
-
-                currentDate = addDays(currentDate, 1);
+            } else {
+                newColumns.push({
+                    day: format(currentDate, 'iiii', { locale: vi }),
+                    date: day,
+                });
             }
-        },
-        [scheduleDataList, selectedSchedule],
-    );
 
-    const renderScheduleItems = (scheduleItems) => {
+            currentDate = addDays(currentDate, 1);
+        }
+
+        return newColumns;
+    }, [scheduleDataList, selectedDate]);
+
+    const renderScheduleItems = (type, scheduleItems) => {
         return (
-            <td key={scheduleItems?.id} style={{ backgroundColor: 'white' }}>
+            <td key={scheduleItems?.id} style={{ backgroundColor: 'white', height: '170px' }}>
                 {scheduleItems &&
                     scheduleItems?.length > 0 &&
-                    scheduleItems.map((item) => (
-                        <div
-                            key={item.id}
-                            style={{
-                                backgroundColor: item.isLichHoc ? 'rgb(231, 236, 240)' : 'rgb(253, 255, 154)',
-                                textAlign: 'center',
-                            }}
-                        >
-                            <p>{item.sectionName}</p>
-                            <p>{item.sectionCode}</p>
-                            <p>{`Tiết: ${item.periodFrom} - ${item.periodTo}`}</p>
-                            <p>{`Phòng: ${item.room}`}</p>
-                            {item.isLichThi && <p>{`Nhóm: ${item.nhom}`}</p>}
-                            <p>{`GV: ${item.lecturerName}`}</p>
-                        </div>
-                    ))}
+                    scheduleItems
+                        ?.filter((item) =>
+                            type === 'morning'
+                                ? item?.periodStart <= 6
+                                : type === 'afternoon'
+                                ? item?.periodStart > 6 && item?.periodStart <= 12
+                                : type === 'evening'
+                                ? item?.periodStart > 12 && item?.periodStart <= 15
+                                : false,
+                        )
+                        ?.map((item) => (
+                            <div
+                                key={item.id}
+                                className="flex flex-column justify-content-start align-items-center"
+                                style={{
+                                    backgroundColor: 'rgb(231, 236, 240)',
+                                    textAlign: 'center',
+                                    height: '100%',
+                                }}
+                            >
+                                <br />
+                                <p className="p-0 m-0">{item.sectionName}</p>
+                                <p className="p-0 m-0">{item.sectionCode}</p>
+                                <br />
+                                <p className="p-0 m-0">{`Tiết: ${item.periodStart} - ${item.periodEnd}`}</p>
+                                <p className="p-0 m-0">{`Phòng: ${item.room}`}</p>
+                                <p className="p-0 m-0">{`GV: ${item.lecturerName}`}</p>
+                            </div>
+                        ))}
             </td>
         );
     };
@@ -123,8 +165,8 @@ const Lichhoc = () => {
                         </div>
                     </div>
                     <DatePicker
-                        selected={new Date()}
-                        onChange={(date) => {}}
+                        selected={selectedDate}
+                        onChange={(date) => setSelectedDate(date)}
                         dateFormat="dd/MM/yyyy"
                         customInput={<CustomDatePickerInput />}
                     />
@@ -159,24 +201,20 @@ const Lichhoc = () => {
                             ))}
                         </tr>
                     </thead>
-                    <tr>
-                        <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Sáng</th>
-                        {scheduleDataList
-                            .filter((item) => item?.dateTime?.toLowerCase() === 'morning')
-                            .map((column) => renderScheduleItems(column))}
-                    </tr>
-                    <tr>
-                        <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Chiều</th>
-                        {scheduleDataList
-                            .filter((item) => item?.dateTime?.toLowerCase() === 'afternoon')
-                            .map((column) => renderScheduleItems(column))}
-                    </tr>
-                    <tr>
-                        <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Tối</th>
-                        {scheduleDataList
-                            .filter((item) => item?.dateTime?.toLowerCase() === 'evening')
-                            .map((column) => renderScheduleItems(column))}
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Sáng</th>
+                            {dayOfWeekList?.map((column) => renderScheduleItems('morning', column?.scheduleItems))}
+                        </tr>
+                        <tr>
+                            <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Chiều</th>
+                            {dayOfWeekList?.map((column) => renderScheduleItems('afternoon', column?.scheduleItems))}
+                        </tr>
+                        <tr>
+                            <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Tối</th>
+                            {dayOfWeekList?.map((column) => renderScheduleItems('evening', column?.scheduleItems))}
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
