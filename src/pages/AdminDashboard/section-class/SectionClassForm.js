@@ -550,7 +550,6 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 />
                             </div>
                             <div className="col-12 p-0 mt-3">
-                                {console.log(data)}
                                 <DataTable
                                     emptyMessage="Chưa có thời gian học cho lớp học phần này..."
                                     value={

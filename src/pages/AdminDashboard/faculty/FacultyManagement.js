@@ -86,7 +86,6 @@ const FacultyManagement = () => {
 
     return (
         <React.Fragment>
-            {console.log(data)}
             <div className="card col-12">
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}

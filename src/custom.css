@@ -11,3 +11,30 @@
     background-color: '#38419D';
 }
 
+.fc .fc-col-header {
+    width: 100% !important;
+}
+
+.fc .fc-daygrid-body,
+.fc-scrollgrid-sync-table {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.fc-event {
+    height: fit-content !important;
+}
+
+.fc-scroller {
+    overflow: auto;
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;
+}
+.fc-scroller::-webkit-scrollbar {
+    width: 0 !important;
+    display: none;
+}
+
+.fc-daygrid-day-number {
+    width: 100% !important;
+}

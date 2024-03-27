@@ -27,6 +27,7 @@ import Doimatkhau from '~/pages/Doimatkhau/DoiMatKhau';
 import Thongtincanhan from '~/pages/Thongtincanhan/ThongTinCaNhan';
 import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien/CapNhatThongTinSinhVien';
 import { getAccessToken } from './components/authentication/AuthUtils';
+import StudentInformation from './pages/AdminDashboard/student/StudentInformation';
 export const UserRoles = {
     ADMIN: 'Admin',
     LECTURER: 'Lecturer',
@@ -58,6 +59,11 @@ function App() {
             {
                 path: '/admin',
                 component: !getAccessToken() ? Login : AdminDashboard,
+                layout: !getAccessToken() && null,
+            },
+            {
+                path: '/admin/student/:id',
+                component: !getAccessToken() ? Login : StudentInformation,
                 layout: !getAccessToken() && null,
             },
             {

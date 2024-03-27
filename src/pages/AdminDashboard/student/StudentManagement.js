@@ -16,6 +16,7 @@ import { separateStudentsByClass } from '~/api/specialization/SpecializationClas
 import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { getListSchoolYear } from '~/api/student/StudentService';
 import { Divider } from 'primereact/divider';
+import { InputText } from 'primereact/inputtext';
 
 const QueryKey = 'Student-Management';
 const QueryKeySchoolYear = 'School-Year-Options';
@@ -27,6 +28,7 @@ const initialPageable = {
 };
 const StudentManagement = () => {
     const [pageable, setPageable] = useState({ ...initialPageable });
+    const [filterRequest, setFilterRequest] = useState({});
 
     const { data, refetch } = useQuery(
         [
@@ -36,10 +38,11 @@ const StudentManagement = () => {
             pageable.rows,
             pageable.sortField,
             pageable.sortOrder,
-            { systemRole: 'student' },
+            { ...filterRequest, systemRole: 'student' },
         ],
         () =>
             getPageUser(getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {
+                ...filterRequest,
                 systemRole: 'student',
             }),
         {
@@ -133,20 +136,36 @@ const StudentManagement = () => {
     }, [mutate, schoolYear]);
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-            <p className="text-900 font-bold">QUẢN LÝ SINH VIÊN</p>
-            <div className="flex align-items-center ">
-                <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
-                <Button
-                    className="mr-2"
-                    icon="pi pi-plus"
-                    rounded
-                    raised
-                    onClick={() => studentRef.current.showForm()}
-                />
-                <Button label="Phân lớp chuyên ngành" rounded raised onClick={() => setVisible(true)} />
+        <React.Fragment>
+            <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+                <p className="text-900 font-bold">QUẢN LÝ SINH VIÊN</p>
+                <div className="flex align-items-center ">
+                    <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
+                    <Button
+                        className="mr-2"
+                        icon="pi pi-plus"
+                        rounded
+                        raised
+                        onClick={() => studentRef.current.showForm()}
+                    />
+                    <Button label="Phân lớp chuyên ngành" rounded raised onClick={() => setVisible(true)} />
+                </div>
             </div>
-        </div>
+            <div className="col-12">
+                <span className="font-semibold text-primary">
+                    <p>Tìm kiếm</p>
+                </span>
+                <span className="p-input-icon-left w-full">
+                    <i className="pi pi-search" />
+                    <InputText
+                        value={filterRequest?.searchValue || ''}
+                        placeholder="Nhập mã sinh viên hoặc tên của sinh viên để tìm kiếm"
+                        onChange={(e) => setFilterRequest({ ...filterRequest, searchValue: e.target.value })}
+                        className="w-full"
+                    />
+                </span>
+            </div>
+        </React.Fragment>
     );
 
     const headerSeparate = (
@@ -169,7 +188,7 @@ const StudentManagement = () => {
                     pageable.rows,
                     pageable.sortField,
                     pageable.sortOrder,
-                    { systemRole: 'student' },
+                    { ...filterRequest, systemRole: 'student' },
                 ],
                 () =>
                     getPageUser(
@@ -178,11 +197,11 @@ const StudentManagement = () => {
                         pageable?.rows,
                         pageable.sortField,
                         pageable.sortOrder,
-                        { systemRole: 'student' },
+                        { ...filterRequest, systemRole: 'student' },
                     ),
             );
         }
-    }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
+    }, [data, filterRequest, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
 
     return (
         <React.Fragment>
@@ -229,10 +248,22 @@ const StudentManagement = () => {
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
                                             text
+                                            className="mr-2"
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
+                                            tooltip="Chỉnh sửa thông tin của sinh viên"
+                                            tooltipOptions={{ position: 'left' }}
                                             onClick={() => studentRef.current.showForm(rowData)}
+                                        />
+                                        <Button
+                                            text
+                                            icon="pi pi-eye"
+                                            rounded
+                                            raised
+                                            onClick={() => window.location.assign(`/admin/student/${rowData?.id}`)}
+                                            tooltip="Xem các học phần của sinh viên"
+                                            tooltipOptions={{ position: 'left' }}
                                         />
                                     </div>
                                 ) : (

@@ -19,7 +19,6 @@ import { getListSpecializationClassInfo } from '~/api/specialization/Specializat
 import { Divider } from 'primereact/divider';
 import { Calendar } from 'primereact/calendar';
 import moment from 'moment';
-import { InputNumber } from 'primereact/inputnumber';
 import { InputMask } from 'primereact/inputmask';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
@@ -209,7 +208,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Thuộc chuyên ngành</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.specializationId}
+                                    value={data?.specializationId || null}
                                     onChange={(e) => handleOnChange('specializationId', e?.target.value)}
                                     options={specializationOptions}
                                     optionLabel="name"
@@ -223,7 +222,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Thuộc lớp chuyên ngành</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.specializationClassId}
+                                    value={data?.specializationClassId || null}
                                     onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
                                     options={specializationClassOptions}
                                     optionLabel="name"
@@ -234,10 +233,11 @@ const StudentForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
+                            {console.log(data)}
                             <p>Loại hình đào tạo</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.typeOfEducation}
+                                    value={data?.typeOfEducation || null}
                                     onChange={(e) => handleOnChange('typeOfEducation', e?.target.value)}
                                     options={typeOfEducationOptions}
                                     optionLabel="label"
@@ -251,7 +251,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Tên sinh viên</p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.firstName}
+                                    value={data?.firstName || ''}
                                     placeholder="Nhập tên của sinh viên..."
                                     onChange={(e) => handleOnChange('firstName', e?.target.value)}
                                     className=" w-full"
@@ -262,7 +262,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Họ đệm sinh viên</p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.lastName}
+                                    value={data?.lastName || ''}
                                     placeholder="Nhập họ đệm của sinh viên..."
                                     onChange={(e) => handleOnChange('lastName', e?.target.value)}
                                     className=" w-full"
@@ -303,7 +303,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Vùng sinh sống</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.regionId}
+                                    value={data?.regionId || null}
                                     onChange={(e) => handleOnChange('regionId', e?.target.value)}
                                     options={regionOptions}
                                     optionLabel="name"
@@ -317,7 +317,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Tỉnh</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.provinceCode}
+                                    value={data?.provinceCode || null}
                                     onChange={(e) => handleOnChange('provinceCode', e?.target.value)}
                                     options={provinceOptions}
                                     optionLabel="name"
@@ -331,7 +331,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Quận</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.districtCode}
+                                    value={data?.districtCode || null}
                                     onChange={(e) => handleOnChange('districtCode', e?.target.value)}
                                     options={districtOptions}
                                     optionLabel="name"
@@ -346,7 +346,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Phường</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.wardCode}
+                                    value={data?.wardCode || null}
                                     onChange={(e) => handleOnChange('wardCode', e?.target.value)}
                                     options={wardOptions}
                                     optionLabel="name"
@@ -360,7 +360,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <p>Địa chỉ (Số nhà, Tổ, Khu phố, Đường)</p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.addressLine}
+                                    value={data?.addressLine || null}
                                     placeholder="Nhập địa chỉ..."
                                     onChange={(e) => handleOnChange('addressLine', e?.target.value)}
                                     className=" w-full"

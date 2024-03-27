@@ -18,7 +18,7 @@ import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { RadioButton } from 'primereact/radiobutton';
 import { convertDayInWeek } from '~/utils/Utils';
 
-const registrationType = [
+export const registrationType = [
     {
         key: 'new_learning',
         name: 'HỌC MỚI',
@@ -126,6 +126,7 @@ const Dangkyhocphan = () => {
         }
 
         let toPostData = {
+            termId: selectedTerm,
             sectionId: selectedSection?.id,
 
             sectionClassPracticeId: selectTimeAndPlacePractice?.sectionClassId,
@@ -135,18 +136,17 @@ const Dangkyhocphan = () => {
             timeAndPlaceTheoryId: selectTimeAndPlaceTheory?.id,
 
             registrationType: selectedRegistration,
-            registrationStatus: 'registered',
         };
-
         mutate(toPostData);
     }, [
-        mutate,
-        selectedRegistration,
-        selectTimeAndPlacePractice,
-        selectTimeAndPlaceTheory?.id,
-        selectTimeAndPlaceTheory?.sectionClassId,
         selectedSection,
         selectedSectionClass,
+        selectedTerm,
+        selectTimeAndPlacePractice,
+        selectTimeAndPlaceTheory?.sectionClassId,
+        selectTimeAndPlaceTheory?.id,
+        selectedRegistration,
+        mutate,
     ]);
 
     return (
@@ -215,7 +215,7 @@ const Dangkyhocphan = () => {
                     </div>
                 </div>
             </div>
-
+            {console.log(selectedRegistration)}
             {/* LỚP HỌC PHẦN CHỜ ĐĂNG KÝ */}
             <div
                 style={{
@@ -251,7 +251,6 @@ const Dangkyhocphan = () => {
                                         setSelectedSection(rowData);
                                         setSelectedSectionClass(null);
                                         setSelectTimeAndPlacePractice(null);
-                                        setSelectedRegistration(null);
                                         setSelectTimeAndPlaceTheory(null);
                                     }}
                                     className={`cursor-pointer ${
@@ -355,7 +354,6 @@ const Dangkyhocphan = () => {
                                     onClick={() => {
                                         setSelectedSectionClass(rowData);
                                         setSelectTimeAndPlacePractice(null);
-                                        setSelectedRegistration(null);
                                         setSelectTimeAndPlaceTheory(null);
                                     }}
                                     className={`cursor-pointer ${

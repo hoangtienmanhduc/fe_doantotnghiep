@@ -316,16 +316,15 @@ const SectionForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
-                            <p>Các môn học thuộc học phần</p>
+                            <p>Thuộc môn học</p>
                             <span className="w-full">
-                                <MultiSelect
-                                    value={data?.courseIds ? data.courseIds : []}
-                                    onChange={(e) => handleOnChange('courseIds', e?.target.value)}
+                                <Dropdown
+                                    value={data?.courseId || null}
+                                    onChange={(e) => handleOnChange('courseId', e?.target.value)}
                                     options={courseOptions}
                                     optionLabel="name"
                                     optionValue="id"
-                                    placeholder="Hãy chọn các môn học thuộc học phần"
-                                    maxSelectedLabels={3}
+                                    placeholder="Hãy chọn môn học mà học phần thuộc"
                                     className="w-full"
                                 />
                             </span>
@@ -373,9 +372,22 @@ const SectionForm = forwardRef((props, ref) => {
                                 />
                             </span>
                         </div>
-
                         <div className="col-12 p-0">
                             <p>Loại học phần</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.sectionType}
+                                    onChange={(e) => handleOnChange('sectionType', e?.target.value)}
+                                    options={SectionTypeOptions}
+                                    optionLabel="label"
+                                    optionValue="key"
+                                    placeholder="Hãy chọn loại học phần"
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Loại nội dung học tập học phần</p>
                             <span className="w-full">
                                 <Dropdown
                                     value={data?.sectionType}
