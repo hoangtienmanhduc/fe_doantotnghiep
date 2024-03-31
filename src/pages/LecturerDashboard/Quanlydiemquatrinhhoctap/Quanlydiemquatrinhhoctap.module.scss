@@ -1,0 +1,33 @@
+.wrapper {
+    width: 100%;
+    flex: 1;
+}
+
+.container {
+    width: 99%;
+    flex: 1;
+    background-color: white;
+    margin-top: 25px;
+}
+
+.searchma {
+    width: 150px;
+    height: 35px;
+    padding-left: 10px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    border: 2px solid transparent;
+    border-color: rgba(22, 24, 35, 0.34);
+    margin-left: 20px;
+
+    input {
+        color: black;
+        font-size: 1.6rem;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        flex: 1;
+        caret-color: var(--primary);
+    }
+}

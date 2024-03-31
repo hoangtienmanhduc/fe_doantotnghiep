@@ -1,0 +1,37 @@
+.wrapper {
+    width: 100%;
+    flex: 1;
+}
+
+.container {
+    width: 99%;
+    flex: 1;
+    background-color: white;
+    margin-top: 25px;
+}
+
+.header {
+    width: 98%;
+    height: 35px;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+}
+
+.button {
+    width: 80px;
+    background-color: rgb(29, 161, 242);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    border-radius: 5px;
+    color: white;
+    height: 30px;
+    margin-top: 5px;
+
+    &:hover {
+        background-color: #c0deef;
+        color: rgb(29, 161, 242);
+    }
+}

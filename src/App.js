@@ -4,17 +4,6 @@ import { Fragment } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import Home from './pages/Home/Home';
-import Login from './pages/Login/Login';
-import Lichtheotiendo from './pages/Lichtheotiendo/LichTheoTienDo';
-import Ketquahoctap from './pages/Ketquahoctap/KetQuaHocTap';
-import PhieuTongHop from './pages/Phieutonghop/PhieuTongHop';
-import Lichhoc from './pages/Lichhoc/LichHoc';
-import Thanhtoantructuyen from './pages/Thanhtoantructuyen/ThanhToanTrucTuyen';
-import Dangkyhocphan from './pages/Dangkyhocphan/DangKyHocPhan';
-import Ghichunhacnho from './pages/Ghichunhacnho/GhiChuNhacNho';
-import Tracuucongno from './pages/Tracuucongno/TraCuuCongNo';
-import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import { PrimeReactProvider } from 'primereact/api';
 
 import 'primeflex/primeflex.css';
@@ -22,12 +11,26 @@ import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-cyan/theme.css';
 import 'primeicons/primeicons.css';
 import './custom.css';
-import Chuongtrinhkhung from '~/pages/Chuongtrinhkhung/ChuongTrinhKhung';
-import Doimatkhau from '~/pages/Doimatkhau/DoiMatKhau';
-import Thongtincanhan from '~/pages/Thongtincanhan/ThongTinCaNhan';
-import Capnhatthongtinsinhvien from '~/pages/Capnhatthongtinsinhvien/CapNhatThongTinSinhVien';
 import { getAccessToken } from './components/authentication/AuthUtils';
+import Login from './pages/Login/Login';
+import Home from './pages/StudentDashboard/Home/Home';
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import StudentInformation from './pages/AdminDashboard/student/StudentInformation';
+import Capnhatthongtinsinhvien from './pages/StudentDashboard/Capnhatthongtinsinhvien/CapNhatThongTinSinhVien';
+import Doimatkhau from './pages/StudentDashboard/Doimatkhau/DoiMatKhau';
+import Thongtincanhan from './pages/StudentDashboard/Thongtincanhan/ThongTinCaNhan';
+import Chuongtrinhkhung from './pages/StudentDashboard/Chuongtrinhkhung/ChuongTrinhKhung';
+import Lichtheotiendo from './pages/StudentDashboard/Lichtheotiendo/LichTheoTienDo';
+import Ketquahoctap from './pages/StudentDashboard/Ketquahoctap/KetQuaHocTap';
+import PhieuTongHop from './pages/StudentDashboard/Phieutonghop/PhieuTongHop';
+import Lichhoc from './pages/StudentDashboard/Lichhoc/LichHoc';
+import Thanhtoantructuyen from './pages/StudentDashboard/Thanhtoantructuyen/ThanhToanTrucTuyen';
+import Ghichunhacnho from './pages/StudentDashboard/Ghichunhacnho/GhiChuNhacNho';
+import Dangkyhocphan from './pages/StudentDashboard/Dangkyhocphan/DangKyHocPhan';
+import Tracuucongno from './pages/StudentDashboard/Tracuucongno/TraCuuCongNo';
+import HomeLecturer from './pages/LecturerDashboard/HomeLecturer';
+import HeaderLecturer from './components/Layout/components/HeaderLecturer';
+import DefaultLayoutLecturer from './components/Layout/DefaultLayoutLecturer';
 export const UserRoles = {
     ADMIN: 'Admin',
     LECTURER: 'Lecturer',
@@ -125,6 +128,11 @@ function App() {
                 path: '/tracuucongno',
                 component: !getAccessToken() ? Login : Tracuucongno,
                 layout: !getAccessToken() ? null : HeaderOnly,
+            },
+            {
+                path: '/homelecturer',
+                component: !getAccessToken() ? Login : HomeLecturer,
+                layout: !getAccessToken() ? null : DefaultLayoutLecturer,
             },
         ];
     }, []);

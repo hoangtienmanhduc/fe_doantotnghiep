@@ -1,0 +1,21 @@
+.wrapper {
+    width: 250px;
+    min-height: 100px;
+    height: 650px;
+    background-color: #e9f1f7;
+    margin-top: 60px;
+}
+
+.button {
+    width: 98%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    margin-left: 3px;
+    border: 0px;
+    background-color: #e9f1f7;
+
+    &:hover {
+        font-weight: bold;
+    }
+}

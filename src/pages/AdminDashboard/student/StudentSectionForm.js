@@ -13,7 +13,7 @@ import { getListTermInfo } from '~/api/term/TermService';
 import { getListTimeAndPlaceInfo } from '~/api/time-and-place/TimeAndPlaceService';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { showNotification } from '~/components/notification/NotificationService';
-import { registrationType } from '~/pages/Dangkyhocphan/DangKyHocPhan';
+import { registrationType } from '~/pages/StudentDashboard/Dangkyhocphan/DangKyHocPhan';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
 
 const QueryKeySectionClassOptions = 'SectionClass-Options';
