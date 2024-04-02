@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import React, { useCallback, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
 import { getListTermInfo } from '~/api/term/TermService';
 import { Dropdown } from 'primereact/dropdown';
@@ -52,7 +52,7 @@ const Dangkyhocphan = () => {
         enabled: !!getUserId(),
     });
 
-    const { data: sectionList } = useQuery(
+    const { data: sectionList, refetch: refetchSection } = useQuery(
         [QueryKeySection, getUserId(), selectedTerm],
 
         () => getListSectionInfo(getUserId(), { termId: selectedTerm, studentId: getRefId() }),
@@ -62,7 +62,7 @@ const Dangkyhocphan = () => {
     );
 
     const { data: sectionClassTheoryList } = useQuery(
-        [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id, selectedTerm],
+        [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
         () =>
             getListSectionClassInfo(getUserId(), {
                 sectionId: selectedSection?.id,
@@ -92,17 +92,32 @@ const Dangkyhocphan = () => {
             getListStudentSectionClassInfo(getUserId(), {
                 studentId: getRefId(),
                 termId: selectedTerm,
+                sectionClassType: 'theory',
             }),
         {
             enabled: !!getRefId() && !!selectedTerm,
         },
     );
 
+    const queryClient = useQueryClient();
     const { mutate } = useMutation((toPostData) => registerGenericSectionClass(getUserId(), toPostData), {
         onSuccess: (data) => {
             if (!!data && data === HTTP_STATUS_OK) {
-                showNotification('success', 'Success', 'Register Successfully !!');
+                showNotification('success', 'Thành công', 'Đăng ký học phần thành công !!');
                 refetch();
+
+                setSelectedSection(null);
+                setSelectedSectionClass(null);
+                setSelectTimeAndPlaceTheory(null);
+                setSelectTimeAndPlacePractice(null);
+
+                queryClient.setQueryData([QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm], {});
+                queryClient.setQueryData(
+                    [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id],
+                    () => {},
+                );
+
+                refetchSection();
             }
         },
     });
@@ -167,7 +182,27 @@ const Dangkyhocphan = () => {
                             <Dropdown
                                 className="p-2 w-full"
                                 value={selectedTerm || null}
-                                onChange={(e) => setSelectedTerm(e?.target?.value)}
+                                onChange={(e) => {
+                                    setSelectedTerm(e?.target?.value);
+                                    setSelectedSection(null);
+                                    setSelectedSectionClass(null);
+                                    setSelectTimeAndPlaceTheory(null);
+                                    setSelectTimeAndPlacePractice(null);
+
+                                    queryClient.setQueryData(
+                                        [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
+                                        {},
+                                    );
+                                    queryClient.setQueryData(
+                                        [
+                                            QueryKeySectionClass,
+                                            getUserId(),
+                                            selectedSectionClass?.id,
+                                            selectedSection?.id,
+                                        ],
+                                        () => {},
+                                    );
+                                }}
                                 options={termOptions}
                                 optionLabel="name"
                                 optionValue="id"
@@ -215,7 +250,6 @@ const Dangkyhocphan = () => {
                     </div>
                 </div>
             </div>
-            {console.log(selectedRegistration)}
             {/* LỚP HỌC PHẦN CHỜ ĐĂNG KÝ */}
             <div
                 style={{

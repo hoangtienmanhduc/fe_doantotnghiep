@@ -127,6 +127,38 @@ const SectionForm = forwardRef((props, ref) => {
 
     const handleOnChangeSectionWork = (value) => {
         if (!!value) {
+            debugger;
+            if (sectionWorks.includes('practice')) {
+                if (!value.includes('practice')) {
+                    setData({
+                        ...data,
+                        sectionDuration: {
+                            ...data?.sectionDuration,
+                            practice: 0,
+                        },
+                    });
+                }
+            } else if (sectionWorks.includes('selfLearning')) {
+                if (!value.includes('selfLearning')) {
+                    setData({
+                        ...data,
+                        sectionDuration: {
+                            ...data?.sectionDuration,
+                            selfLearning: 0,
+                        },
+                    });
+                }
+            } else if (sectionWorks.includes('discussionExercises')) {
+                if (!value.includes('discussionExercises')) {
+                    setData({
+                        ...data,
+                        sectionDuration: {
+                            ...data?.sectionDuration,
+                            discussionExercises: 0,
+                        },
+                    });
+                }
+            }
             setSectionWorks([...value]);
         }
     };
@@ -143,11 +175,11 @@ const SectionForm = forwardRef((props, ref) => {
             isError = true;
         }
 
-        if (!data?.courseIds || data.courseIds?.length < 1) {
+        if (!data?.courseId) {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Các môn học thuộc học phần không được để trống và phải có ít nhất một môn học!!',
+                detail: 'Môn học học phần thuộc không được để trống!!',
             });
             isError = true;
         }

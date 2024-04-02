@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { startOfWeek, endOfWeek, addDays, format, isSameDay, subWeeks } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { useQuery } from '@tanstack/react-query';
-import { getRefId, getSystemRole, getUserId } from '~/components/authentication/AuthUtils';
+import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
 import { InputText } from 'primereact/inputtext';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
 import { getListRegistration } from '~/api/registration/RegistrationService';
 import { getListScheduleInfo } from '~/api/schedule/ScheduleSevice';
+import { Value } from 'sass';
 
 const QueryKey = 'Schedule-List';
 const QueryKeyRegistration = 'Registration-List';
@@ -42,12 +43,14 @@ const Lichhoc = () => {
 
     const currentDateFormatted = format(selectedDate, 'dd/MM/yyyy');
 
-    const CustomDatePickerInput = ({ value, onClick }) => (
-        <span className="p-input-icon-right" onClick={onClick}>
-            <i className="pi pi-calendar" />
-            <InputText value={value || currentDateFormatted} readOnly placeholder="Chọn ngày" />
-        </span>
-    );
+    const CustomDatePickerInput = ({ value = currentDateFormatted, onClick = () => {} }) => {
+        return (
+            <span className="p-input-icon-right" onClick={onClick}>
+                <i className="pi pi-calendar" />
+                <InputText value={value} placeholder="Chọn ngày" />
+            </span>
+        );
+    };
 
     const dayOfWeekList = useMemo(() => {
         const startDate = startOfWeek(selectedDate, { weekStartsOn: 1 });
@@ -101,9 +104,8 @@ const Lichhoc = () => {
                         ?.map((item) => (
                             <div
                                 key={item.id}
-                                className="flex flex-column justify-content-start align-items-center"
+                                className="font-semibold surface-200 text-800 p-2 flex flex-column justify-content-start align-items-center"
                                 style={{
-                                    backgroundColor: 'rgb(231, 236, 240)',
                                     textAlign: 'center',
                                     height: '100%',
                                 }}
@@ -111,6 +113,13 @@ const Lichhoc = () => {
                                 <br />
                                 <p className="p-0 m-0">{item.sectionName}</p>
                                 <p className="p-0 m-0">{item.sectionCode}</p>
+                                <p className="p-0 m-0">
+                                    {item.sectionClassType === 'theory'
+                                        ? '(Lý thuyết)'
+                                        : item.sectionClassType === 'practice'
+                                        ? '(Thực hành)'
+                                        : ''}
+                                </p>
                                 <br />
                                 <p className="p-0 m-0">{`Tiết: ${item.periodStart} - ${item.periodEnd}`}</p>
                                 <p className="p-0 m-0">{`Phòng: ${item.room}`}</p>

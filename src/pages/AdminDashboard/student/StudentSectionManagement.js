@@ -6,11 +6,7 @@ import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import React, { useRef, useState } from 'react';
 import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
-import {
-    changeRegistrationType,
-    getListRegistration,
-    getPageRegistrationInfo,
-} from '~/api/registration/RegistrationService';
+import { changeRegistrationStatus, getPageRegistrationInfo } from '~/api/registration/RegistrationService';
 import { getListSectionInfo } from '~/api/section/SectionService';
 import { getListTermInfo } from '~/api/term/TermService';
 import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
@@ -32,7 +28,7 @@ const initialPageable = {
 };
 const StudentSectionManagement = () => {
     const [pageable, setPageable] = useState({ ...initialPageable });
-    const [filterRequest, setFilterRequest] = useState();
+    const [filterRequest, setFilterRequest] = useState({ sectionClassType: 'theory' });
     const [selectedSectionClass, setSelectedSectionClass] = useState(null);
     const [selectedStudentSectionClass, setSelectedStudentSectionClass] = useState(null);
     const [registrationStatus, setRegistrationStatus] = useState(null);
@@ -91,10 +87,10 @@ const StudentSectionManagement = () => {
 
         const toPostData = {
             id: selectedStudentSectionClass,
-            type: registrationStatus,
+            status: registrationStatus,
         };
 
-        const response = await changeRegistrationType(getUserId(), toPostData);
+        const response = await changeRegistrationStatus(getUserId(), toPostData);
 
         if (response === HTTP_STATUS_OK) {
             showNotification('success', 'Thành công', 'Cập nhật trạng thái đăng ký thành công !!');

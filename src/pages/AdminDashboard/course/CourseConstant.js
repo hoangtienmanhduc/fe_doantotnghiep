@@ -7,7 +7,7 @@ export const courseTypeOptions = [
 
 export const workSectionOptions = [
     { key: 'theory', label: 'Lý thuyết' },
-    { key: 'practice', label: 'Học trước' },
+    { key: 'practice', label: 'Thực hành' },
     { key: 'discussionExercises', label: 'Bài tập, thảo luận' },
     { key: 'selfLearning', label: 'Tự học' },
 ];

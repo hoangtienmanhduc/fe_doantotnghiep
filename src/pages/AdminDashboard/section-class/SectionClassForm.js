@@ -50,22 +50,22 @@ const SectionClassForm = forwardRef((props, ref) => {
     const { data: lecturerOptions } = useQuery(
         [QueryKeyLecturerOptions, getUserId()],
         () => getListLecturerInfo(getUserId(), {}, null, true),
-        { enabled: !!getUserId() },
+        { enabled: !!getUserId() && !!visible },
     );
     const { data: sectionOptions } = useQuery(
         [QueryKeySectionOptions, getUserId()],
         () => getListSectionInfo(getUserId(), {}, null, true),
-        { enabled: !!getUserId() },
+        { enabled: !!getUserId() && !!visible },
     );
 
     const { data: sectionClassOptions } = useQuery(
         [QueryKeySectionClassOptions, getUserId()],
         () => getListSectionClassInfo(getUserId(), { sectionClassType: 'theory' }, null, true),
-        { enabled: !!getUserId() },
+        { enabled: !!getUserId() && !!visible },
     );
 
     const { data: termOptions } = useQuery([QueryKeyTerm, getUserId()], () => getListTermInfo(getUserId()), {
-        enabled: !!getUserId(),
+        enabled: !!getUserId() && !!visible,
     });
 
     const handleHideForm = useCallback(() => {
@@ -232,7 +232,6 @@ const SectionClassForm = forwardRef((props, ref) => {
 
         if (!isError) {
             const sectionData = await createOrUpdateGenericSectionClass(getUserId(), toPostData);
-
             if (sectionData?.id) {
                 try {
                     toast.current.show({

@@ -14,6 +14,8 @@ import ScheduleSectionClass from './ScheduleSectionClass';
 import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
 import { getListSectionInfo } from '~/api/section/SectionService';
 import { getListTermInfo } from '~/api/term/TermService';
+import { Dropdown } from 'primereact/dropdown';
+import { SectionClassTypeOptions } from './SectionClassConstant';
 const QueryKeyLecturerOptions = 'Lecturer-Options';
 const QueryKeySectionOptions = 'Section-Options';
 const QueryKeyTerm = 'Term-Options';
@@ -276,6 +278,24 @@ const SectionClassManagement = () => {
                                 maxSelectedLabels={3}
                                 className="w-full"
                             />
+                        </div>
+                        <div className="col-12">
+                            <span className="font-semibold text-primary">
+                                <p>Loại lớp học phần</p>
+                            </span>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={filterRequest?.sectionClassType || null}
+                                    onChange={(e) =>
+                                        setFilterRequest({ ...filterRequest, sectionClassType: e.target.value })
+                                    }
+                                    options={SectionClassTypeOptions}
+                                    optionLabel="label"
+                                    optionValue="key"
+                                    placeholder="Hãy chọn loại lớp của lớp học phần"
+                                    className="w-full"
+                                />
+                            </span>
                         </div>
                     </div>
                 </div>

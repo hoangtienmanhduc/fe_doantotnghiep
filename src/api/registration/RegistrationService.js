@@ -41,9 +41,9 @@ export function createOrUpdateGenericRegistration(userId, data = {}) {
         .catch((error) => console.log(error));
 }
 
-export function changeRegistrationType(userId, data = {}) {
+export function changeRegistrationStatus(userId, data = {}) {
     return axiosInstance
-        .post(`${BACKEND_ENDPOINT}/registration/changeType`, data, {
+        .post(`${BACKEND_ENDPOINT}/registration/changeStatus`, data, {
             params: { userId },
         })
         .then((res) => res.data)

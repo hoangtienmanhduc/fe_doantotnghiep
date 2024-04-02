@@ -74,7 +74,11 @@ const AdminDashboard = () => {
                     {activeTab === 'specializationClassManagement' && <SpecializationClassManagement />}
                     {activeTab === 'academicYearManagement' && <AcademicYearManagement />}
                     {activeTab === 'facultyManagement' && <FacultyManagement />}
-                    {activeTab === 'tuitionManagement' && <FacultyManagement />}
+                    {activeTab === 'tuitionManagement' && (
+                        <React.Fragment>
+                            <h2 className="text-center">Developing</h2>
+                        </React.Fragment>
+                    )}
                 </div>
             </div>
         </React.Fragment>
