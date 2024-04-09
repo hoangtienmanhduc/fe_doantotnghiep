@@ -244,6 +244,28 @@ const StudentManagement = () => {
                                             {rowData['formattedAddress']}
                                         </div>
                                     </div>
+                                ) : col.field === 'gender' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                            {rowData[col.field] === 'unknown'
+                                                ? 'Không biết'
+                                                : rowData[col.field] === 'male'
+                                                ? 'Nam'
+                                                : rowData[col.field] === 'female'
+                                                ? 'Nữ'
+                                                : '-'}
+                                        </div>
+                                    </div>
+                                ) : col.field === 'typeOfEducation' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                            {rowData[col.field] === 'general_program'
+                                                ? 'Đại trà'
+                                                : rowData[col.field] === 'high_quality_program'
+                                                ? 'Chất lượng cao'
+                                                : '-'}
+                                        </div>
+                                    </div>
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button

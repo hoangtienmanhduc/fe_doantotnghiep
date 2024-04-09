@@ -47,7 +47,6 @@ const StudentProfile = ({ data = {} }) => {
     return (
         <React.Fragment>
             <div className="flex w-full align-items-start h-full">
-                {console.log(data)}
                 <div className="col-3 h-full">
                     <div className="col-12 surface-50 border-round-xl">
                         <h3 className="text-primary">Thông tin</h3>

@@ -7,7 +7,6 @@ import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
 import AcademicYearForm from './AcademicYearForm';
 import { getPageAcademicYearInfo } from '~/api/academic-year/AcademicYearService';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 
 const QueryKey = 'Academic-Year-Management';
@@ -38,7 +37,7 @@ const AcademicYearManagement = () => {
 
     const academicRef = useRef(null);
     const columns = [
-        { field: 'academicYearName', header: 'Niên khoá' },
+        { field: 'name', header: 'Niên khoá' },
         { field: 'firstTermName', header: 'Tên học kỳ 1' },
         { field: 'firstTermStart', header: 'Thời gian bắt đầu HK1' },
         { field: 'firstTermEnd', header: 'Thời gian kết thúc HK1' },
@@ -86,31 +85,6 @@ const AcademicYearManagement = () => {
             );
         }
     }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
-
-    const accept = () => {
-        toast.current.show({
-            severity: 'info',
-            summary: 'Confirmed',
-            detail: 'Xoá niên khoá thành công !!',
-            life: 3000,
-        });
-    };
-
-    const reject = () => {
-        toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'Huỷ xoá niên khoá', life: 3000 });
-    };
-
-    const deleteConfirm = () => {
-        confirmDialog({
-            message: 'Bạn có chắc xoá niên khoá này không?',
-            header: 'Xác nhân xoá',
-            icon: 'pi pi-info-circle',
-            defaultFocus: 'reject',
-            acceptClassName: 'p-button-danger',
-            accept,
-            reject,
-        });
-    };
 
     return (
         <React.Fragment>
@@ -169,7 +143,6 @@ const AcademicYearManagement = () => {
                 </DataTable>
             </div>
             <AcademicYearForm ref={academicRef} />
-            <ConfirmDialog />
             <Toast ref={toast} />
         </React.Fragment>
     );

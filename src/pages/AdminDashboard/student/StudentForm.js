@@ -14,7 +14,7 @@ import { getListSpecializationInfo } from '~/api/specialization/SpecializationSe
 import { getListDistrict, getListProvince, getListRegion, getListWard } from '~/api/address/AddressService';
 import { useEffect } from 'react';
 import { createOrUpdateGenericUser } from '~/api/user/UserService';
-import { typeOfEducationOptions } from './StudentConstant';
+import { genderOptions, typeOfEducationOptions } from './StudentConstant';
 import { getListSpecializationClassInfo } from '~/api/specialization/SpecializationClassService';
 import { Divider } from 'primereact/divider';
 import { Calendar } from 'primereact/calendar';
@@ -233,7 +233,6 @@ const StudentForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
-                            {console.log(data)}
                             <p>Loại hình đào tạo</p>
                             <span className="w-full">
                                 <Dropdown
@@ -270,14 +269,32 @@ const StudentForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
+                            <p>Giới tính</p>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={data?.gender || null}
+                                    onChange={(e) => handleOnChange('gender', e?.target.value)}
+                                    options={genderOptions}
+                                    optionLabel="label"
+                                    optionValue="key"
+                                    placeholder="Hãy chọn giới tính..."
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
                             <p>Ngày sinh</p>
                             <span className="w-full">
-                                <Calendar
-                                    placeholder="Chọn ngày sinh của sinh viên"
+                                <InputMask
                                     className="w-full"
-                                    value={data?.dob ? moment(data?.dob, 'dd/MM/yyyy').toDate() : new Date()}
-                                    onChange={(e) => setData({ ...data, dob: e.value })}
-                                />
+                                    id="dob"
+                                    mask="99-99-9999"
+                                    placeholder="dd-mm-yyyy"
+                                    value={data?.dob || ''}
+                                    onChange={(e) => {
+                                        handleOnChange('dob', e.target.value);
+                                    }}
+                                ></InputMask>
                             </span>
                         </div>
                         <div className="col-12 p-0">
@@ -286,7 +303,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <InputMask
                                     className="w-full"
                                     id="school-year"
-                                    mask="9999999999"
+                                    mask="999999999999"
                                     placeholder="Nhập số căn cước công dân"
                                     value={data?.CINumber || ''}
                                     onChange={(e) => handleOnChange('CINumber', e.target.value)}

@@ -28,18 +28,12 @@ const SectionManagement = () => {
 
     const sectionRef = useRef(null);
     const columns = [
-        { field: 'specializationName', header: 'Tên chuyên ngành' },
-        { field: 'specializationCode', header: 'Mã chuyên ngành' },
+        { field: 'termName', header: 'Thuộc học kỳ' },
+        { field: 'courseName', header: 'Thuộc môn học' },
+        { field: 'courseCode', header: 'Mã môn học' },
         { field: 'name', header: 'Tên học phần' },
         { field: 'code', header: 'Mã học phần' },
-        { field: 'description', header: 'Mô tả' },
-        { field: 'theory', header: 'Hệ số tiết lý thuyết' },
-        { field: 'practice', header: 'Hệ số tiết thực hành' },
-        { field: 'discussionExercises', header: 'Hệ số tiết thảo luận bài tập' },
-        { field: 'selfLearning', header: 'Hệ số thời gian tự học' },
-        { field: 'credits', header: 'Tín chỉ học tập' },
-        { field: 'costCredits', header: 'Tín chỉ học phí' },
-        { field: 'sectionType', header: 'Loại học phần' },
+        { field: 'description', header: 'Mô tả học phần' },
         { field: 'createdAt', header: 'Được tạo' },
         { field: 'deleted', header: 'Trạng thái bị xoá' },
         { field: 'action', header: 'Thao tác' },

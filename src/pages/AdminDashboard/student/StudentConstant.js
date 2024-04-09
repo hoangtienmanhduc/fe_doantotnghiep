@@ -3,6 +3,21 @@ export const typeOfEducationOptions = [
     { key: 'high_quality_program', label: 'Hệ chất lượng cao' },
 ];
 
+export const genderOptions = [
+    {
+        key: 'unknown',
+        label: 'Không biết',
+    },
+    {
+        key: 'male',
+        label: 'Nam',
+    },
+    {
+        key: 'female',
+        label: 'Nữ',
+    },
+];
+
 export const infoList = [
     {
         key: 'lastName',

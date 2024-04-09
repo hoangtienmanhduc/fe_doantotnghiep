@@ -47,7 +47,7 @@ const SpecializationForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Chuyên ngành không được để trống!!',
+                detail: 'Khoa của chuyên ngành không được để trống!!',
             });
             isError = true;
         }
@@ -56,16 +56,7 @@ const SpecializationForm = forwardRef((props, ref) => {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Tên lớp học phần không được để trống!!',
-            });
-            isError = true;
-        }
-
-        if (!data?.code) {
-            toast.current.show({
-                severity: 'info',
-                summary: 'Info',
-                detail: 'Mã lớp học phần không được để trống!!',
+                detail: 'Tên chuyên ngành không được để trống!!',
             });
             isError = true;
         }
@@ -74,7 +65,6 @@ const SpecializationForm = forwardRef((props, ref) => {
             let toPostData = {
                 ...data,
             };
-            debugger;
             const specializationData = await createOrUpdateGenericSpecialization(getUserId(), toPostData);
 
             if (specializationData?.id) {
@@ -123,8 +113,8 @@ const SpecializationForm = forwardRef((props, ref) => {
                             <p>Khoa</p>
                             <span className="w-full">
                                 <Dropdown
-                                    value={data?.facultyId}
-                                    onChange={(e) => handleOnChange('specializationId', e?.target.value)}
+                                    value={data?.facultyId || null}
+                                    onChange={(e) => handleOnChange('facultyId', e?.target.value)}
                                     options={facultyOptions}
                                     optionLabel="name"
                                     optionValue="id"
@@ -137,20 +127,9 @@ const SpecializationForm = forwardRef((props, ref) => {
                             <p>Tên chuyên ngành</p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.name}
+                                    value={data?.name || ''}
                                     placeholder="Nhập tên chuyên ngành..."
                                     onChange={(e) => handleOnChange('name', e?.target.value)}
-                                    className=" w-full"
-                                />
-                            </span>
-                        </div>
-                        <div className="col-12 p-0">
-                            <p>Mã chuyên ngành</p>
-                            <span className="w-full">
-                                <InputText
-                                    value={data?.code}
-                                    placeholder="Nhập mã chuyên ngành..."
-                                    onChange={(e) => handleOnChange('code', e?.target.value)}
                                     className=" w-full"
                                 />
                             </span>

@@ -12,12 +12,14 @@ import StudentManagement from './student/StudentManagement';
 import SpecializationClassManagement from './specialization-class/SpecializationClassManagement';
 import SpecializationManagement from './specialization/SpecializationManagement';
 import { Button } from 'primereact/button';
+import ProgramManagement from './program/ProgramManagement';
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('academicYearManagement');
     const tabList = [
         { key: 'academicYearManagement', label: 'QUẢN LÝ NIÊN KHOÁ', icon: 'pi pi-th-large' },
         { key: 'facultyManagement', label: 'QUẢN LÝ KHOA', icon: 'pi pi-th-large' },
         { key: 'specializationManagement', label: 'QUẢN LÝ CHUYÊN NGÀNH', icon: 'pi pi-th-large' },
+        { key: 'programManagement', label: 'QUẢN LÝ CHƯƠNG TRÌNH ĐÀO TẠO', icon: 'pi pi-tag' },
         {
             key: 'specializationClassManagement',
             label: 'QUẢN LÝ LỚP CHUYÊN NGÀNH',
@@ -66,6 +68,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="col-9 bg-white border-round-xl">
                     {activeTab === 'courseManagement' && <CouseManagement />}
+                    {activeTab === 'programManagement' && <ProgramManagement />}
                     {activeTab === 'sectionManagement' && <SectionManagement />}
                     {activeTab === 'sectionClassManagement' && <SectionClassManagement />}
                     {activeTab === 'studentManagement' && <StudentManagement />}

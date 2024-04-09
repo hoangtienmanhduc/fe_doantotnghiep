@@ -4,40 +4,27 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { startOfWeek, endOfWeek, addDays, format, isSameDay, subWeeks } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { useQuery } from '@tanstack/react-query';
-import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
+import { getRefId, getUserId, getUserRole } from '~/components/authentication/AuthUtils';
 import { InputText } from 'primereact/inputtext';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
-import { getListRegistration } from '~/api/registration/RegistrationService';
 import { getListScheduleInfo } from '~/api/schedule/ScheduleSevice';
-import { Value } from 'sass';
+import { UserRoles } from '~/App';
 
 const QueryKey = 'Schedule-List';
-const QueryKeyRegistration = 'Registration-List';
-
 const Lichhoc = () => {
     // Date
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedSchedule, setSelectedSchedule] = useState(0);
-    const { data } = useQuery(
-        [QueryKeyRegistration, getUserId()],
+
+    const { data: scheduleDataList } = useQuery(
+        [QueryKey, getUserId(), getUserRole() === UserRoles.STUDENT ? getRefId() : null],
         () =>
-            getListRegistration(getUserId(), {
-                studentId: getRefId(),
+            getListScheduleInfo(getUserId(), {
+                studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
             }),
         {
             enabled: !!getUserId() && !!getRefId(),
-        },
-    );
-
-    const { data: scheduleDataList } = useQuery(
-        [QueryKey, getUserId()],
-        () =>
-            getListScheduleInfo(getUserId(), {
-                sectionClassIds: data.map((item) => item?.sectionClassId),
-            }),
-        {
-            enabled: !!getUserId() && !!getRefId() && !!data && data?.length > 0,
         },
     );
 
@@ -104,10 +91,9 @@ const Lichhoc = () => {
                         ?.map((item) => (
                             <div
                                 key={item.id}
-                                className="font-semibold surface-200 text-800 p-2 flex flex-column justify-content-start align-items-center"
+                                className="font-semibold m-1 border-round surface-100 text-800 p-2 flex flex-column justify-content-start align-items-center"
                                 style={{
                                     textAlign: 'center',
-                                    height: '100%',
                                 }}
                             >
                                 <br />

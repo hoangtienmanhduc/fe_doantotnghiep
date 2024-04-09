@@ -16,6 +16,8 @@ import { getListDistrict, getListProvince, getListRegion, getListWard } from '~/
 import { useEffect } from 'react';
 import { createOrUpdateGenericUser } from '~/api/user/UserService';
 import { Divider } from 'primereact/divider';
+import { InputMask } from 'primereact/inputmask';
+import { genderOptions } from '../student/StudentConstant';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
 const QueryKeyRegionOptions = 'Region-Options';
@@ -233,9 +235,9 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Họ đệm</p>
                         <span className="w-full">
                             <InputText
-                                value={data?.firstName || ''}
-                                placeholder="Nhập họ đệm của giảng viên..."
-                                onChange={(e) => handleOnChange('firstName', e?.target.value)}
+                                value={data?.lastName || ''}
+                                placeholder="Nhập họ đệm của giảng viên"
+                                onChange={(e) => handleOnChange('lastName', e?.target.value)}
                                 className=" w-full"
                             />
                         </span>
@@ -244,22 +246,40 @@ const LecturerForm = forwardRef((props, ref) => {
                         <p>Tên giảng viên</p>
                         <span className="w-full">
                             <InputText
-                                value={data?.lastName || ''}
-                                placeholder="Nhập tên của giảng viên..."
-                                onChange={(e) => handleOnChange('lastName', e?.target.value)}
+                                value={data?.firstName || ''}
+                                placeholder="Nhập tên của giảng viên"
+                                onChange={(e) => handleOnChange('firstName', e?.target.value)}
                                 className=" w-full"
+                            />
+                        </span>
+                    </div>
+                    <div className="col-12 p-0">
+                        <p>Giới tính</p>
+                        <span className="w-full">
+                            <Dropdown
+                                value={data?.gender || null}
+                                onChange={(e) => handleOnChange('gender', e?.target.value)}
+                                options={genderOptions}
+                                optionLabel="label"
+                                optionValue="key"
+                                placeholder="Hãy chọn giới tính..."
+                                className="w-full"
                             />
                         </span>
                     </div>
                     <div className="col-12 p-0">
                         <p>Ngày sinh</p>
                         <span className="w-full">
-                            <InputText
+                            <InputMask
+                                className="w-full"
+                                id="dob"
+                                mask="99-99-9999"
+                                placeholder="dd-mm-yyyy"
                                 value={data?.dob || ''}
-                                placeholder="Nhập ngày sinh..."
-                                onChange={(e) => handleOnChange('dob', e?.target.value)}
-                                className=" w-full"
-                            />
+                                onChange={(e) => {
+                                    handleOnChange('dob', e.target.value);
+                                }}
+                            ></InputMask>
                         </span>
                     </div>
                     <div className="col-12 p-0">

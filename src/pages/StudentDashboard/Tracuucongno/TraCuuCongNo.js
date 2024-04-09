@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
+import { getRefId, getUserId, getUserRole } from '~/components/authentication/AuthUtils';
 import { getListTermInfo } from '~/api/term/TermService';
 import { Dropdown } from 'primereact/dropdown';
-import { getListRegistration, getPageRegistrationInfo } from '~/api/registration/RegistrationService';
+import { getListRegistration } from '~/api/registration/RegistrationService';
+import { UserRoles } from '~/App';
 
 const QueryKeyTerm = 'Term-Options';
 const QueryKeySectionClassStudent = 'Section-Class-Student-Register';
@@ -20,11 +21,11 @@ const Tracuucongno = () => {
         [QueryKeySectionClassStudent, getRefId(), selectedTerm],
         () =>
             getListRegistration(getUserId(), {
-                termId: !!selectedTerm ? (selectedTerm === 'tatca' ? null : selectedTerm) : null,
-                sectionClassType: 'theory',
+                termId: !selectedTerm || selectedTerm === 'tatca' ? null : selectedTerm,
+                studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
             }),
         {
-            enabled: !!getUserId(),
+            enabled: !!getUserId() && !!selectedTerm,
         },
     );
 
@@ -73,9 +74,10 @@ const Tracuucongno = () => {
                     .map((registration, idx) => {
                         return (
                             <tr key={registration?.id}>
+                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}></td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{registration.termName}</td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                    {registration.sectionClassCode}
+                                    {registration.secitonCode}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                     {registration.sectionName}
@@ -92,29 +94,25 @@ const Tracuucongno = () => {
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{registration.total}</td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                    {registration.type === 'new_learning'
+                                    {registration.registrationStatus === 'new_learning'
                                         ? 'Đăng ký học mới'
-                                        : registration.type === 'again_learning'
+                                        : registration.registrationStatus === 'again_learning'
                                         ? 'Đăng ký học lại'
-                                        : registration.type === 'improve_learning'
+                                        : registration.registrationStatus === 'improve_learning'
                                         ? 'Đăng ký học cải thiện'
                                         : '-'}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                    {registration.status === 'registered'
-                                        ? 'Đã đăng ký'
-                                        : registration.status === 'canceled'
-                                        ? 'Xoá bỏ đăng ký'
-                                        : '-'}
+                                    {registration.registrationStatus === 'canceled' ? 'Xoá bỏ đăng ký' : 'Đã đăng ký'}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{'-'}</td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{registration.total}</td>
 
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                    {registration.plusDeductions}
+                                    {registration.plusDeductions ? registration.plusDeductions : 0}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                    {registration.minusDeductions}
+                                    {registration.minusDeductions ? registration.minusDeductions : 0}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{registration.debt}</td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
@@ -169,12 +167,20 @@ const Tracuucongno = () => {
                                                     }}
                                                 >
                                                     <td
-                                                        style={{ fontWeight: 'semibold', height: '30px' }}
-                                                        className="text-primary"
+                                                        style={{ height: '30px' }}
+                                                        className="text-primary font-bold "
                                                         colSpan="19"
                                                     >
-                                                        <i className="pi pi-angle-right"></i>
-                                                        Đợt: {registration.termName}
+                                                        <div className="">
+                                                            <i
+                                                                className={`pi ${
+                                                                    !selectCollapse.includes(registration?.id)
+                                                                        ? 'pi-angle-down'
+                                                                        : 'pi-angle-right'
+                                                                } mr-2`}
+                                                            ></i>
+                                                            Đợt: {registration.termName}
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 {!selectCollapse.includes(registration?.id) && (
@@ -184,7 +190,7 @@ const Tracuucongno = () => {
                                                             {registration.termName}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.sectionClassCode}
+                                                            {registration.sectionCode}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                                             {registration.sectionName}
@@ -205,20 +211,18 @@ const Tracuucongno = () => {
                                                             {registration.initialFee}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.type === 'new_learning'
+                                                            {registration.registrationStatus === 'new_learning'
                                                                 ? 'Đăng ký học mới'
-                                                                : registration.type === 'again_learning'
+                                                                : registration.registrationStatus === 'again_learning'
                                                                 ? 'Đăng ký học lại'
-                                                                : registration.type === 'improve_learning'
+                                                                : registration.registrationStatus === 'improve_learning'
                                                                 ? 'Đăng ký học cải thiện'
                                                                 : '-'}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.status === 'registered'
-                                                                ? 'Đã đăng ký'
-                                                                : registration.status === 'canceled'
+                                                            {registration.registrationStatus === 'canceled'
                                                                 ? 'Xoá bỏ đăng ký'
-                                                                : '-'}
+                                                                : 'Đã đăng ký'}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                                             {'-'}
@@ -227,10 +231,14 @@ const Tracuucongno = () => {
                                                             {registration.total}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.plusDeductions}
+                                                            {registration.plusDeductions
+                                                                ? registration.plusDeductions
+                                                                : 0}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.minusDeductions}
+                                                            {registration.minusDeductions
+                                                                ? registration.minusDeductions
+                                                                : 0}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                                             {registration.total}
@@ -258,26 +266,28 @@ const Tracuucongno = () => {
                                                         </td>
                                                     </tr>
                                                 )}
-                                                <tr className="text-center font-bold">
-                                                    <td style={{ height: '30px' }} rowSpan="1"></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{credits}</td>
-                                                    <td>{initialFee}</td>
-                                                    <td></td>
-                                                    <td>{discountFee}</td>
-                                                    <td>{initialFee}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{totalFee}</td>
-                                                    <td>{plusDeductions}</td>
-                                                    <td>{minusDeductions}</td>
-                                                    <td>{totalFee}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
+                                                {!selectCollapse.includes(registration?.id) && (
+                                                    <tr className="text-center font-bold">
+                                                        <td style={{ height: '30px' }} rowSpan="1"></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>{credits}</td>
+                                                        <td>{initialFee}</td>
+                                                        <td></td>
+                                                        <td>{discountFee}</td>
+                                                        <td>{initialFee}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>{totalFee}</td>
+                                                        <td>{plusDeductions}</td>
+                                                        <td>{minusDeductions}</td>
+                                                        <td>{totalFee}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                )}
                                             </React.Fragment>
                                         );
                                     }),
@@ -296,6 +306,7 @@ const Tracuucongno = () => {
     return (
         <div className="w-full">
             <div className="mb-3">
+                {console.log(registrationList)}
                 <div
                     style={{
                         textAlign: 'center',
@@ -335,7 +346,7 @@ const Tracuucongno = () => {
                                 Học kỳ
                             </th>
                             <th style={{ width: '8rem', height: '70px' }} rowSpan="1">
-                                Mã LHP
+                                Mã HP
                             </th>
                             <th style={{ width: '10rem', height: '70px' }} rowSpan="1">
                                 Nội dung

@@ -40,3 +40,28 @@ export function createOrUpdateGenericSection(userId, data = {}) {
         .then((res) => res.data)
         .catch((error) => console.log(error));
 }
+
+export function getListStudentSectionInfo(
+    userId,
+    filterRequest = {},
+    rows,
+    dto = false,
+    sortField = 'id',
+    sortOrder = -1,
+) {
+    return axiosInstance
+        .post(`${BACKEND_ENDPOINT}/registration/getList`, filterRequest, {
+            params: { userId, rows, dto, sortField, sortOrder },
+        })
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}
+
+export function registerGenericSectionClass(userId, data = {}) {
+    return axiosInstance
+        .post(`${BACKEND_ENDPOINT}/registration/registerSection`, data, {
+            params: { userId },
+        })
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}

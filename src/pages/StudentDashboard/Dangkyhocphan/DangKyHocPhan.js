@@ -1,22 +1,21 @@
-import styles from './Dangkyhocphan.module.scss';
-import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
+import { getRefId, getUserId, getUserRole } from '~/components/authentication/AuthUtils';
 import { getListTermInfo } from '~/api/term/TermService';
 import { Dropdown } from 'primereact/dropdown';
-import { getListSectionInfo } from '~/api/section/SectionService';
 import {
-    getListSectionClassInfo,
-    getListStudentSectionClassInfo,
+    getListSectionInfo,
+    getListStudentSectionInfo,
     registerGenericSectionClass,
-} from '~/api/section/SectionClassService';
+} from '~/api/section/SectionService';
+import { getListSectionClassInfo } from '~/api/section/SectionClassService';
 import { showNotification } from '~/components/notification/NotificationService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { RadioButton } from 'primereact/radiobutton';
 import { convertDayInWeek } from '~/utils/Utils';
+import { UserRoles } from '~/App';
 
 export const registrationType = [
     {
@@ -33,10 +32,10 @@ export const registrationType = [
     },
 ];
 
-const QueryKeyTerm = 'Term-Register-Options';
+const QueryKeyTerm = 'Term-Register';
 const QueryKeySection = 'Section-Register';
 const QueryKeySectionClass = 'Section-Class-Register';
-const QueryKeySectionClassStudent = 'Section-Class-Student-Register';
+const QueryKeySectionStudent = 'Regitrations';
 
 const Dangkyhocphan = () => {
     // State
@@ -44,8 +43,9 @@ const Dangkyhocphan = () => {
     const [selectedSectionClass, setSelectedSectionClass] = useState(null);
     const [selectedRegistration, setSelectedRegistration] = useState(registrationType[0].key);
     const [selectedTerm, setSelectedTerm] = useState(null);
-    const [selectTimeAndPlaceTheory, setSelectTimeAndPlaceTheory] = useState(null);
-    const [selectTimeAndPlacePractice, setSelectTimeAndPlacePractice] = useState(null);
+    const [selectTimeAndPlaceRef, setSelectTimeAndPlaceRef] = useState(null);
+    const [selectTimeAndPlace, setSelectTimeAndPlace] = useState(null);
+    const queryClient = useQueryClient();
 
     // Use Query
     const { data: termOptions } = useQuery([QueryKeyTerm, getUserId()], () => getListTermInfo(getUserId()), {
@@ -54,23 +54,27 @@ const Dangkyhocphan = () => {
 
     const { data: sectionList, refetch: refetchSection } = useQuery(
         [QueryKeySection, getUserId(), selectedTerm],
-
-        () => getListSectionInfo(getUserId(), { termId: selectedTerm, studentId: getRefId() }),
+        () =>
+            getListSectionInfo(getUserId(), {
+                termId: selectedTerm,
+                studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
+                createStatus: true,
+            }),
         {
             enabled: !!getUserId() && !!selectedTerm,
         },
     );
 
     const { data: sectionClassTheoryList } = useQuery(
-        [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
+        [QueryKeySectionClass, getUserId(), selectedSection?.id],
         () =>
             getListSectionClassInfo(getUserId(), {
                 sectionId: selectedSection?.id,
-                sectionClassType: 'theory',
-                termId: selectedTerm,
+                sectionClassRef: true,
+                createStatus: true,
             }),
         {
-            enabled: !!getUserId() && !!selectedTerm && !!selectedSection?.id,
+            enabled: !!getUserId() && !!selectedSection?.id,
         },
     );
 
@@ -86,20 +90,19 @@ const Dangkyhocphan = () => {
         },
     );
 
-    const { data: sectionClassStudentList, refetch } = useQuery(
-        [QueryKeySectionClassStudent, getUserId(), selectedTerm],
+    const { data: sectionStudentList, refetch } = useQuery(
+        [QueryKeySectionStudent, getUserId(), selectedTerm],
         () =>
-            getListStudentSectionClassInfo(getUserId(), {
-                studentId: getRefId(),
+            getListStudentSectionInfo(getUserId(), {
+                studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
                 termId: selectedTerm,
-                sectionClassType: 'theory',
             }),
         {
             enabled: !!getRefId() && !!selectedTerm,
         },
     );
 
-    const queryClient = useQueryClient();
+    // Handle Func
     const { mutate } = useMutation((toPostData) => registerGenericSectionClass(getUserId(), toPostData), {
         onSuccess: (data) => {
             if (!!data && data === HTTP_STATUS_OK) {
@@ -108,8 +111,8 @@ const Dangkyhocphan = () => {
 
                 setSelectedSection(null);
                 setSelectedSectionClass(null);
-                setSelectTimeAndPlaceTheory(null);
-                setSelectTimeAndPlacePractice(null);
+                setSelectTimeAndPlaceRef(null);
+                setSelectTimeAndPlace(null);
 
                 queryClient.setQueryData([QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm], {});
                 queryClient.setQueryData(
@@ -134,7 +137,7 @@ const Dangkyhocphan = () => {
         }
 
         if (!!selectedSection && selectedSection?.practice > 0) {
-            if (!selectTimeAndPlacePractice) {
+            if (!selectTimeAndPlace) {
                 showNotification('error', 'Lỗi', 'Hãy chọn lớp thực hành cho lớp học phần muốn đăng ký !!');
                 return;
             }
@@ -143,27 +146,30 @@ const Dangkyhocphan = () => {
         let toPostData = {
             termId: selectedTerm,
             sectionId: selectedSection?.id,
+            studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
 
-            sectionClassPracticeId: selectTimeAndPlacePractice?.sectionClassId,
-            timeAndPlacePracticeId: selectTimeAndPlacePractice?.id,
+            sectionClassId: selectTimeAndPlace?.sectionClassId,
+            timeAndPlaceId: selectTimeAndPlace?.id,
 
-            sectionClassTheoryId: selectTimeAndPlaceTheory?.sectionClassId,
-            timeAndPlaceTheoryId: selectTimeAndPlaceTheory?.id,
+            sectionClassRefId: selectTimeAndPlaceRef?.sectionClassId,
+            timeAndPlaceRefId: selectTimeAndPlaceRef?.id,
 
-            registrationType: selectedRegistration,
+            registrationStatus: selectedRegistration,
         };
+
         mutate(toPostData);
     }, [
         selectedSection,
         selectedSectionClass,
         selectedTerm,
-        selectTimeAndPlacePractice,
-        selectTimeAndPlaceTheory?.sectionClassId,
-        selectTimeAndPlaceTheory?.id,
+        selectTimeAndPlace,
+        selectTimeAndPlaceRef?.sectionClassId,
+        selectTimeAndPlaceRef?.id,
         selectedRegistration,
         mutate,
     ]);
 
+    // Render
     return (
         <React.Fragment>
             <div
@@ -175,19 +181,21 @@ const Dangkyhocphan = () => {
                 <h1 style={{ color: '#006994' }}>ĐĂNG KÝ HỌC PHẦN</h1>
             </div>
             <div className="w-full grid align-items-center justify-content-around">
-                <div className="grid align-items-center sm:col-12 xs:col-12 md:col-6 lg:col-6">
-                    <h2 style={{ textAlign: 'center', marginRight: '25px' }}>Đợt đăng kí</h2>
+                <div className="grid align-items-center col-12">
+                    <h2 className="mr-2 text-primary" style={{ textAlign: 'center' }}>
+                        Đợt đăng kí
+                    </h2>
                     {termOptions && (
                         <div style={{ width: '28rem' }}>
                             <Dropdown
-                                className="p-2 w-full"
+                                className="w-full"
                                 value={selectedTerm || null}
                                 onChange={(e) => {
                                     setSelectedTerm(e?.target?.value);
                                     setSelectedSection(null);
                                     setSelectedSectionClass(null);
-                                    setSelectTimeAndPlaceTheory(null);
-                                    setSelectTimeAndPlacePractice(null);
+                                    setSelectTimeAndPlaceRef(null);
+                                    setSelectTimeAndPlace(null);
 
                                     queryClient.setQueryData(
                                         [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
@@ -211,7 +219,7 @@ const Dangkyhocphan = () => {
                         </div>
                     )}
                 </div>
-                <div className="flex flex-wrap gap-3 sm:col-12 xs:col-12 md:col-6 lg:col-6">
+                <div className="flex flex-wrap gap-3 col-12 justify-content-center">
                     <div className="flex align-items-center">
                         <RadioButton
                             inputId="hocmoi"
@@ -250,167 +258,180 @@ const Dangkyhocphan = () => {
                     </div>
                 </div>
             </div>
+
             {/* LỚP HỌC PHẦN CHỜ ĐĂNG KÝ */}
-            <div
-                style={{
-                    width: '100%',
-                    textAlign: 'center',
-                }}
-            >
-                <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#FF8C00' }}>MÔN HỌC PHẦN ĐANG CHỜ ĐĂNG KÍ</p>
-            </div>
-            <div style={{ marginTop: '25px' }}>
-                <table border="1" className="w-full">
-                    <thead>
-                        <tr className="bg-primary">
-                            <th rowSpan="1">Thuộc chuyên ngành</th>
-                            <th rowSpan="1">Mã HP</th>
-                            <th rowSpan="1">Tên môn học / Học phần</th>
-                            <th rowSpan="1">Tín chỉ học tập</th>
-                            <th rowSpan="1">Tín chỉ chi phí</th>
-                            <th rowSpan="1">Số chỉ lý thuyết</th>
-                            <th rowSpan="1">Số chỉ thực hành</th>
-                            <th rowSpan="1">Bắt buộc</th>
-                            <th style={{ width: '200px' }} rowSpan="1">
-                                Học phần: học trước (a), tiên quyết (b), song hành (c)
-                            </th>
-                        </tr>
-                    </thead>
-                    {sectionList &&
-                        sectionList?.length > 0 &&
-                        sectionList.map((rowData) => (
-                            <tbody key={rowData.id}>
-                                <tr
-                                    onClick={() => {
-                                        setSelectedSection(rowData);
-                                        setSelectedSectionClass(null);
-                                        setSelectTimeAndPlacePractice(null);
-                                        setSelectTimeAndPlaceTheory(null);
-                                    }}
-                                    className={`cursor-pointer ${
-                                        rowData?.id === selectedSection?.id ? 'bg-yellow-300' : ''
-                                    }`}
-                                >
-                                    <th style={{ height: '3rem' }}>{rowData.specializationName}</th>
-                                    <th>{rowData.code}</th>
-                                    <th>{rowData.name}</th>
-                                    <th>{rowData.credits}</th>
-                                    <th>{rowData.costCredits}</th>
-                                    <th>{rowData.theory}</th>
-                                    <th>{rowData.practice}</th>
-                                    <th>
-                                        {rowData.sectionType === 'elective' ? (
-                                            <FontAwesomeIcon
-                                                style={{ color: 'red', fontSize: '20px' }}
-                                                icon={faCircleXmark}
-                                            />
-                                        ) : (
-                                            <FontAwesomeIcon
-                                                style={{ color: 'green', fontSize: '20px' }}
-                                                icon={faCircleCheck}
-                                            />
-                                        )}
-                                    </th>
-                                    <th>
-                                        {rowData.requireSection &&
-                                        rowData?.requireSection?.studyFirst &&
-                                        rowData?.requireSection?.studyFirst?.length > 0
-                                            ? rowData?.requireSection?.studyFirst.map((sectionCode) => {
-                                                  return (
-                                                      <div key={sectionCode}>
-                                                          {sectionCode + ' (a)'} <br />
-                                                      </div>
-                                                  );
-                                              })
-                                            : ''}
-                                        {rowData.requireSection &&
-                                        rowData?.requireSection?.prerequisite &&
-                                        rowData?.requireSection?.prerequisite?.length > 0
-                                            ? rowData?.requireSection?.prerequisite.map((sectionCode) => {
-                                                  return (
-                                                      <div key={sectionCode}>
-                                                          {sectionCode + ' (b)'} <br />
-                                                      </div>
-                                                  );
-                                              })
-                                            : ''}
-                                        {rowData.requireSection &&
-                                        rowData?.requireSection?.parallel &&
-                                        rowData?.requireSection?.parallel?.length > 0
-                                            ? rowData?.requireSection?.parallel.map((sectionCode) => {
-                                                  return (
-                                                      <div key={sectionCode}>
-                                                          {sectionCode + ' (c)'} <br />
-                                                      </div>
-                                                  );
-                                              })
-                                            : ''}
-                                    </th>
-                                </tr>
-                            </tbody>
-                        ))}
-                </table>
+            <div className="w-full">
+                <div
+                    style={{
+                        width: '100%',
+                        textAlign: 'center',
+                    }}
+                >
+                    <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#FF8C00' }}>
+                        MÔN HỌC PHẦN ĐANG CHỜ ĐĂNG KÍ
+                    </p>
+                </div>
+                <div style={{ marginTop: '25px' }}>
+                    <table border="1" className="w-full">
+                        <thead>
+                            <tr className="bg-primary">
+                                <th rowSpan="1">Mã chuyên ngành</th>
+                                <th rowSpan="1">Thuộc chuyên ngành</th>
+                                <th rowSpan="1">Mã HP</th>
+                                <th rowSpan="1">Tên môn học / Học phần</th>
+                                <th rowSpan="1">Tín chỉ học tập</th>
+                                <th rowSpan="1">Tín chỉ chi phí</th>
+                                <th rowSpan="1">Thời lượng môn học</th>
+                                <th rowSpan="1">Số chỉ lý thuyết</th>
+                                <th rowSpan="1">Số chỉ thực hành</th>
+                                <th rowSpan="1">Bắt buộc</th>
+                                <th style={{ width: '200px' }} rowSpan="1">
+                                    Học phần: học trước (a), tiên quyết (b), song hành (c)
+                                </th>
+                            </tr>
+                        </thead>
+                        {sectionList &&
+                            sectionList?.length > 0 &&
+                            sectionList.map((rowData) => (
+                                <tbody key={rowData.id}>
+                                    <tr
+                                        onClick={() => {
+                                            setSelectedSection(rowData);
+                                            setSelectedSectionClass(null);
+                                            setSelectTimeAndPlace(null);
+                                            setSelectTimeAndPlaceRef(null);
+                                        }}
+                                        className={`cursor-pointer ${
+                                            rowData?.id === selectedSection?.id ? 'bg-yellow-300' : ''
+                                        }`}
+                                    >
+                                        <th style={{ height: '3rem' }}>{rowData.specializationCode}</th>
+                                        <th>{rowData.specializationName}</th>
+                                        <th>{rowData.code}</th>
+                                        <th>{rowData.name}</th>
+                                        <th>{rowData.credits}</th>
+                                        <th>{rowData.costCredits}</th>
+                                        <th>{rowData.courseDurationValue}</th>
+                                        <th>{rowData?.courseDuration?.theory}</th>
+                                        <th>{rowData?.courseDuration?.practice}</th>
+                                        <th>
+                                            {rowData.sectionType === 'elective' ? (
+                                                <FontAwesomeIcon
+                                                    style={{ color: 'red', fontSize: '20px' }}
+                                                    icon={faCircleXmark}
+                                                />
+                                            ) : (
+                                                <FontAwesomeIcon
+                                                    style={{ color: 'green', fontSize: '20px' }}
+                                                    icon={faCircleCheck}
+                                                />
+                                            )}
+                                        </th>
+                                        <th className="font-semibold ">
+                                            {rowData.requireCourse &&
+                                            rowData?.requireCourse?.studyFirst &&
+                                            rowData?.requireCourse?.studyFirst?.length > 0
+                                                ? rowData?.requireCourse?.studyFirst.map((courseCode) => {
+                                                      return (
+                                                          <div key={courseCode}>
+                                                              {courseCode + ' (a)'} <br />
+                                                          </div>
+                                                      );
+                                                  })
+                                                : ''}
+                                            {rowData.requireCourse &&
+                                            rowData?.requireCourse?.prerequisite &&
+                                            rowData?.requireCourse?.prerequisite?.length > 0
+                                                ? rowData?.requireCourse?.prerequisite.map((courseCode) => {
+                                                      return (
+                                                          <div key={courseCode}>
+                                                              {courseCode + ' (b)'} <br />
+                                                          </div>
+                                                      );
+                                                  })
+                                                : ''}
+                                            {rowData.requireCourse &&
+                                            rowData?.requireCourse?.parallel &&
+                                            rowData?.requireCourse?.parallel?.length > 0
+                                                ? rowData?.requireCourse?.parallel.map((courseCode) => {
+                                                      return (
+                                                          <div key={courseCode}>
+                                                              {courseCode + ' (c)'} <br />
+                                                          </div>
+                                                      );
+                                                  })
+                                                : ''}
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            ))}
+                    </table>
+                </div>
             </div>
             <hr />
 
             {/* LỚP HỌC PHẦN CHỜ ĐĂNG KÝ */}
-            <div
-                style={{
-                    width: '100%',
-                    marginTop: '25px',
-                    textAlign: 'center',
-                }}
-            >
-                <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#FF8C00' }}>LỚP HỌC PHẦN CHỜ ĐĂNG KÝ</p>
-            </div>
-            <div
-                style={{
-                    marginTop: '25px',
-                }}
-            >
-                <table border="1" className="w-full">
-                    <thead>
-                        <tr className="bg-primary">
-                            <th rowSpan="1">Mã LHP</th>
-                            <th rowSpan="1">Tên lớp học phần</th>
-                            <th rowSpan="1">Giảng viên giảng dạy</th>
-                            <th rowSpan="1">Mã giảng viên</th>
-                            <th rowSpan="1">Sĩ số tối đa</th>
-                            <th rowSpan="1">Đã đăng kí</th>
-                            <th rowSpan="1">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    {sectionClassTheoryList &&
-                        sectionClassTheoryList?.length > 0 &&
-                        sectionClassTheoryList.map((rowData) => (
-                            <tbody key={rowData.id}>
-                                <tr
-                                    onClick={() => {
-                                        setSelectedSectionClass(rowData);
-                                        setSelectTimeAndPlacePractice(null);
-                                        setSelectTimeAndPlaceTheory(null);
-                                    }}
-                                    className={`cursor-pointer ${
-                                        rowData?.id === selectedSectionClass?.id ? 'bg-yellow-300' : ''
-                                    }`}
-                                >
-                                    <th style={{ height: '3rem' }}>{rowData?.code}</th>
-                                    <th>{rowData?.name}</th>
-                                    <th>{rowData?.lecturerName}</th>
-                                    <th>{rowData?.lecturerCode}</th>
-                                    <th>{rowData?.numberOfStudents}</th>
-                                    <th>{rowData?.registered ? rowData?.registered : 0}</th>
-                                    <th>
-                                        {!!rowData?.sectionClassStatus
-                                            ? rowData?.sectionClassStatus === 'open'
-                                                ? 'Đang mở'
-                                                : 'Đã đóng'
-                                            : ''}
-                                    </th>
-                                </tr>
-                            </tbody>
-                        ))}
-                </table>
+            <div className="w-full">
+                <div
+                    style={{
+                        width: '100%',
+                        marginTop: '25px',
+                        textAlign: 'center',
+                    }}
+                >
+                    <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#FF8C00' }}>LỚP HỌC PHẦN CHỜ ĐĂNG KÝ</p>
+                </div>
+                <div
+                    style={{
+                        marginTop: '25px',
+                    }}
+                >
+                    <table border="1" className="w-full">
+                        <thead>
+                            <tr className="bg-primary">
+                                <th rowSpan="1">Mã LHP</th>
+                                <th rowSpan="1">Tên lớp học phần</th>
+                                <th rowSpan="1">Giảng viên giảng dạy</th>
+                                <th rowSpan="1">Mã giảng viên</th>
+                                <th rowSpan="1">Sĩ số tối đa</th>
+                                <th rowSpan="1">Đã đăng kí</th>
+                                <th rowSpan="1">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        {sectionClassTheoryList &&
+                            sectionClassTheoryList?.length > 0 &&
+                            sectionClassTheoryList.map((rowData) => (
+                                <tbody key={rowData.id}>
+                                    <tr
+                                        onClick={() => {
+                                            setSelectedSectionClass(rowData);
+                                            setSelectTimeAndPlace(null);
+                                            setSelectTimeAndPlaceRef(null);
+                                        }}
+                                        className={`cursor-pointer ${
+                                            rowData?.id === selectedSectionClass?.id ? 'bg-yellow-300' : ''
+                                        }`}
+                                    >
+                                        <th style={{ height: '3rem' }}>{rowData?.code}</th>
+                                        <th>{rowData?.name}</th>
+                                        <th>{rowData?.lecturerName}</th>
+                                        <th>{rowData?.lecturerCode}</th>
+                                        <th>{rowData?.maxStudents}</th>
+                                        <th>{rowData?.registered ? rowData?.registered : 0}</th>
+                                        <th>
+                                            {!!rowData?.sectionClassStatus
+                                                ? rowData?.sectionClassStatus === 'open'
+                                                    ? 'Đang mở'
+                                                    : rowData?.sectionClassStatus === 'closed'
+                                                    ? 'Đã đóng'
+                                                    : ''
+                                                : ''}
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            ))}
+                    </table>
+                </div>
             </div>
             <hr />
 
@@ -481,25 +502,25 @@ const Dangkyhocphan = () => {
                                             <tr
                                                 onClick={() => {
                                                     if (rowData?.sectionClassType === 'theory') {
-                                                        if (selectTimeAndPlaceTheory?.id === timeAndPlace?.id) {
-                                                            setSelectTimeAndPlaceTheory(null);
+                                                        if (selectTimeAndPlaceRef?.id === timeAndPlace?.id) {
+                                                            setSelectTimeAndPlaceRef(null);
                                                         } else {
-                                                            setSelectTimeAndPlaceTheory(timeAndPlace);
+                                                            setSelectTimeAndPlaceRef(timeAndPlace);
                                                         }
                                                     } else {
-                                                        if (selectTimeAndPlacePractice?.id === timeAndPlace?.id) {
-                                                            setSelectTimeAndPlacePractice(null);
+                                                        if (selectTimeAndPlace?.id === timeAndPlace?.id) {
+                                                            setSelectTimeAndPlace(null);
                                                         } else {
-                                                            setSelectTimeAndPlacePractice(timeAndPlace);
+                                                            setSelectTimeAndPlace(timeAndPlace);
                                                         }
                                                     }
                                                 }}
                                                 className={`cursor-pointer ${
                                                     rowData?.sectionClassType === 'theory'
-                                                        ? selectTimeAndPlaceTheory?.id === timeAndPlace?.id
+                                                        ? selectTimeAndPlaceRef?.id === timeAndPlace?.id
                                                             ? 'bg-yellow-300'
                                                             : ''
-                                                        : selectTimeAndPlacePractice?.id === timeAndPlace?.id
+                                                        : selectTimeAndPlace?.id === timeAndPlace?.id
                                                         ? 'bg-yellow-300'
                                                         : ''
                                                 }`}
@@ -558,7 +579,7 @@ const Dangkyhocphan = () => {
                     <thead>
                         <tr className="bg-primary">
                             <th style={{ height: '50px' }} rowSpan="1">
-                                Mã LHP
+                                Mã HP
                             </th>
                             <th rowSpan="1">Tên môn học / Học phần</th>
                             <th rowSpan="1">Số TC học tập</th>
@@ -567,41 +588,39 @@ const Dangkyhocphan = () => {
                             <th rowSpan="1">Hạn nộp</th>
                             <th rowSpan="1">Loại ĐK</th>
                             <th rowSpan="1">Ngày ĐK</th>
-                            <th rowSpan="1">Trạng thái LHP</th>
                             <th rowSpan="1">Trạng thái ĐK</th>
                         </tr>
                     </thead>
-                    {sectionClassStudentList &&
-                        sectionClassStudentList?.length > 0 &&
-                        sectionClassStudentList?.map((studentSectionClass, i) => (
-                            <tbody key={studentSectionClass?.id}>
+                    {sectionStudentList &&
+                        sectionStudentList?.length > 0 &&
+                        sectionStudentList?.map((studentSection, i) => (
+                            <tbody key={studentSection?.id}>
                                 <tr>
-                                    <th style={{ height: '40px' }}>{studentSectionClass?.sectionClassCode}</th>
-                                    <th>{studentSectionClass?.sectionName}</th>
-                                    <th>{studentSectionClass?.credits}</th>
-                                    <th>{studentSectionClass?.costCredits}</th>
-                                    <th>{studentSectionClass?.total} VND</th>
-                                    <th>{'-'}</th>
-
+                                    <th style={{ height: '40px' }}>{studentSection?.sectionCode}</th>
+                                    <th>{studentSection?.sectionName}</th>
+                                    <th>{studentSection?.credits}</th>
+                                    <th>{studentSection?.costCredits}</th>
+                                    <th>{studentSection?.total} VND</th>
                                     <th>
-                                        {studentSectionClass?.type === 'new_learning'
+                                        {studentSection?.paymentDeadline
+                                            ? new Date(studentSection?.paymentDeadline).toLocaleDateString()
+                                            : '-'}
+                                    </th>
+                                    <th>
+                                        {studentSection?.registrationStatus === 'new_learning'
                                             ? 'Đăng kí học mới'
-                                            : studentSectionClass?.type === 'again_learning'
+                                            : studentSection?.registrationStatus === 'again_learning'
                                             ? 'Đăng ký học lại'
-                                            : studentSectionClass?.type === 'improve_learning'
+                                            : studentSection?.registrationStatus === 'improve_learning'
                                             ? 'Đăng ký học cải thiện'
                                             : '-'}
                                     </th>
-                                    <th>{new Date(studentSectionClass?.createdAt).toLocaleDateString()}</th>
-                                    <th>{`${
-                                        studentSectionClass?.sectionClassStatus === 'open' ? 'Đang mở' : 'Đã khóa'
-                                    }`}</th>
+                                    <th>{new Date(studentSection?.createdAt).toLocaleDateString()}</th>
+
                                     <th>
-                                        {studentSectionClass?.status === 'registered'
-                                            ? 'Đã đăng ký'
-                                            : studentSectionClass?.status === 'canceled'
-                                            ? 'Đã huỷ'
-                                            : 'Đang chờ'}
+                                        {studentSection?.registrationStatus === 'canceled'
+                                            ? 'Đã huỷ bỏ đăng ký'
+                                            : 'Đã đăng ký'}
                                     </th>
                                 </tr>
                             </tbody>

@@ -4,49 +4,42 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
-import { getPageCourseInfo } from '~/api/course/CourseService';
-import CourseForm from './CourseForm';
 import { useRef } from 'react';
+import { getPageUser } from '~/api/user/UserService';
+import ProgramForm from './ProgramForm';
 
-const QueryKey = 'Course-Management';
+const QueryKey = 'Program-Management';
 const initialPageable = {
     rows: 10,
     pageNumber: 0,
     sortField: 'id',
     sortOrder: -1,
 };
-const CouseManagement = () => {
+const ProgramManagement = () => {
     const [pageable, setPageable] = useState({ ...initialPageable });
-
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
-        () => getPageCourseInfo(getUserId()),
+        () => {},
         {
             enabled: !!getUserId(),
         },
     );
 
-    const courseRef = useRef(null);
+    const programRef = useRef(null);
     const columns = [
-        { field: 'specializationName', header: 'Tên chuyên ngành' },
+        { field: 'academicYearName', header: 'Năm học' },
         { field: 'specializationCode', header: 'Mã chuyên ngành' },
-        { field: 'code', header: 'Mã môn học' },
-        { field: 'name', header: 'Tên môn học' },
-        { field: 'credits', header: 'Số tín chỉ học tập' },
-        { field: 'courseDurationValue', header: 'Thời lượng trong môn học' },
-        { field: 'courseType', header: 'Loại môn học' },
-        { field: 'typeOfKnowledge', header: 'Loại kiến thức trong môn học' },
-        { field: 'createdAt', header: 'Được tạo' },
-        { field: 'deleted', header: 'Trạng thái bị xoá' },
+        { field: 'specializationName', header: 'Tên chuyên ngành' },
+        { field: 'programName', header: 'Tên chương trình đào tạo' },
         { field: 'action', header: 'Thao tác' },
     ];
 
     const header = (
-        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-            <p className="text-900 font-bold m-0">QUẢN LÝ MÔN HỌC</p>
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2x">
+            <p className="text-900 font-bold">QUẢN LÝ CHƯƠNG TRÌNH ĐÀO TẠO</p>
             <div className="flex align-items-center ">
                 <Button className="mr-2" icon="pi pi-refresh" rounded raised onClick={refetch} />
-                <Button className="" icon="pi pi-plus" rounded raised onClick={() => courseRef.current.showForm()} />
+                <Button className="" icon="pi pi-plus" rounded raised onClick={() => programRef.current.showForm()} />
             </div>
         </div>
     );
@@ -65,7 +58,7 @@ const CouseManagement = () => {
                     {},
                 ],
                 () =>
-                    getPageCourseInfo(
+                    getPageUser(
                         getUserId(),
                         pageable?.pageNumber + 1,
                         pageable?.rows,
@@ -79,7 +72,7 @@ const CouseManagement = () => {
 
     return (
         <React.Fragment>
-            <div className="col-12">
+            <div className="card col-12">
                 <DataTable
                     value={!!data && data?.content?.length > 0 ? data?.content : []}
                     header={header}
@@ -112,6 +105,12 @@ const CouseManagement = () => {
                                             Không
                                         </div>
                                     )
+                                ) : col.field === 'address' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                            {rowData['formattedAddress']}
+                                        </div>
+                                    </div>
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         <Button
@@ -119,32 +118,8 @@ const CouseManagement = () => {
                                             icon="pi pi-pencil"
                                             rounded
                                             raised
-                                            onClick={() => courseRef.current.showForm(rowData)}
+                                            onClick={() => programRef.current.showForm(rowData)}
                                         />
-                                    </div>
-                                ) : col.field === 'createdAt' ? (
-                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {new Date(rowData[col.field]).toLocaleDateString()}
-                                    </div>
-                                ) : col.field === 'courseType' ? (
-                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field] === 'elective'
-                                            ? 'Tự chọn'
-                                            : rowData[col.field] === 'compulsory'
-                                            ? 'Bắt buộc'
-                                            : '-'}
-                                    </div>
-                                ) : col.field === 'typeOfKnowledge' ? (
-                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field] === 'general_education'
-                                            ? 'Môn học đại cương'
-                                            : rowData[col.field] === 'specialized_education'
-                                            ? 'Môn học chuyên ngành'
-                                            : '-'}
-                                    </div>
-                                ) : col.field === 'specializationCode' || col.field === 'specializationName' ? (
-                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field] ? rowData[col.field] : 'Không có'}
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
@@ -156,9 +131,9 @@ const CouseManagement = () => {
                     ))}
                 </DataTable>
             </div>
-            <CourseForm ref={courseRef} />
+            <ProgramForm ref={programRef} />
         </React.Fragment>
     );
 };
 
-export default CouseManagement;
+export default ProgramManagement;

@@ -105,6 +105,7 @@ export function storeAllUserData(data) {
     setUserToken(data?.userToken);
     setXApiKey(data?.xApiKey);
     setSessionId(data?.sessionId);
+    setUserRole(data.userRole);
 }
 
 // ATTEMPT

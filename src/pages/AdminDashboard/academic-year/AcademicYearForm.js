@@ -14,6 +14,7 @@ import { Calendar } from 'primereact/calendar';
 import { Divider } from 'primereact/divider';
 import moment from 'moment';
 import { InputNumber } from 'primereact/inputnumber';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const AcademicYearForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
@@ -38,11 +39,11 @@ const AcademicYearForm = forwardRef((props, ref) => {
         let isError = false;
 
         // Check dữ liệu của form
-        if (!data?.academicYearName) {
+        if (!data?.yearStart) {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Tên niên khoá của năm học không được để trống!!',
+                detail: 'Năm học bắt đầu của niên khoá không được để trống!!',
             });
             isError = true;
         }
@@ -132,6 +133,23 @@ const AcademicYearForm = forwardRef((props, ref) => {
             return;
         } else {
             // Validate thời gian hợp lệ của các học kỳ
+
+            // Học kỳ đầu
+            debugger;
+            if (
+                new Date(data.yearStart + 1, 0).getFullYear() < new Date(data.firstTermStart).getFullYear() ||
+                new Date(data.yearStart, 0).getFullYear() > new Date(data.firstTermStart).getFullYear() ||
+                new Date(data.yearStart + 1, 0).getFullYear() < new Date(data.firstTermEnd).getFullYear() ||
+                new Date(data.yearStart, 0).getFullYear() > new Date(data.firstTermEnd).getFullYear()
+            ) {
+                toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'Thời gian của học kỳ đầu phải nằm trong niên khoá!!',
+                });
+                return;
+            }
+
             if (new Date().getTime() > new Date(data.firstTermStart).getTime()) {
                 toast.current.show({
                     severity: 'info',
@@ -159,6 +177,21 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
+            // Học kỳ hai
+            if (
+                new Date(data.yearStart + 1, 0).getFullYear() < new Date(data.secondTermStart).getFullYear() ||
+                new Date(data.yearStart, 0).getFullYear() > new Date(data.secondTermStart).getFullYear() ||
+                new Date(data.yearStart + 1, 0).getFullYear() < new Date(data.secondTermEnd).getFullYear() ||
+                new Date(data.yearStart, 0).getFullYear() > new Date(data.secondTermEnd).getFullYear()
+            ) {
+                toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'Thời gian của học kỳ hai phải năm trong niên khoá!!',
+                });
+                return;
+            }
+
             if (new Date(data.secondTermStart).getTime() > new Date(data.secondTermEnd).getTime()) {
                 toast.current.show({
                     severity: 'info',
@@ -177,6 +210,22 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
+            // Học kỳ hè
+
+            if (
+                new Date(data.yearStart + 1, 0).getFullYear() < new Date(data.thirdTermStart).getFullYear() ||
+                new Date(data.yearStart, 0).getFullYear() > new Date(data.thirdTermStart).getFullYear() ||
+                new Date(data.yearStart + 1, 0).getFullYear() < new Date(data.thirdTermEnd).getFullYear() ||
+                new Date(data.yearStart, 0).getFullYear() > new Date(data.thirdTermEnd).getFullYear()
+            ) {
+                toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'Thời gian của học kỳ hè phải nằm trong niên khoá!!',
+                });
+                return;
+            }
+
             if (new Date(data.thirdTermStart).getTime() > new Date(data.thirdTermEnd).getTime()) {
                 toast.current.show({
                     severity: 'info',
@@ -189,7 +238,6 @@ const AcademicYearForm = forwardRef((props, ref) => {
 
         const toPostData = {
             id: data?.id ? data.id : null,
-            name: data?.academicYearName,
             ...data,
         };
 
@@ -238,20 +286,24 @@ const AcademicYearForm = forwardRef((props, ref) => {
                         <Divider align="left">
                             <div className="inline-flex align-items-center">
                                 <i className="pi pi-calendar mr-2"></i>
-                                <h3 className="p-0 m-0">Năm học</h3>
+                                <h3 className="p-0 m-0">Năm học (Niên khoá)</h3>
                             </div>
                         </Divider>
                         <div className="col-12 p-0">
-                            <p>Niên khoá năm học</p>
+                            <p>
+                                <strong>Năm học bắt đầu</strong>
+                            </p>
                             <span className="w-full">
-                                <InputMask
+                                <Calendar
+                                    placeholder="Nhập năm bắt đầu"
                                     className="w-full"
-                                    id="school-year"
-                                    mask="9999-9999"
-                                    placeholder="20xx-20xx"
-                                    value={data?.academicYearName || ''}
-                                    onChange={(e) => handleOnChange('academicYearName', e.target.value)}
-                                ></InputMask>
+                                    view="year"
+                                    dateFormat="yy"
+                                    value={data?.yearStart ? new Date(data?.yearStart, 0) : null}
+                                    onChange={(e) => {
+                                        setData({ ...data, yearStart: e.value.getFullYear() });
+                                    }}
+                                ></Calendar>
                             </span>
                         </div>
                         <Divider align="left">
@@ -274,7 +326,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
-                            <p>Chi phí một tín chỉ</p>
+                            <p>Chi phí một tín chỉ (VND)</p>
                             <span className="w-full">
                                 <InputNumber
                                     value={data?.costFirstTerm}
@@ -294,7 +346,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         value={
                                             data?.firstTermStart
                                                 ? moment(data?.firstTermStart, 'dd/MM/yyyy').toDate()
-                                                : new Date()
+                                                : null
                                         }
                                         onChange={(e) => setData({ ...data, firstTermStart: e.value })}
                                     />
@@ -312,7 +364,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         value={
                                             data?.firstTermEnd
                                                 ? moment(data?.firstTermEnd, 'dd/MM/yyyy').toDate()
-                                                : new Date()
+                                                : null
                                         }
                                         onChange={(e) => setData({ ...data, firstTermEnd: e.value })}
                                     ></Calendar>
@@ -333,7 +385,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
-                            <p>Chi phí một tín chỉ</p>
+                            <p>Chi phí một tín chỉ (VND)</p>
                             <span className="w-full">
                                 <InputNumber
                                     value={data?.costSecondTerm}
@@ -353,7 +405,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         value={
                                             data?.secondTermStart
                                                 ? moment(data?.secondTermStart, 'dd/MM/yyyy').toDate()
-                                                : new Date()
+                                                : null
                                         }
                                         onChange={(e) => setData({ ...data, secondTermStart: e.value })}
                                     />
@@ -371,7 +423,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         value={
                                             data?.secondTermEnd
                                                 ? moment(data?.secondTermEnd, 'dd/MM/yyyy').toDate()
-                                                : new Date()
+                                                : null
                                         }
                                         onChange={(e) => setData({ ...data, secondTermEnd: e.value })}
                                     ></Calendar>
@@ -392,7 +444,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
-                            <p>Chi phí một tín chỉ</p>
+                            <p>Chi phí một tín chỉ (VND)</p>
                             <span className="w-full">
                                 <InputNumber
                                     value={data?.costThirdTerm}
@@ -412,7 +464,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         value={
                                             data?.thirdTermStart
                                                 ? moment(data?.thirdTermStart, 'dd/MM/yyyy').toDate()
-                                                : new Date()
+                                                : null
                                         }
                                         onChange={(e) => setData({ ...data, thirdTermStart: e.value })}
                                     />
@@ -430,7 +482,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         value={
                                             data?.thirdTermEnd
                                                 ? moment(data?.thirdTermEnd, 'dd/MM/yyyy').toDate()
-                                                : new Date()
+                                                : null
                                         }
                                         onChange={(e) => setData({ ...data, thirdTermEnd: e.value })}
                                     ></Calendar>

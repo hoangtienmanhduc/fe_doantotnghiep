@@ -31,12 +31,15 @@ const SectionClassForm = forwardRef((props, ref) => {
         showForm: handleShowForm,
         hideForm: handleHideForm,
     }));
+
+    // State
     const [timeData, setTimeData] = useState({});
     const [isAddTime, setIsAddTime] = useState(false);
     const [visible, setVisible] = useState(false);
     const [data, setData] = useState({});
     const [editData, setEditData] = useState({});
     const [classType, setClassType] = useState(null);
+
     const toast = useRef(null);
     const handleShowForm = useCallback((data) => {
         if (data && Object.keys(data)?.length > 0) {
@@ -47,27 +50,35 @@ const SectionClassForm = forwardRef((props, ref) => {
         setVisible(true);
     }, []);
 
+    // Use Query
     const { data: lecturerOptions } = useQuery(
         [QueryKeyLecturerOptions, getUserId()],
-        () => getListLecturerInfo(getUserId(), {}, null, true),
+        () => getListLecturerInfo(getUserId(), { sectionId: data?.sectionId }, null, true),
         { enabled: !!getUserId() && !!visible },
     );
     const { data: sectionOptions } = useQuery(
-        [QueryKeySectionOptions, getUserId()],
-        () => getListSectionInfo(getUserId(), {}, null, true),
-        { enabled: !!getUserId() && !!visible },
+        [QueryKeySectionOptions, getUserId(), data?.termId],
+        () => getListSectionInfo(getUserId(), { termId: data?.termId }, null, true),
+        { enabled: !!getUserId() && !!visible && !!data?.termId },
     );
 
     const { data: sectionClassOptions } = useQuery(
-        [QueryKeySectionClassOptions, getUserId()],
-        () => getListSectionClassInfo(getUserId(), { sectionClassType: 'theory' }, null, true),
-        { enabled: !!getUserId() && !!visible },
+        [QueryKeySectionClassOptions, getUserId(), data?.sectionId],
+        () =>
+            getListSectionClassInfo(
+                getUserId(),
+                { sectionClassType: 'theory', sectionId: data?.sectionId },
+                null,
+                true,
+            ),
+        { enabled: !!getUserId() && !!visible && !!data?.sectionId },
     );
 
     const { data: termOptions } = useQuery([QueryKeyTerm, getUserId()], () => getListTermInfo(getUserId()), {
         enabled: !!getUserId() && !!visible,
     });
 
+    // Handle Func
     const handleHideForm = useCallback(() => {
         setData({});
         setTimeData({});
@@ -179,10 +190,6 @@ const SectionClassForm = forwardRef((props, ref) => {
     }, [data, editData, timeData]);
 
     const handleOnSubmit = useCallback(async () => {
-        let toPostData = {
-            ...data,
-        };
-
         let isError = false;
 
         if (!data?.lecturerId) {
@@ -212,11 +219,29 @@ const SectionClassForm = forwardRef((props, ref) => {
             isError = true;
         }
 
-        if (!data?.numberOfStudents) {
+        if (!data?.minStudents || data.minStudents < 1) {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
-                detail: 'Tổng sinh viên tối đa của lớp không được để trống!!',
+                detail: 'Tổng sinh viên tối thiểu mở lớp không được để trống và phải lớn 0 !!',
+            });
+            isError = true;
+        }
+
+        if (!data?.maxStudents || data.maxStudents < 1) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Tổng sinh viên tối đa của lớp không được để trống và phải lớn 0 !!',
+            });
+            isError = true;
+        }
+
+        if (data?.maxStudents < data?.minStudents) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Tổng sinh viên tối đa của lớp không được nhỏ hơn số sinh viên tối thiểu của lớp !!',
             });
             isError = true;
         }
@@ -231,8 +256,12 @@ const SectionClassForm = forwardRef((props, ref) => {
         }
 
         if (!isError) {
-            const sectionData = await createOrUpdateGenericSectionClass(getUserId(), toPostData);
-            if (sectionData?.id) {
+            let toPostData = {
+                ...data,
+            };
+
+            const sectionClassData = await createOrUpdateGenericSectionClass(getUserId(), toPostData);
+            if (sectionClassData?.id) {
                 try {
                     toast.current.show({
                         severity: 'success',
@@ -242,9 +271,9 @@ const SectionClassForm = forwardRef((props, ref) => {
                 } catch (err) {
                     console.log('Tải lại bảng không thành công');
                 }
-
-                handleHideForm();
             }
+
+            handleHideForm();
         }
     }, [data, handleHideForm]);
 
@@ -357,6 +386,8 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         options={dayInWeekOptions}
                                         optionLabel="label"
                                         optionValue="key"
+                                        filter
+                                        showClear
                                         placeholder="Hãy chọn ngày học trong tuần của lớp học phần (Bắt buộc)"
                                         className="w-full"
                                     />
@@ -431,6 +462,8 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         value={data.termId}
                                         onChange={(e) => handleOnChange('termId', e?.target.value)}
                                         options={termOptions}
+                                        filter
+                                        showClear
                                         optionLabel="name"
                                         optionValue="id"
                                         placeholder="Hãy chọn học kỳ của lớp học phần"
@@ -445,7 +478,9 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         value={data.sectionId}
                                         onChange={(e) => handleOnChange('sectionId', e?.target.value)}
                                         options={sectionOptions}
-                                        optionLabel="name"
+                                        filter
+                                        showClear
+                                        optionLabel="fullName"
                                         optionValue="id"
                                         placeholder="Hãy chọn học phần của lớp học phần"
                                         className="w-full"
@@ -465,6 +500,8 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         value={data?.lecturerId}
                                         onChange={(e) => handleOnChange('lecturerId', e?.target.value)}
                                         options={lecturerOptions}
+                                        filter
+                                        showClear
                                         optionLabel="name"
                                         optionValue="id"
                                         placeholder="Hãy chọn giảng viên phụ trách giảng dạy cho lớp học phần"
@@ -487,6 +524,8 @@ const SectionClassForm = forwardRef((props, ref) => {
                                             handleOnChange('sectionClassType', e?.target.value);
                                             setClassType(e?.target.value);
                                         }}
+                                        filter
+                                        showClear
                                         options={SectionClassTypeOptions}
                                         optionLabel="label"
                                         optionValue="key"
@@ -503,21 +542,34 @@ const SectionClassForm = forwardRef((props, ref) => {
                                             value={data?.refId || null}
                                             onChange={(e) => handleOnChange('refId', e?.target.value)}
                                             options={sectionClassOptions}
+                                            filter
+                                            showClear
                                             optionLabel="name"
                                             optionValue="id"
-                                            placeholder="Hãy chọn lớp học phần lý thuyết mà lớp thực hành này thuộc"
+                                            placeholder="Hãy chọn lớp học phần lý thuyết mà lớp thực hành này thuộc (Không bắt buộc)"
                                             className="w-full"
                                         />
                                     </span>
                                 </div>
                             )}
                             <div className="col-12 p-0">
+                                <p>Sinh viên tối thiếu để mở lớp</p>
+                                <span className="w-full">
+                                    <InputNumber
+                                        value={data?.minStudents || null}
+                                        placeholder="Nhập sinh viên tối thiểu cho lớp học"
+                                        onChange={(e) => handleOnChange('minStudents', e?.value)}
+                                        className="w-full"
+                                    />
+                                </span>
+                            </div>
+                            <div className="col-12 p-0">
                                 <p>Sinh viên tối đa cho lớp học</p>
                                 <span className="w-full">
                                     <InputNumber
-                                        value={data?.numberOfStudents}
+                                        value={data?.maxStudents || null}
                                         placeholder="Nhập sinh viên tối đa cho lớp học (Mặc định là 90 dành cho lớp Lý thuyết, 30 dành cho lớp Thực hành)"
-                                        onChange={(e) => handleOnChange('numberOfStudents', e?.value)}
+                                        onChange={(e) => handleOnChange('maxStudents', e?.value)}
                                         className="w-full"
                                     />
                                 </span>

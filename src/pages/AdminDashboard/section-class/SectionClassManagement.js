@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -15,7 +15,7 @@ import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
 import { getListSectionInfo } from '~/api/section/SectionService';
 import { getListTermInfo } from '~/api/term/TermService';
 import { Dropdown } from 'primereact/dropdown';
-import { SectionClassTypeOptions } from './SectionClassConstant';
+import { SectionClassIsMainOptions, SectionClassTypeOptions } from './SectionClassConstant';
 const QueryKeyLecturerOptions = 'Lecturer-Options';
 const QueryKeySectionOptions = 'Section-Options';
 const QueryKeyTerm = 'Term-Options';
@@ -67,10 +67,6 @@ const SectionClassManagement = () => {
         { enabled: !!getUserId() },
     );
 
-    const { data: termOptions } = useQuery([QueryKeyTerm, getUserId()], () => getListTermInfo(getUserId()), {
-        enabled: !!getUserId(),
-    });
-
     const sectionClassRef = useRef(null);
     const scheduleClassRef = useRef(null);
     const columns = [
@@ -80,10 +76,12 @@ const SectionClassManagement = () => {
         { field: 'lecturerCode', header: 'Mã giảng viên' },
         { field: 'code', header: 'Mã lớp học phần' },
         { field: 'name', header: 'Tên lớp học phần' },
-        { field: 'numberOfStudents', header: 'Số sinh viên tối đa' },
+        { field: 'minStudents', header: 'Số sinh viên tối thiểu' },
+        { field: 'maxStudents', header: 'Số sinh viên tối đa' },
         { field: 'sectionClassType', header: 'Loại lớp học phần' },
+        { field: 'sectionClassStatus', header: 'Trạng thái lớp học phần' },
         { field: 'note', header: 'Ghi chú' },
-        { field: 'sectionClassStatus', header: 'Tình trạng lớp học phần' },
+        { field: 'createStatus', header: 'Trạng thái tạo lớp' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -207,6 +205,19 @@ const SectionClassManagement = () => {
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {rowData[col.field] === 'theory' ? 'Lý thuyết' : 'Thực hành'}
                                     </div>
+                                ) : col.field === 'createStatus' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {!!rowData[col.field] || rowData['sectionClassType'] === 'practice' ? (
+                                            <i className="text-white pi pi-check p-2 border-circle bg-green-300"></i>
+                                        ) : (
+                                            <div>
+                                                <i className="text-white pi pi-times p-2 border-circle bg-red-300 mr-2"></i>
+                                                <b className="text-red-300">
+                                                    Lớp lý thuyết hiện chưa có nhóm lớp thực hành
+                                                </b>
+                                            </div>
+                                        )}
+                                    </div>
                                 ) : col.field === 'sectionClassStatus' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {rowData[col.field] === 'open' ? 'Đang mở' : 'Đã đóng'}
@@ -233,22 +244,6 @@ const SectionClassManagement = () => {
                     <div className="grid col-12 justify-content-between align-items-center">
                         <div className="col-12">
                             <span className="font-semibold text-primary">
-                                <p>Thuộc Học kỳ</p>
-                            </span>
-                            <MultiSelect
-                                value={filterRequest?.termIds || null}
-                                onChange={(e) => setFilterRequest({ ...filterRequest, termIds: [...e.value] })}
-                                options={termOptions}
-                                optionValue="id"
-                                optionLabel="name"
-                                filter
-                                placeholder="Chọn học kỳ để lọc lớp học phần"
-                                maxSelectedLabels={3}
-                                className="w-full"
-                            />
-                        </div>
-                        <div className="col-12">
-                            <span className="font-semibold text-primary">
                                 <p>Thuộc học phần</p>
                             </span>
                             <MultiSelect
@@ -256,8 +251,9 @@ const SectionClassManagement = () => {
                                 onChange={(e) => setFilterRequest({ ...filterRequest, sectionIds: [...e.value] })}
                                 options={sectionOptions}
                                 optionValue="id"
-                                optionLabel="name"
+                                optionLabel="fullName"
                                 filter
+                                showClear
                                 placeholder="Chọn tên học phần để lọc lớp học phần"
                                 maxSelectedLabels={3}
                                 className="w-full"
@@ -274,6 +270,7 @@ const SectionClassManagement = () => {
                                 optionLabel="fullName"
                                 optionValue="id"
                                 filter
+                                showClear
                                 placeholder="Chọn giảng viên để lọc lớp học phần"
                                 maxSelectedLabels={3}
                                 className="w-full"
@@ -290,6 +287,42 @@ const SectionClassManagement = () => {
                                         setFilterRequest({ ...filterRequest, sectionClassType: e.target.value })
                                     }
                                     options={SectionClassTypeOptions}
+                                    filter
+                                    showClear
+                                    optionLabel="label"
+                                    optionValue="key"
+                                    placeholder="Hãy chọn loại lớp của lớp học phần"
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12">
+                            <span className="font-semibold text-primary">
+                                <p>Lớp học phần chính</p>
+                            </span>
+                            <span className="w-full">
+                                <Dropdown
+                                    value={
+                                        filterRequest?.sectionClassRef === null
+                                            ? 'none'
+                                            : !filterRequest?.sectionClassRef
+                                            ? 'sub'
+                                            : !!filterRequest?.sectionClassRef
+                                            ? 'main'
+                                            : null
+                                    }
+                                    onChange={(e) => {
+                                        if (e?.target.value === 'none') {
+                                            setFilterRequest({ ...filterRequest, sectionClassRef: null });
+                                        } else if (e?.target.value === 'main') {
+                                            setFilterRequest({ ...filterRequest, sectionClassRef: true });
+                                        } else if (e?.target.value === 'sub') {
+                                            setFilterRequest({ ...filterRequest, sectionClassRef: false });
+                                        }
+                                    }}
+                                    options={SectionClassIsMainOptions}
+                                    filter
+                                    showClear
                                     optionLabel="label"
                                     optionValue="key"
                                     placeholder="Hãy chọn loại lớp của lớp học phần"

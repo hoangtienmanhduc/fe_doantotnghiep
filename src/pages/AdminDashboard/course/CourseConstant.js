@@ -5,9 +5,13 @@ export const courseTypeOptions = [
     { key: 'parallel', label: 'Song hành' },
 ];
 
-export const workSectionOptions = [
+export const workCourseOptions = [
     { key: 'theory', label: 'Lý thuyết' },
     { key: 'practice', label: 'Thực hành' },
-    { key: 'discussionExercises', label: 'Bài tập, thảo luận' },
     { key: 'selfLearning', label: 'Tự học' },
+];
+
+export const typeOfKnowledge = [
+    { key: 'general_education', label: 'Môn học đại cương' },
+    { key: 'specialized_education', label: 'Môn học chuyên ngành' },
 ];

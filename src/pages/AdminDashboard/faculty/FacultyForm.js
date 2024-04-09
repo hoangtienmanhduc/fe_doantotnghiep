@@ -142,22 +142,11 @@ const FacultyForm = forwardRef((props, ref) => {
                             </div>
                         </Divider>
                         <div className="col-12 p-0">
-                            <p>Mã khoa</p>
-                            <span className="w-full">
-                                <InputText
-                                    value={data?.code || ''}
-                                    placeholder="Nhập mã khoa... (Không bắt buộc)"
-                                    onChange={(e) => handleOnChange('code', e?.target.value)}
-                                    className=" w-full"
-                                />
-                            </span>
-                        </div>
-                        <div className="col-12 p-0">
                             <p>Tên khoa</p>
                             <span className="w-full">
                                 <InputText
                                     value={data?.name || ''}
-                                    placeholder="Nhập tên khoa... (Bắt buộc)"
+                                    placeholder="Nhập tên khoa (Bắt buộc)"
                                     onChange={(e) => handleOnChange('name', e?.target.value)}
                                     className=" w-full"
                                 />
@@ -169,9 +158,7 @@ const FacultyForm = forwardRef((props, ref) => {
                                 <Calendar
                                     placeholder="Chọn ngày thành lập khoa"
                                     className="w-full"
-                                    value={
-                                        data?.establishmentDate ? moment(data?.establishmentDate).toDate() : new Date()
-                                    }
+                                    value={data?.establishmentDate ? moment(data?.establishmentDate).toDate() : null}
                                     onChange={(e) => setData({ ...data, establishmentDate: e.value })}
                                 />
                             </span>
@@ -201,7 +188,7 @@ const FacultyForm = forwardRef((props, ref) => {
                             <p>Họ và tên</p>
                             <span className="w-full">
                                 <InputText
-                                    placeholder="Nhập họ và tên trưởng khoa.. (Bắt buộc)"
+                                    placeholder="Nhập họ và tên trưởng khoa (Bắt buộc)"
                                     value={data?.headName || ''}
                                     onChange={(e) => handleOnChange('headName', e.target.value)}
                                     className=" w-full"
@@ -212,7 +199,7 @@ const FacultyForm = forwardRef((props, ref) => {
                             <p>Email</p>
                             <span className="w-full">
                                 <InputText
-                                    placeholder="Nhập email liên lạc trưởng khoa.. (Bắt buộc)"
+                                    placeholder="Nhập email liên lạc trưởng khoa (Bắt buộc)"
                                     value={data?.headEmail || ''}
                                     onChange={(e) => handleOnChange('headEmail', e.target.value)}
                                     className=" w-full"
@@ -223,7 +210,7 @@ const FacultyForm = forwardRef((props, ref) => {
                             <p>Số điện thoại</p>
                             <span className="w-full">
                                 <InputText
-                                    placeholder="Nhập số điện thoại liên lạc trưởng khoa.. (Không bắt buộc)"
+                                    placeholder="Nhập số điện thoại liên lạc trưởng khoa (Không bắt buộc)"
                                     value={data?.headPhone || ''}
                                     onChange={(e) => handleOnChange('headPhone', e.target.value)}
                                     className=" w-full"
