@@ -28,9 +28,11 @@ import Thanhtoantructuyen from './pages/StudentDashboard/Thanhtoantructuyen/Than
 import Ghichunhacnho from './pages/StudentDashboard/Ghichunhacnho/GhiChuNhacNho';
 import Dangkyhocphan from './pages/StudentDashboard/Dangkyhocphan/DangKyHocPhan';
 import Tracuucongno from './pages/StudentDashboard/Tracuucongno/TraCuuCongNo';
-import HomeLecturer from './pages/LecturerDashboard/HomeLecturer';
-import HeaderLecturer from './components/Layout/components/HeaderLecturer';
+import HomeLecturer from './pages/LecturerDashboard/HomeLecturer/HomeLecturer';
 import DefaultLayoutLecturer from './components/Layout/DefaultLayoutLecturer';
+import Kehoachgiangday from './pages/LecturerDashboard/Kehoachgiangday/KeHoachGiangDay';
+import Lichtrinhgiangday from './pages/LecturerDashboard/Lichtrinhgianday/LichTrinhGiangDay';
+import Lichthiketthuchocphan from './pages/LecturerDashboard/Lichthiketthuchocphan/LichThiKetThucHocPhan';
 export const UserRoles = {
     ADMIN: 'Admin',
     LECTURER: 'Lecturer',
@@ -132,7 +134,22 @@ function App() {
             {
                 path: '/homelecturer',
                 component: !getAccessToken() ? Login : HomeLecturer,
-                layout: !getAccessToken() ? null : DefaultLayoutLecturer,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/kehoachgiangday',
+                component: !getAccessToken() ? Login : Kehoachgiangday,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/lichtrinhgiangday',
+                component: !getAccessToken() ? Login : Lichtrinhgiangday,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/lichthiketthuchocphan',
+                component: !getAccessToken() ? Login : Lichthiketthuchocphan,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
             },
         ];
     }, []);

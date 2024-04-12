@@ -2,7 +2,7 @@ import Tippy from '@tippyjs/react/headless';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import MenuItem from './MenuItem';
 
-function Menu({ children, items = [] }) {
+function MenuUtils({ children, items = [] }) {
     const renderItems = () => {
         return items.map((item, index) => <MenuItem key={index} data={item} />);
     };
@@ -24,4 +24,4 @@ function Menu({ children, items = [] }) {
     );
 }
 
-export default Menu;
+export default MenuUtils;

@@ -26,14 +26,13 @@ const buttonClickLichThiKetThucHocPhan = (popupState) => {
 
 function HeaderLecturer() {
     return (
-        <header className={cx('wrapper')}>
-            <div className={cx('inner')}>
-                <div className={cx('logo')}>
-                    <img src={images.Logo} alt="Logo"></img>
+        <header className="col-12 mb-2 border-bottom-1 border-500">
+            <div className="w-full h-full flex align-items-center">
+                <div className="h-6rem">
+                    <img src={images.Logo} className="h-full" alt="Logo"></img>
                 </div>
                 <div>
-                    <p style={{ fontWeight: 'bold', fontSize: '13px', color: '#DC143C' }}>TECHER'S</p>
-                    <p style={{ fontWeight: 'bold', fontSize: '20px', color: '#D2691E' }}>OFFICE</p>
+                    <h2 style={{ fontWeight: 'bold', fontSize: '13px', color: '#DC143C' }}>Trang Giảng viên</h2>
                 </div>
 
                 <div style={{ marginLeft: '85px', display: 'flex' }}>

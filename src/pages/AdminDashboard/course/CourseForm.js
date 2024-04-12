@@ -159,15 +159,6 @@ const CourseForm = forwardRef((props, ref) => {
     const handleOnSubmit = useCallback(async () => {
         let isError = false;
 
-        if (!data?.specializationId) {
-            toast.current.show({
-                severity: 'info',
-                summary: 'Info',
-                detail: 'Chuyên ngành của môn học không dược để trống!!',
-            });
-            isError = true;
-        }
-
         if (!data?.credits || data?.credits <= 0) {
             toast.current.show({
                 severity: 'info',
@@ -318,7 +309,7 @@ const CourseForm = forwardRef((props, ref) => {
                                     options={specializationOptions}
                                     optionLabel="name"
                                     optionValue="id"
-                                    placeholder="Hãy chọn chuyên ngành của môn học (Bắt buộc)"
+                                    placeholder="Hãy chọn chuyên ngành của môn học"
                                     className="w-full"
                                 />
                             </span>
@@ -592,7 +583,6 @@ const CourseForm = forwardRef((props, ref) => {
                             label={'Xác nhận'}
                             onClick={handleOnSubmit}
                         />
-
                         <Button className="col-6" icon={'pi pi-times'} label={'Huỷ bỏ'} onClick={handleHideForm} />
                     </div>
                 </div>

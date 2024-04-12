@@ -1,10 +1,15 @@
 import images from '~/assets/images';
-import Menu from '~/components/Popper/Menu';
 import React from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
-import { clearStorage } from '~/components/authentication/AuthUtils';
+import { clearStorage, getUserRole } from '~/components/authentication/AuthUtils';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { Menu, MenuItem } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import MenuUtils from '~/components/Popper/Menu';
+import { UserRoles } from '~/App';
 
 const MENU_ITEMS = [
     {
@@ -25,6 +30,21 @@ const MENU_ITEMS = [
         to: '/',
     },
 ];
+
+const buttonClickKeHoachGiangDay = (popupState) => {
+    window.location.href = 'kehoachgiangday';
+    popupState.close(); // Đóng popup sau khi click
+};
+
+const buttonClickLichTrinhGiangDay = (popupState) => {
+    window.location.href = 'lichtrinhgiangday';
+    popupState.close(); // Đóng popup sau khi click
+};
+
+const buttonClickLichThiKetThucHocPhan = (popupState) => {
+    window.location.href = 'lichthiketthuchocphan';
+    popupState.close(); // Đóng popup sau khi click
+};
 
 function Header() {
     return (
@@ -56,14 +76,156 @@ function Header() {
                             </div>
                         </div>
                     </div>
+                    {getUserRole() !== UserRoles.STUDENT && (
+                        <div className="flex gap-2 align-items-center">
+                            <div>
+                                <PopupState variant="popover" popupId="demo-popup-menu">
+                                    {(popupState) => (
+                                        <React.Fragment>
+                                            <Button
+                                                tooltip="Đào tạo và Giảng dạy"
+                                                variant="contained"
+                                                {...bindTrigger(popupState)}
+                                                icon="pi pi-home"
+                                            ></Button>
+                                            <Menu {...bindMenu(popupState)}>
+                                                <p
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        fontWeight: 'bold',
+                                                        color: '#1E90FF',
+                                                    }}
+                                                >
+                                                    Công tác giảng dạy
+                                                </p>
+                                                <MenuItem onClick={() => buttonClickKeHoachGiangDay(popupState)}>
+                                                    Kế hoạch giảng dạy
+                                                </MenuItem>
+                                                <MenuItem onClick={() => buttonClickLichTrinhGiangDay(popupState)}>
+                                                    Lịch giảng dạy
+                                                </MenuItem>
+                                                <MenuItem onClick={() => buttonClickLichThiKetThucHocPhan(popupState)}>
+                                                    Lịch thi
+                                                </MenuItem>
+                                                <p
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        fontWeight: 'bold',
+                                                        color: '#1E90FF',
+                                                    }}
+                                                >
+                                                    Số liệu thống kê
+                                                </p>
+                                                <MenuItem onClick={popupState.close}>
+                                                    Kết quả khảo sát giảng dạy
+                                                </MenuItem>
+                                                <MenuItem onClick={popupState.close}>Thống kê giờ giảng</MenuItem>
+                                                <MenuItem onClick={popupState.close}>
+                                                    Thống kê giờ chuẩn giảng dạy
+                                                </MenuItem>
+                                            </Menu>
+                                        </React.Fragment>
+                                    )}
+                                </PopupState>
+                            </div>
+                            <div>
+                                <PopupState variant="popover" popupId="demo-popup-menu">
+                                    {(popupState) => (
+                                        <React.Fragment>
+                                            <Button
+                                                tooltip="Tác nghiệp và Tra cứu thông tin"
+                                                variant="contained"
+                                                {...bindTrigger(popupState)}
+                                                icon={'pi pi-users'}
+                                            ></Button>
+                                            <Menu {...bindMenu(popupState)}>
+                                                <p
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        fontWeight: 'bold',
+                                                        color: '#1E90FF',
+                                                    }}
+                                                >
+                                                    Công tác giảng dạy
+                                                </p>
+                                                <MenuItem onClick={popupState.close}>Kế hoạch giảng dạy</MenuItem>
+                                                <MenuItem onClick={popupState.close}>Lịch giảng dạy</MenuItem>
+                                                <MenuItem onClick={popupState.close}>Lịch thi</MenuItem>
+                                                <p
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        fontWeight: 'bold',
+                                                        color: '#1E90FF',
+                                                    }}
+                                                >
+                                                    Số liệu thống kê
+                                                </p>
+                                                <MenuItem onClick={popupState.close}>
+                                                    Kết quả khảo sát giảng dạy
+                                                </MenuItem>
+                                                <MenuItem onClick={popupState.close}>Thống kê giờ giảng</MenuItem>
+                                                <MenuItem onClick={popupState.close}>
+                                                    Thống kê giờ chuẩn giảng dạy
+                                                </MenuItem>
+                                            </Menu>
+                                        </React.Fragment>
+                                    )}
+                                </PopupState>
+                            </div>
+                            <div>
+                                <PopupState variant="popover" popupId="demo-popup-menu">
+                                    {(popupState) => (
+                                        <React.Fragment>
+                                            <Button
+                                                tooltip="Quản lý và Điều hành"
+                                                variant="contained"
+                                                {...bindTrigger(popupState)}
+                                                icon={'pi pi-calendar'}
+                                            ></Button>
+                                            <Menu {...bindMenu(popupState)}>
+                                                <p
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        fontWeight: 'bold',
+                                                        color: '#1E90FF',
+                                                    }}
+                                                >
+                                                    Công tác giảng dạy
+                                                </p>
+                                                <MenuItem onClick={popupState.close}>Kế hoạch giảng dạy</MenuItem>
+                                                <MenuItem onClick={popupState.close}>Lịch giảng dạy</MenuItem>
+                                                <MenuItem onClick={popupState.close}>Lịch thi</MenuItem>
+                                                <p
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        fontWeight: 'bold',
+                                                        color: '#1E90FF',
+                                                    }}
+                                                >
+                                                    Số liệu thống kê
+                                                </p>
+                                                <MenuItem onClick={popupState.close}>
+                                                    Kết quả khảo sát giảng dạy
+                                                </MenuItem>
+                                                <MenuItem onClick={popupState.close}>Thống kê giờ giảng</MenuItem>
+                                                <MenuItem onClick={popupState.close}>
+                                                    Thống kê giờ chuẩn giảng dạy
+                                                </MenuItem>
+                                            </Menu>
+                                        </React.Fragment>
+                                    )}
+                                </PopupState>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="flex align-items-center p-0">
-                        <Menu items={MENU_ITEMS}>
+                        <MenuUtils items={MENU_ITEMS}>
                             <div className="flex align-items-center p-2 cursor-pointer hover:surface-100 border-round">
                                 <h3 className="text-800 mr-2 ">Hoàng Tiến Mạnh Đức</h3>
                                 <Avatar icon="pi pi-user" size="large" shape="circle" className="bg-primary" />
                             </div>
-                        </Menu>
+                        </MenuUtils>
                     </div>
                 </div>
             </div>

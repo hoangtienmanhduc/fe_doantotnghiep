@@ -2,18 +2,15 @@ import images from '~/assets/images';
 import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRepeat } from '@fortawesome/free-solid-svg-icons';
 import { useCallback } from 'react';
 import { useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { authenticateUser } from '~/components/authentication/AuthEndPoint';
-import { getSystemRole, storeAllUserData } from '~/components/authentication/AuthUtils';
+import { storeAllUserData } from '~/components/authentication/AuthUtils';
 import { UserRoles } from '~/App';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-const cx = classNames.bind(styles);
 
 function generateRandomString(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -84,7 +81,7 @@ function Login() {
                         if (data?.userRole === UserRoles.ADMIN) {
                             window.location.assign('/admin');
                         } else if (data?.userRole === UserRoles.LECTURER) {
-                            window.location.assign('/lecturer');
+                            window.location.assign('/homelecturer');
                         } else {
                             window.location.assign('/');
                         }

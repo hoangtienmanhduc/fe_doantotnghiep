@@ -7,6 +7,7 @@ import { getUserId } from '~/components/authentication/AuthUtils';
 import { useRef } from 'react';
 import { getPageUser } from '~/api/user/UserService';
 import ProgramForm from './ProgramForm';
+import { getPageProgramInfo } from '~/api/program/ProgramSevice';
 
 const QueryKey = 'Program-Management';
 const initialPageable = {
@@ -19,7 +20,15 @@ const ProgramManagement = () => {
     const [pageable, setPageable] = useState({ ...initialPageable });
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
-        () => {},
+        () =>
+            getPageProgramInfo(
+                getUserId(),
+                pageable.pageNumber,
+                pageable.rows,
+                pageable.sortField,
+                pageable.sortOrder,
+                {},
+            ),
         {
             enabled: !!getUserId(),
         },
@@ -29,8 +38,7 @@ const ProgramManagement = () => {
     const columns = [
         { field: 'academicYearName', header: 'Năm học' },
         { field: 'specializationCode', header: 'Mã chuyên ngành' },
-        { field: 'specializationName', header: 'Tên chuyên ngành' },
-        { field: 'programName', header: 'Tên chương trình đào tạo' },
+        { field: 'name', header: 'Tên chương trình đào tạo' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -58,7 +66,7 @@ const ProgramManagement = () => {
                     {},
                 ],
                 () =>
-                    getPageUser(
+                    getPageProgramInfo(
                         getUserId(),
                         pageable?.pageNumber + 1,
                         pageable?.rows,
