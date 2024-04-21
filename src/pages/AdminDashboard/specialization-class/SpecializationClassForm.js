@@ -14,6 +14,7 @@ import { createOrUpdateGenericSpecializationClass } from '~/api/specialization/S
 import { getListSpecializationInfo } from '~/api/specialization/SpecializationService';
 import { Calendar } from 'primereact/calendar';
 import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
+import { InputNumber } from 'primereact/inputnumber';
 
 const QueryKeySpecializationOptions = 'Specialization-Options';
 const QueryKeyLecturerOptions = 'Lecturer-Options';
@@ -154,7 +155,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                                 view="year"
                                 dateFormat="yy"
                                 value={data?.schoolYear ? new Date(data.schoolYear, 0) : null}
-                                onChange={(e) => setData({ ...data, schoolYear: e.value.getFullYear() })}
+                                onChange={(e) => setData({ ...data, schoolYear: e.value?.getFullYear() })}
                             />
                         </span>
                         <div className="col-12 p-0">
@@ -168,6 +169,17 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                                 />
                             </span>
                         </div>
+                        <div className="col-12 p-0">
+                            <p>Tổng số sinh viên trong lớp</p>
+                            <span className="w-full">
+                                <InputNumber
+                                    value={data?.numberOfStudents}
+                                    placeholder="Nhập số sinh viên tối đa(Bắt buộc)"
+                                    onChange={(e) => handleOnChange('numberOfStudents', e?.value)}
+                                    className="w-full"
+                                />
+                            </span>
+                        </div>
                     </div>
                     <hr />
                     <div className="flex col-12">
@@ -177,7 +189,6 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                             label={'Xác nhận'}
                             onClick={handleOnSubmit}
                         />
-
                         <Button
                             className="col-6 p-button-lg font-bold"
                             icon={'pi pi-times'}

@@ -82,6 +82,7 @@ const SectionClassManagement = () => {
         { field: 'endDate', header: 'Ngày kết thúc' },
         { field: 'note', header: 'Ghi chú' },
         { field: 'createStatus', header: 'Trạng thái tạo lớp' },
+        { field: 'timeAndPlaceStatus', header: 'Trạng thái tạo lịch học' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -130,7 +131,7 @@ const SectionClassManagement = () => {
                     pageable.rows,
                     pageable.sortField,
                     pageable.sortOrder,
-                    {},
+                    filterRequest,
                 ],
                 () =>
                     getPageSectionClassInfo(
@@ -139,11 +140,11 @@ const SectionClassManagement = () => {
                         pageable?.rows,
                         pageable.sortField,
                         pageable.sortOrder,
-                        {},
+                        filterRequest,
                     ),
             );
         }
-    }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
+    }, [data, filterRequest, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
 
     return (
         <React.Fragment>
@@ -225,6 +226,17 @@ const SectionClassManagement = () => {
                                 ) : col.field === 'sectionClassStatus' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {rowData[col.field] === 'open' ? 'Đang mở' : 'Đã đóng'}
+                                    </div>
+                                ) : col.field === 'timeAndPlaceStatus' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {!!rowData[col.field] ? (
+                                            <i className="text-white pi pi-check p-2 border-circle bg-green-300"></i>
+                                        ) : (
+                                            <div>
+                                                <i className="text-white pi pi-times p-2 border-circle bg-red-300 mr-2"></i>
+                                                <b className="text-red-300">Lớp lý thuyết hiện chưa có lịch học</b>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>

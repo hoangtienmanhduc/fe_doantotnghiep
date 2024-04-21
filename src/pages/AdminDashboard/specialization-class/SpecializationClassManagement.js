@@ -40,6 +40,7 @@ const SpecializationClassManagement = () => {
         { field: 'specializationCode', header: 'Mã chuyên ngành' },
         { field: 'name', header: 'Tên lớp chuyên ngành' },
         { field: 'schoolYear', header: 'Niên khoá' },
+        { field: 'numberOfStudents', header: 'Sỉ số sinh viên tối đa' },
         { field: 'action', header: 'Thao tác' },
     ];
 

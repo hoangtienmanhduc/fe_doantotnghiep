@@ -148,7 +148,7 @@ const StudentManagement = () => {
                         raised
                         onClick={() => studentRef.current.showForm()}
                     />
-                    <Button label="Phân lớp chuyên ngành" rounded raised onClick={() => setVisible(true)} />
+                    {/* <Button label="Phân lớp chuyên ngành" rounded raised onClick={() => setVisible(true)} /> */}
                 </div>
             </div>
             <div className="col-12">

@@ -135,7 +135,6 @@ const AcademicYearForm = forwardRef((props, ref) => {
             // Validate thời gian hợp lệ của các học kỳ
 
             // Học kỳ đầu
-            debugger;
             if (
                 new Date(data.yearStart + 1, 0).getFullYear() < new Date(data.firstTermStart).getFullYear() ||
                 new Date(data.yearStart, 0).getFullYear() > new Date(data.firstTermStart).getFullYear() ||

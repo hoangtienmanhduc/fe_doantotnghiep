@@ -90,7 +90,6 @@ function Quanlydiemquatrinhhoctap() {
 
         // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
         if (sectionClassInfo?.id && getUserId()) {
-            debugger;
             if (isVerificationCodeMatched && checkAllFieldsFilled()) {
                 const response = await saveFinalResults(getUserId(), id);
 

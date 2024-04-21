@@ -401,36 +401,38 @@ const Dangkyhocphan = () => {
                         </thead>
                         {sectionClassTheoryList &&
                             sectionClassTheoryList?.length > 0 &&
-                            sectionClassTheoryList.map((rowData) => (
-                                <tbody key={rowData.id}>
-                                    <tr
-                                        onClick={() => {
-                                            setSelectedSectionClass(rowData);
-                                            setSelectTimeAndPlace(null);
-                                            setSelectTimeAndPlaceRef(null);
-                                        }}
-                                        className={`cursor-pointer ${
-                                            rowData?.id === selectedSectionClass?.id ? 'bg-yellow-300' : ''
-                                        }`}
-                                    >
-                                        <th style={{ height: '3rem' }}>{rowData?.code}</th>
-                                        <th>{rowData?.name}</th>
-                                        <th>{rowData?.lecturerName}</th>
-                                        <th>{rowData?.lecturerCode}</th>
-                                        <th>{rowData?.maxStudents}</th>
-                                        <th>{rowData?.registered ? rowData?.registered : 0}</th>
-                                        <th>
-                                            {!!rowData?.sectionClassStatus
-                                                ? rowData?.sectionClassStatus === 'open'
-                                                    ? 'Đang mở'
-                                                    : rowData?.sectionClassStatus === 'closed'
-                                                    ? 'Đã đóng'
-                                                    : ''
-                                                : ''}
-                                        </th>
-                                    </tr>
-                                </tbody>
-                            ))}
+                            sectionClassTheoryList
+                                .filter((sectionClass) => sectionClass?.timeAndPlaces?.length > 0)
+                                .map((rowData) => (
+                                    <tbody key={rowData.id}>
+                                        <tr
+                                            onClick={() => {
+                                                setSelectedSectionClass(rowData);
+                                                setSelectTimeAndPlace(null);
+                                                setSelectTimeAndPlaceRef(null);
+                                            }}
+                                            className={`cursor-pointer ${
+                                                rowData?.id === selectedSectionClass?.id ? 'bg-yellow-300' : ''
+                                            }`}
+                                        >
+                                            <th style={{ height: '3rem' }}>{rowData?.code}</th>
+                                            <th>{rowData?.name}</th>
+                                            <th>{rowData?.lecturerName}</th>
+                                            <th>{rowData?.lecturerCode}</th>
+                                            <th>{rowData?.maxStudents}</th>
+                                            <th>{rowData?.registered ? rowData?.registered : 0}</th>
+                                            <th>
+                                                {!!rowData?.sectionClassStatus
+                                                    ? rowData?.sectionClassStatus === 'open'
+                                                        ? 'Đang mở'
+                                                        : rowData?.sectionClassStatus === 'closed'
+                                                        ? 'Đã đóng'
+                                                        : ''
+                                                    : ''}
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                ))}
                     </table>
                 </div>
             </div>

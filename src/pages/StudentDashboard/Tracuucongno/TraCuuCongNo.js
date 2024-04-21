@@ -25,7 +25,7 @@ const Tracuucongno = () => {
                 studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
             }),
         {
-            enabled: !!getUserId() && !!selectedTerm,
+            enabled: !!getUserId(),
         },
     );
 

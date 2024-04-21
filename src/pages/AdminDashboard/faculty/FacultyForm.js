@@ -46,7 +46,6 @@ const FacultyForm = forwardRef((props, ref) => {
             });
             isError = true;
         }
-        debugger;
         if (!facultyLogoRef?.current.value) {
             toast.current.show({
                 severity: 'info',

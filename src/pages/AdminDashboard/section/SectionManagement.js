@@ -20,7 +20,15 @@ const SectionManagement = () => {
 
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
-        () => getPageSectionInfo(getUserId()),
+        () =>
+            getPageSectionInfo(
+                getUserId(),
+                pageable?.pageNumber,
+                pageable?.rows,
+                pageable.sortField,
+                pageable.sortOrder,
+                {},
+            ),
         {
             enabled: !!getUserId(),
         },
@@ -73,7 +81,7 @@ const SectionManagement = () => {
                     ),
             );
         }
-    }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
+    }, [data, pageable, queryClient]);
 
     return (
         <React.Fragment>

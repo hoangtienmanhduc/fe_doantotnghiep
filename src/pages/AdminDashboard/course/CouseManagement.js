@@ -20,7 +20,15 @@ const CouseManagement = () => {
 
     const { data, refetch } = useQuery(
         [QueryKey, getUserId(), pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, {}],
-        () => getPageCourseInfo(getUserId()),
+        () =>
+            getPageCourseInfo(
+                getUserId(),
+                pageable?.pageNumber,
+                pageable?.rows,
+                pageable.sortField,
+                pageable.sortOrder,
+                {},
+            ),
         {
             enabled: !!getUserId(),
         },
@@ -75,7 +83,7 @@ const CouseManagement = () => {
                     ),
             );
         }
-    }, [data, pageable.pageNumber, pageable.rows, pageable.sortField, pageable.sortOrder, queryClient]);
+    }, [data, pageable, queryClient]);
 
     return (
         <React.Fragment>

@@ -48,7 +48,7 @@ const StudentForm = forwardRef((props, ref) => {
         { enabled: !!getUserId() && !!visible },
     );
     const { data: specializationClassOptions } = useQuery(
-        [QueryKeySpecializationClassOptions, getUserId()],
+        [QueryKeySpecializationClassOptions, getUserId(), data?.specializationId],
         () =>
             getListSpecializationClassInfo(
                 getUserId(),
