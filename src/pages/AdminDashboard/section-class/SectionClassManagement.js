@@ -80,6 +80,8 @@ const SectionClassManagement = () => {
         { field: 'maxStudents', header: 'Số sinh viên tối đa' },
         { field: 'sectionClassType', header: 'Loại lớp học phần' },
         { field: 'sectionClassStatus', header: 'Trạng thái lớp học phần' },
+        { field: 'startDate', header: 'Ngày bắt đầu' },
+        { field: 'endDate', header: 'Ngày kết thúc' },
         { field: 'note', header: 'Ghi chú' },
         { field: 'createStatus', header: 'Trạng thái tạo lớp' },
         { field: 'action', header: 'Thao tác' },
@@ -204,6 +206,10 @@ const SectionClassManagement = () => {
                                 ) : col.field === 'sectionClassType' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {rowData[col.field] === 'theory' ? 'Lý thuyết' : 'Thực hành'}
+                                    </div>
+                                ) : col.field === 'startDate' || col.field === 'endDate' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] ? new Date(rowData[col.field]).toLocaleDateString() : '-'}
                                     </div>
                                 ) : col.field === 'createStatus' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>

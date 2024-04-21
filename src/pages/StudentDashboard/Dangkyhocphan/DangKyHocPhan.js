@@ -537,6 +537,8 @@ const Dangkyhocphan = () => {
                                                 </th>
                                                 <th>{timeAndPlace.room}</th>
                                                 <th>{rowData.lecturerName}</th>
+                                                <th>{new Date(rowData.startDate).toLocaleDateString()}</th>
+                                                <th>{new Date(rowData.endDate).toLocaleDateString()}</th>
                                                 <th>{`${timeAndPlace.periodStart}`}</th>
                                                 <th>{`${timeAndPlace.periodEnd}`}</th>
                                             </tr>
