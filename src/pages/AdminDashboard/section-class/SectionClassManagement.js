@@ -13,12 +13,10 @@ import { Dialog } from 'primereact/dialog';
 import ScheduleSectionClass from './ScheduleSectionClass';
 import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
 import { getListSectionInfo } from '~/api/section/SectionService';
-import { getListTermInfo } from '~/api/term/TermService';
 import { Dropdown } from 'primereact/dropdown';
 import { SectionClassIsMainOptions, SectionClassTypeOptions } from './SectionClassConstant';
 const QueryKeyLecturerOptions = 'Lecturer-Options';
 const QueryKeySectionOptions = 'Section-Options';
-const QueryKeyTerm = 'Term-Options';
 const QueryKey = 'Section-Class-Management';
 
 const initialPageable = {
