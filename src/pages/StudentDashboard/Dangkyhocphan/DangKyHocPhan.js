@@ -201,6 +201,7 @@ const Dangkyhocphan = () => {
                                         [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
                                         {},
                                     );
+
                                     queryClient.setQueryData(
                                         [
                                             QueryKeySectionClass,
@@ -484,6 +485,8 @@ const Dangkyhocphan = () => {
                             </th>
                             <th rowSpan="1">Phòng học</th>
                             <th rowSpan="1">Giảng viên</th>
+                            <th rowSpan="1">Ngày bắt đầu</th>
+                            <th rowSpan="1">Ngày kết thúc</th>
                             <th rowSpan="1">Tiết bắt đầu</th>
                             <th rowSpan="1">Tiết kết thúc</th>
                             {/* <th rowSpan="1">Thao tác</th> */}

@@ -26,7 +26,7 @@ const Kehoachgiangday = () => {
         () =>
             getListSectionClassInfo(
                 getUserId(),
-                { lecturerId: getRefId(), termId: selectedTerm != null ? selectedTerm : null },
+                { lecturerId: getRefId(), termId: selectedTerm != null ? selectedTerm : null, sectionClassRef: true },
                 null,
                 true,
             ),
@@ -77,7 +77,11 @@ const Kehoachgiangday = () => {
                     <tbody>
                         {sectionClassList && sectionClassList?.length > 0 ? (
                             sectionClassList.map((sectionClass, idx) => (
-                                <tr key={idx} className="text-800">
+                                <tr
+                                    key={idx}
+                                    className="cursor-pointer hover:surface-100 text-800"
+                                    onClick={() => window.location.assign(`/thongtinlophocphan/${sectionClass?.id}`)}
+                                >
                                     <th style={{ height: '50px', width: '50px' }} rowSpan="1">
                                         {idx + 1}
                                     </th>

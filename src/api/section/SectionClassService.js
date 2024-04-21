@@ -72,3 +72,12 @@ export function createOrUpdateGenericTimeAndPlace(userId, sectionClassId, data =
         .then((res) => res.data)
         .catch((error) => console.log(error));
 }
+
+export function getSectionClassInfo(userId, id) {
+    return axiosInstance
+        .get(`${BACKEND_ENDPOINT}/section/class/getById`, {
+            params: { userId, id },
+        })
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}

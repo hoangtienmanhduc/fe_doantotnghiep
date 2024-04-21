@@ -1,16 +1,34 @@
 /* eslint-disable react/jsx-pascal-case */
-import { Button, ButtonGroup } from '@mui/material';
 import styles from '~/pages/LecturerDashboard/Quanlydiemquatrinhhoctap/Quanlydiemquatrinhhoctap.module.scss';
 import classNames from 'classnames/bind';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRepeat } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getUserId } from '~/components/authentication/AuthUtils';
+import { getSectionClassInfo } from '~/api/section/SectionClassService';
+import { Button } from 'primereact/button';
+import { Image } from 'primereact/image';
+import img from '../../../assets/images/point_calc.png';
+import { InputText } from 'primereact/inputtext';
+import { saveFinalResults } from '~/api/result/ResultService';
+import { HTTP_STATUS_OK } from '~/utils/Constants';
+import { showNotification } from '~/components/notification/NotificationService';
 const cx = classNames.bind(styles);
 
+const QueryKey = 'SectionClass-Info';
 function Quanlydiemquatrinhhoctap() {
-    const navigate = useNavigate();
+    const { id: idString } = useParams();
+    const id = useMemo(() => {
+        return !!idString ? parseInt(idString) : null;
+    }, [idString]);
+
+    const { data: sectionClassInfo } = useQuery([QueryKey, getUserId()], () => getSectionClassInfo(getUserId(), id), {
+        enabled: !!getUserId() && !!id,
+    });
+
     const [showAdditionalDiv, setShowAdditionalDiv] = useState(false);
     const [randomString, setRandomString] = useState(generateRandomString(4));
     const [isErrorVisible, setIsErrorVisible] = useState(false);
@@ -31,47 +49,10 @@ function Quanlydiemquatrinhhoctap() {
         setRandomString(generateRandomString(4));
     }
 
-    const studentData = [
-        {
-            maSinhVien: '123456',
-            hoTen: 'Hoàng Đức',
-            giuaKi: '1',
-            tk1: '2',
-            tk2: '3',
-            tk3: '4',
-            tk4: '5',
-            tk5: '6',
-            th1: '7',
-            th2: '8',
-            th3: '9',
-            th4: '10',
-            th5: '1',
-            ck: '2',
-            tongKet: '3',
-        },
-        {
-            maSinhVien: '123456',
-            hoTen: 'Hoàng Đức',
-            giuaKi: '1',
-            tk1: '2',
-            tk2: '3',
-            tk3: '4',
-            tk4: '5',
-            tk5: '6',
-            th1: '7',
-            th2: '8',
-            th3: '9',
-            th4: '10',
-            th5: '1',
-            ck: '2',
-            tongKet: '3',
-        },
-        // Thêm các sinh viên khác nếu cần
-    ];
-
     const handleSubmit = () => {
         // Xử lý khi người dùng nhấn nút "Nộp điểm QTHT"
-        setShowAdditionalDiv(true);
+        setShowAdditionalDiv((prevState) => !prevState);
+        window.scrollTo(0, document.body.scrollHeight);
     };
 
     function generateRandomString(length) {
@@ -92,10 +73,44 @@ function Quanlydiemquatrinhhoctap() {
         setIsVerificationCodeMatched(value === randomString);
     };
 
-    const checkAllFieldsFilled = () => {
+    const checkAllFieldsFilled = useCallback(() => {
         const values = Object.values(inputValues);
         return values.every((value) => value.trim() !== '');
-    };
+    }, [inputValues]);
+
+    const handleOnSubmitFinalResult = useCallback(async () => {
+        setIsAllFieldsFilled(checkAllFieldsFilled());
+
+        // Kiểm tra xem mã nhập có đúng không
+        const isVerificationCodeMatched = inputValues.verificationCode === randomString;
+        setIsVerificationCodeMatched(isVerificationCodeMatched);
+
+        // Hiển thị thông báo lỗi
+        setIsErrorVisible(true);
+
+        // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
+        if (sectionClassInfo?.id && getUserId()) {
+            debugger;
+            if (isVerificationCodeMatched && checkAllFieldsFilled()) {
+                const response = await saveFinalResults(getUserId(), id);
+
+                if (response === HTTP_STATUS_OK) {
+                    showNotification(
+                        'success',
+                        'Thành công',
+                        'Lưu kết quả học tập cuối cùng của lớp học phần thành công !!',
+                    );
+
+                    setShowAdditionalDiv(false);
+                }
+            }
+        }
+
+        // Tự động ẩn thông báo sau 3 giây
+        setTimeout(() => {
+            setIsErrorVisible(false);
+        }, 1500);
+    }, [checkAllFieldsFilled, id, inputValues.verificationCode, randomString, sectionClassInfo?.id]);
 
     return (
         <div className={cx('wrapper')}>
@@ -106,189 +121,151 @@ function Quanlydiemquatrinhhoctap() {
                         <h2>QUẢN LÝ ĐIỂM QUÁ TRÌNH HỌC TẬP</h2>
                     </div>
                 </div>
-                <p style={{ textAlign: 'center' }}>
-                    ___________________________________________________________________________________________________________________________________________________________________________________________________________
-                </p>
-                <div style={{ marginLeft: '750px', marginTop: '10px' }}>
-                    <ButtonGroup style={{ width: '500px' }} variant="outlined" aria-label="Basic button group">
-                        <Button>Quy định các tính điểm QTHT</Button>
-                        <Button>
-                            <a href="nhapdiemquatrinhhoctap" style={{ textDecoration: 'none' }}>
-                                Nhập điểm QTHT
-                            </a>
-                        </Button>
-                        <Button onClick={handleSubmit}>Nộp điểm QTHT</Button>
-                        <Button>In bảng điểm QTHT</Button>
-                        <Button>Quay lại</Button>
-                    </ButtonGroup>
+                <hr />
+                <div className="col-12">
+                    <div className="p-inputgroup flex-1 flex justify-content-end">
+                        <Button
+                            label="Nhập điểm QTHT"
+                            icon="pi pi-send"
+                            onClick={() => window.location.assign(`/nhapdiemquatrinhhoctap/${id}`)}
+                        />
+                        <Button
+                            label="Nộp điểm QTHT"
+                            icon="pi pi-calculator"
+                            disabled={(sectionClassInfo && !sectionClassInfo?.inputResultEnable) || true}
+                            onClick={handleSubmit}
+                        />
+                        {/* <Button label="In bảng điểm QTHT" icon="pi pi-print" /> */}
+                        <Button label="Quay lại" icon="pi pi-arrow-right" />
+                    </div>
                 </div>
                 <div style={{ marginLeft: '15px' }}>
-                    <div style={{ display: 'flex', marginTop: '15px', marginLeft: '100px' }}>
-                        <p style={{ width: '180px' }}>Lớp học phần:</p>
-                        <div
-                            style={{
-                                width: '830px',
-                                height: '25px',
-                                borderBottom: '1px dotted black',
-                            }}
-                        >
+                    <div className="align-items-center" style={{ display: 'flex' }}>
+                        <p className="col-4">Lớp học phần:</p>
+                        <div className="col-8">
                             <p
                                 style={{
                                     fontWeight: 'bold',
                                 }}
                             >
-                                123456789
+                                {sectionClassInfo?.name}
                             </p>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', marginTop: '10px', marginLeft: '100px' }}>
-                        <p style={{ width: '180px' }}>Giảng viên:</p>
-                        <div
-                            style={{
-                                width: '830px',
-                                height: '25px',
-                                borderBottom: '1px dotted black',
-                            }}
-                        >
+                    <div className="align-items-center" style={{ display: 'flex' }}>
+                        <p className="col-4">Giảng viên:</p>
+                        <div className="col-8">
                             <p
                                 style={{
                                     fontWeight: 'bold',
                                 }}
                             >
-                                123456789
+                                {sectionClassInfo?.lecturerName}
                             </p>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', marginTop: '10px', marginLeft: '100px' }}>
-                        <p style={{ width: '180px' }}>Công thức tính điểm QTHT:</p>
-                        <div
-                            style={{
-                                width: '830px',
-                                height: '25px',
-                                borderBottom: '1px dotted black',
-                            }}
-                        >
-                            <p
-                                style={{
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                123456789
-                            </p>
+                    <div className="align-items-center" style={{ display: 'flex' }}>
+                        <p className="col-4">Công thức tính điểm QTHT:</p>
+                        <div className="col-8">
+                            <Image src={img} alt="Image" width="600" preview />
                         </div>
                     </div>
-                    <div style={{ display: 'flex', marginTop: '10px', marginLeft: '100px' }}>
-                        <p style={{ width: '180px' }}>Cách tính điểm đánh giá:</p>
-                        <div
-                            style={{
-                                width: '830px',
-                                height: '25px',
-                                borderBottom: '1px dotted black',
-                            }}
-                        >
-                            <p
-                                style={{
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                123456789
-                            </p>
-                        </div>
-                    </div>
+                    <hr />
                     <p style={{ fontWeight: 'bold', marginTop: '15px' }}>Danh sách sinh viên</p>
-                    <table style={{ marginTop: '10px' }} border="1" width={1230}>
-                        <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ height: '150px' }} rowspan="3">
-                                STT
-                            </th>
-                            <th rowspan="3">Mã sinh viên</th>
-                            <th rowspan="3">Họ và tên</th>
-                            <th rowspan="3">Giữa kì</th>
-                            <th colspan="5" style={{ height: '50px' }}>
-                                Thường kì
-                            </th>
-                            <th colspan="5">Thực hành</th>
-                            <th rowspan="3">Cuối kỳ</th>
-                            <th rowspan="3">Điểm tổng kết</th>
-                        </tr>
-                        <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th colspan="5">LT Hệ số 1</th>
-                            <th style={{ width: '40px' }} rowspan="2">
-                                1
-                            </th>
-                            <th style={{ width: '40px' }} rowspan="2">
-                                2
-                            </th>
-                            <th style={{ width: '40px' }} rowspan="2">
-                                3
-                            </th>
-                            <th style={{ width: '40px' }} rowspan="2">
-                                4
-                            </th>
-                            <th style={{ width: '40px' }} rowspan="2">
-                                5
-                            </th>
-                        </tr>
-                        <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                            <th style={{ width: '40px', height: '50px' }} rowspan="1">
-                                1
-                            </th>
-                            <th style={{ width: '40px', height: '50px' }} rowspan="1">
-                                2
-                            </th>
-                            <th style={{ width: '40px', height: '50px' }} rowspan="1">
-                                3
-                            </th>
-                            <th style={{ width: '40px', height: '50px' }} rowspan="1">
-                                4
-                            </th>
-                            <th style={{ width: '40px', height: '50px' }} rowspan="1">
-                                5
-                            </th>
-                        </tr>
+                    <table style={{ marginTop: '10px' }} border="1" className="w-full">
+                        <thead>
+                            <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
+                                <th style={{ height: '150px' }} rowSpan="3">
+                                    STT
+                                </th>
+                                <th rowSpan="3">Mã sinh viên</th>
+                                <th rowSpan="3">Họ và tên</th>
+                                <th colSpan="3">Giữa kì</th>
+                                <th colSpan="5" style={{ height: '50px' }}>
+                                    Thường kì
+                                </th>
+                                <th colSpan="2">Thực hành</th>
+                                <th rowSpan="3">Cuối kỳ</th>
+                                <th rowSpan="3">Điểm tổng kết</th>
+                            </tr>
+
+                            <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
+                                <th style={{ width: '40px' }} rowSpan="2">
+                                    1
+                                </th>
+                                <th style={{ width: '40px' }} rowSpan="2">
+                                    2
+                                </th>
+                                <th style={{ width: '40px' }} rowSpan="2">
+                                    3
+                                </th>
+                                <th colSpan="5">LT Hệ số 1</th>
+                                <th style={{ width: '40px' }} rowSpan="2">
+                                    1
+                                </th>
+                                <th style={{ width: '40px' }} rowSpan="2">
+                                    2
+                                </th>
+                            </tr>
+                            <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
+                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                    1
+                                </th>
+                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                    2
+                                </th>
+                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                    3
+                                </th>
+                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                    4
+                                </th>
+                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                    5
+                                </th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            {studentData.map((student, index) => (
-                                <tr key={index}>
-                                    <th style={{ height: '35px', width: '50px' }}>{index + 1}</th>
-                                    <th style={{ width: '100px' }}>{student.maSinhVien}</th>
-                                    <th style={{ width: '300px' }}>{student.hoTen}</th>
-                                    <th style={{ width: '50px' }}>{student.giuaKi}</th>
-                                    <th style={{ width: '40px' }}>{student.tk1}</th>
-                                    <th style={{ width: '40px' }}>{student.tk2}</th>
-                                    <th style={{ width: '40px' }}>{student.tk3}</th>
-                                    <th style={{ width: '40px' }}>{student.tk4}</th>
-                                    <th style={{ width: '40px' }}>{student.tk5}</th>
-                                    <th style={{ width: '40px' }}>{student.th1}</th>
-                                    <th style={{ width: '40px' }}>{student.th2}</th>
-                                    <th style={{ width: '40px' }}>{student.th3}</th>
-                                    <th style={{ width: '40px' }}>{student.th4}</th>
-                                    <th style={{ width: '40px' }}>{student.th5}</th>
-                                    <th style={{ width: '40px' }}>{student.ck}</th>
-                                    <th style={{ width: '40px' }}>{student.tongKet}</th>
-                                </tr>
-                            ))}
+                            {sectionClassInfo?.students &&
+                                sectionClassInfo.students?.length > 0 &&
+                                sectionClassInfo.students.map((student, index) => (
+                                    <tr key={index}>
+                                        <th style={{ height: '35px', width: '50px' }}>{index + 1}</th>
+                                        <th style={{ width: '100px' }}>{student.studentCode}</th>
+                                        <th style={{ width: '300px' }}>{student.studentName}</th>
+                                        <th style={{ width: '50px' }}>{student.midtermPoint1}</th>
+                                        <th style={{ width: '50px' }}>{student.midtermPoint2}</th>
+                                        <th style={{ width: '50px' }}>{student.midtermPoint3}</th>
+                                        <th style={{ width: '40px' }}>{student.regularPoint1}</th>
+                                        <th style={{ width: '40px' }}>{student.regularPoint2}</th>
+                                        <th style={{ width: '40px' }}>{student.regularPoint3}</th>
+                                        <th style={{ width: '40px' }}>{student.regularPoint4}</th>
+                                        <th style={{ width: '40px' }}>{student.regularPoint5}</th>
+                                        <th style={{ width: '40px' }}>{student.practicePoint1}</th>
+                                        <th style={{ width: '40px' }}>{student.practicePoint2}</th>
+                                        <th style={{ width: '40px' }}>{student.finalPoint}</th>
+                                        <th style={{ width: '40px' }}>
+                                            {student?.totalPoint ? Math.round(student?.totalPoint * 100) / 100 : '_'}
+                                        </th>
+                                    </tr>
+                                ))}
                         </tbody>
                     </table>
+                    <hr />
                     {showAdditionalDiv && (
                         <div>
-                            <div
-                                style={{
-                                    width: '1230px',
-                                    height: '25px',
-                                    borderBottom: '1px dotted black',
-                                    marginTop: '20px',
-                                }}
-                            >
-                                <p
+                            <div>
+                                <h2
+                                    className="text-primary"
                                     style={{
                                         fontWeight: 'bold',
                                     }}
                                 >
                                     Nộp điểm quá trình học tập
-                                </p>
+                                </h2>
                             </div>
                             <p style={{ fontWeight: 'bold', marginTop: '20px' }}>Lưu ý:</p>
-                            <div style={{ marginLeft: '35px', marginTop: '10px' }}>
+                            <div style={{ marginTop: '10px' }}>
                                 <p>
                                     - Thầy/ cô vui lòng kiểm tra kỹ bảng điểm và chắc chắn đã hoàn tất việc nhập điểm
                                     trước khi tiến hành nộp điểm;
@@ -302,103 +279,64 @@ function Quanlydiemquatrinhhoctap() {
                                     điểm;
                                 </p>
                             </div>
-                            <div style={{ marginLeft: '35px', marginTop: '10px', display: 'flex' }}>
-                                <p style={{ fontWeight: 'bold' }}>Mã xác nhận:</p>
+                            <div style={{ marginTop: '10px', display: 'flex' }}>
+                                <p className="mr-2" style={{ fontWeight: 'bold' }}>
+                                    Mã xác nhận:
+                                </p>
                                 <div style={{ justifyContent: 'space-between' }}>
-                                    <div className={cx('searchma')}>
-                                        <input
+                                    <div className="flex align-items-center mb-3">
+                                        <InputText
+                                            id="username"
                                             placeholder="Nhập mã"
-                                            spellCheck={false}
+                                            className=" w-full mr-2"
                                             value={inputValues.verificationCode}
                                             onChange={(e) => handleInputChange(e, 'verificationCode')}
                                         />
+                                        <div>
+                                            <Button
+                                                icon="pi pi-replay"
+                                                onClick={() => {
+                                                    regenerateString();
+                                                }}
+                                            />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <button
+                                    <div className="surface-100 py-1 text-center mb-3">
+                                        <h2
+                                            className="text-primary"
                                             style={{
-                                                height: '30px',
-                                                border: 'none',
-                                                fontSize: '20px',
-                                                marginTop: '5px',
-                                                color: 'red',
-                                                marginLeft: '20px',
-                                                width: '150px',
-                                            }}
-                                            onClick={() => {
-                                                regenerateString();
-                                            }}
-                                        >
-                                            <FontAwesomeIcon icon={faRepeat} />
-                                        </button>
-                                    </div>
-
-                                    <div
-                                        style={{
-                                            width: '150px',
-                                            height: '35px',
-                                            backgroundColor: 'red',
-                                            marginLeft: '20px',
-                                            textAlign: 'center',
-                                            marginTop: '5px',
-                                        }}
-                                    >
-                                        <p
-                                            style={{
-                                                fontSize: '18px',
                                                 fontWeight: 'bold',
-                                                color: 'blue',
-                                                textAlign: 'center',
                                             }}
                                         >
                                             {randomString}
-                                        </p>
+                                        </h2>
+                                    </div>
+                                    <div className="w-full">
+                                        <Button
+                                            className="w-full"
+                                            icon="pi pi-check"
+                                            style={{
+                                                backgroundColor: '#00BFFF',
+                                                color: 'white',
+                                            }}
+                                            label="Nhập điểm quá trình học tập"
+                                            onClick={handleOnSubmitFinalResult}
+                                        />
+                                        {!isAllFieldsFilled && isErrorVisible && !isVerificationCodeMatched && (
+                                            <p style={{ color: 'red', marginTop: '10px' }}>
+                                                Vui lòng điền đầy đủ thông tin!
+                                            </p>
+                                        )}
+
+                                        {!isVerificationCodeMatched && isErrorVisible && isAllFieldsFilled && (
+                                            <p style={{ color: 'red', marginTop: '10px' }}>Mã xác minh không đúng!</p>
+                                        )}
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ marginLeft: '135px', marginTop: '10px' }}>
-                                <Button
-                                    style={{
-                                        width: '150px',
-                                        height: '30px',
-                                        backgroundColor: '#00BFFF',
-                                        color: 'white',
-                                    }}
-                                    login
-                                    onClick={() => {
-                                        setIsAllFieldsFilled(checkAllFieldsFilled());
-
-                                        // Kiểm tra xem mã nhập có đúng không
-                                        const isVerificationCodeMatched = inputValues.verificationCode === randomString;
-                                        setIsVerificationCodeMatched(isVerificationCodeMatched);
-
-                                        // Hiển thị thông báo lỗi
-                                        setIsErrorVisible(true);
-
-                                        // Nếu mã nhập đúng và tất cả các trường đều được điền, thực hiện chuyển hướng
-                                        if (isVerificationCodeMatched && checkAllFieldsFilled()) {
-                                            // Thực hiện chuyển hướng
-                                            navigate('/');
-                                        }
-
-                                        // Tự động ẩn thông báo sau 3 giây
-                                        setTimeout(() => {
-                                            setIsErrorVisible(false);
-                                        }, 1000);
-                                    }}
-                                >
-                                    Nhập điểm quá trình học tập
-                                </Button>
-                                {!isAllFieldsFilled && isErrorVisible && !isVerificationCodeMatched && (
-                                    <p style={{ color: 'red', marginTop: '10px' }}>Vui lòng điền đầy đủ thông tin!</p>
-                                )}
-
-                                {!isVerificationCodeMatched && isErrorVisible && isAllFieldsFilled && (
-                                    <p style={{ color: 'red', marginTop: '10px' }}>Mã xác minh không đúng!</p>
-                                )}
-                            </div>
                         </div>
                     )}
-                    <div style={{ height: '15px', width: '100%' }}></div>
+                    {console.log(sectionClassInfo)}
                 </div>
             </div>
         </div>

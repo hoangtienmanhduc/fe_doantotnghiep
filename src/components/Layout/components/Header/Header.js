@@ -3,14 +3,13 @@ import React from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
-import { clearStorage, getUserRole } from '~/components/authentication/AuthUtils';
+import { clearStorage, getUserId, getUserRole } from '~/components/authentication/AuthUtils';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { Menu, MenuItem } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import MenuUtils from '~/components/Popper/Menu';
 import { UserRoles } from '~/App';
-
+import { getUserInfo } from '~/api/user/UserService';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 const MENU_ITEMS = [
     {
         title: 'Thông tin cá nhân',
@@ -32,21 +31,25 @@ const MENU_ITEMS = [
 ];
 
 const buttonClickKeHoachGiangDay = (popupState) => {
-    window.location.href = 'kehoachgiangday';
+    window.location.assign('/kehoachgiangday');
     popupState.close(); // Đóng popup sau khi click
 };
 
 const buttonClickLichTrinhGiangDay = (popupState) => {
-    window.location.href = 'lichtrinhgiangday';
+    window.location.assign('/lichtrinhgiangday');
     popupState.close(); // Đóng popup sau khi click
 };
 
 const buttonClickLichThiKetThucHocPhan = (popupState) => {
-    window.location.href = 'lichthiketthuchocphan';
+    window.location.assign('/lichthiketthuchocphan');
     popupState.close(); // Đóng popup sau khi click
 };
+const QueryKey = 'User-Info';
 
 function Header() {
+    const { data: userInfo } = useQuery([QueryKey, getUserId()], () => getUserInfo(getUserId(), getUserId()), {
+        enabled: !!getUserId(),
+    });
     return (
         <React.Fragment>
             <div className="col-12 grid align-items-center shadow-1">
@@ -222,7 +225,17 @@ function Header() {
                     <div className="flex align-items-center p-0">
                         <MenuUtils items={MENU_ITEMS}>
                             <div className="flex align-items-center p-2 cursor-pointer hover:surface-100 border-round">
-                                <h3 className="text-800 mr-2 ">Hoàng Tiến Mạnh Đức</h3>
+                                <h3 className="text-800 mr-2 ">
+                                    {!!userInfo
+                                        ? `${
+                                              getUserRole() === UserRoles.LECTURER
+                                                  ? 'GV.'
+                                                  : getUserRole() === UserRoles.ADMIN
+                                                  ? 'QL'
+                                                  : ''
+                                          } ${userInfo.fullName}`
+                                        : '_'}
+                                </h3>
                                 <Avatar icon="pi pi-user" size="large" shape="circle" className="bg-primary" />
                             </div>
                         </MenuUtils>

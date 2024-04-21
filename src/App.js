@@ -29,10 +29,12 @@ import Ghichunhacnho from './pages/StudentDashboard/Ghichunhacnho/GhiChuNhacNho'
 import Dangkyhocphan from './pages/StudentDashboard/Dangkyhocphan/DangKyHocPhan';
 import Tracuucongno from './pages/StudentDashboard/Tracuucongno/TraCuuCongNo';
 import HomeLecturer from './pages/LecturerDashboard/HomeLecturer/HomeLecturer';
-import DefaultLayoutLecturer from './components/Layout/DefaultLayoutLecturer';
 import Kehoachgiangday from './pages/LecturerDashboard/Kehoachgiangday/KeHoachGiangDay';
 import Lichtrinhgiangday from './pages/LecturerDashboard/Lichtrinhgianday/LichTrinhGiangDay';
 import Lichthiketthuchocphan from './pages/LecturerDashboard/Lichthiketthuchocphan/LichThiKetThucHocPhan';
+import Thongtinlophocphan from './pages/LecturerDashboard/Thongtinlophocphan/ThongTinLopHocPhan';
+import Quanlydiemquatrinhhoctap from './pages/LecturerDashboard/Quanlydiemquatrinhhoctap/QuanLyDiemQuaTrinhHocTap';
+import Nhapdiemquatrinhhoctap from './pages/LecturerDashboard/Nhapdiemquatrinhhoctap/NhapDiemQuaTrinhHocTap';
 export const UserRoles = {
     ADMIN: 'Admin',
     LECTURER: 'Lecturer',
@@ -149,6 +151,21 @@ function App() {
             {
                 path: '/lichthiketthuchocphan',
                 component: !getAccessToken() ? Login : Lichthiketthuchocphan,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/thongtinlophocphan/:id',
+                component: !getAccessToken() ? Login : Thongtinlophocphan,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/quanlydiemquatrinhhoctap/:id',
+                component: !getAccessToken() ? Login : Quanlydiemquatrinhhoctap,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/nhapdiemquatrinhhoctap/:id',
+                component: !getAccessToken() ? Login : Nhapdiemquatrinhhoctap,
                 layout: !getAccessToken() ? null : DefaultLayoutSidebar,
             },
         ];
