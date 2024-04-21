@@ -47,7 +47,7 @@ const Lichhoc = () => {
         let tempData = scheduleDataList && scheduleDataList?.length > 0 ? [...scheduleDataList] : [];
         while (currentDate <= endDate) {
             const day = format(currentDate, 'dd/MM/yyyy');
-            let compareDate = addDays(currentDate, 1);
+            let compareDate = currentDate;
 
             if (scheduleDataList && scheduleDataList?.length > 0) {
                 const dayScheduleItems = tempData?.filter((item) =>
@@ -73,9 +73,9 @@ const Lichhoc = () => {
         return newColumns;
     }, [scheduleDataList, selectedDate]);
 
-    const renderScheduleItems = (type, scheduleItems) => {
+    const renderScheduleItems = (idx, type, scheduleItems) => {
         return (
-            <td key={scheduleItems?.id} style={{ backgroundColor: 'white', height: '170px' }}>
+            <td key={idx} style={{ backgroundColor: 'white', height: '170px' }}>
                 {scheduleItems &&
                     scheduleItems?.length > 0 &&
                     scheduleItems
@@ -88,9 +88,9 @@ const Lichhoc = () => {
                                 ? item?.periodStart > 12 && item?.periodStart <= 15
                                 : false,
                         )
-                        ?.map((item) => (
+                        ?.map((item, idx) => (
                             <div
-                                key={item.id}
+                                key={idx}
                                 className="font-semibold m-1 border-round surface-100 text-800 p-2 flex flex-column justify-content-start align-items-center"
                                 style={{
                                     textAlign: 'center',
@@ -199,15 +199,21 @@ const Lichhoc = () => {
                     <tbody>
                         <tr>
                             <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Sáng</th>
-                            {dayOfWeekList?.map((column) => renderScheduleItems('morning', column?.scheduleItems))}
+                            {dayOfWeekList?.map((column, idx) =>
+                                renderScheduleItems(idx, 'morning', column?.scheduleItems),
+                            )}
                         </tr>
                         <tr>
                             <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Chiều</th>
-                            {dayOfWeekList?.map((column) => renderScheduleItems('afternoon', column?.scheduleItems))}
+                            {dayOfWeekList?.map((column, idx) =>
+                                renderScheduleItems(idx, 'afternoon', column?.scheduleItems),
+                            )}
                         </tr>
                         <tr>
                             <th style={{ height: '170px', backgroundColor: 'rgb(255, 255, 206)' }}>Tối</th>
-                            {dayOfWeekList?.map((column) => renderScheduleItems('evening', column?.scheduleItems))}
+                            {dayOfWeekList?.map((column, idx) =>
+                                renderScheduleItems(idx, 'evening', column?.scheduleItems),
+                            )}
                         </tr>
                     </tbody>
                 </table>
