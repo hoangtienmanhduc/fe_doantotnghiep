@@ -68,14 +68,9 @@ const StudentSectionManagement = () => {
     const columns = [
         { field: 'sectionName', header: 'Học phần' },
         { field: 'sectionCode', header: 'Mã học phần' },
-        { field: 'lecturerName', header: 'Giảng viên phụ trách' },
-        { field: 'lecturerCode', header: 'Mã giảng viên' },
-        { field: 'sectionClassCode', header: 'Mã lớp học phần' },
         { field: 'credits', header: 'Số tín chỉ học tập' },
         { field: 'costCredits', header: 'Số tín chỉ học phí' },
-        { field: 'sectionClassType', header: 'Loại lớp học phần' },
-        { field: 'type', header: 'Loại đăng ký học phần' },
-        { field: 'status', header: 'Tình trạng đăng ký' },
+        { field: 'registrationStatus', header: 'Tình trạng đăng ký học phần' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -231,7 +226,7 @@ const StudentSectionManagement = () => {
                                     )
                                 ) : col.field === 'action' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        <Button
+                                        {/* <Button
                                             text
                                             icon="pi pi-pencil"
                                             tooltip="Chỉnh sửa"
@@ -243,7 +238,7 @@ const StudentSectionManagement = () => {
                                                 setSelectedSectionClass(rowData?.sectionClassId);
                                                 studentSectionRef.current.showForm(rowData, 'edit');
                                             }}
-                                        />
+                                        /> */}
                                         <Button
                                             icon="pi pi-arrow-right-arrow-left"
                                             tooltip="Đổi trạng thái đăng ký"
@@ -286,15 +281,7 @@ const StudentSectionManagement = () => {
                                             </div>
                                         </OverlayPanel>
                                     </div>
-                                ) : col.field === 'sectionClassType' ? (
-                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field] === 'theory'
-                                            ? 'Lý thuyết'
-                                            : rowData[col.field] === 'practice'
-                                            ? 'Thực hành'
-                                            : '-'}
-                                    </div>
-                                ) : col.field === 'type' ? (
+                                ) : col.field === 'registrationStatus' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {rowData[col.field] === 'new_learning'
                                             ? 'Học mới'
@@ -302,16 +289,6 @@ const StudentSectionManagement = () => {
                                             ? 'Học lại'
                                             : rowData[col.field] === 'improve_learning'
                                             ? 'Học cải thiện'
-                                            : '-'}
-                                    </div>
-                                ) : col.field === 'status' ? (
-                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                        {rowData[col.field] === 'registered'
-                                            ? 'Đã đăng ký'
-                                            : rowData[col.field] === 'canceled'
-                                            ? 'Đã huỷ'
-                                            : rowData[col.field] === 'waiting'
-                                            ? 'Đang chờ'
                                             : '-'}
                                     </div>
                                 ) : (
