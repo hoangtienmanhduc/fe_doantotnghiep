@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-pascal-case */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faChartColumn, faDollarSign, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
 import { getUserInfo } from '~/api/user/UserService';

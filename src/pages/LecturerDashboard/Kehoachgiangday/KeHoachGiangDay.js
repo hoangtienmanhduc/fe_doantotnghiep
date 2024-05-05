@@ -6,7 +6,7 @@ import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
 import { getListTermInfo } from '~/api/term/TermService';
 import { useQuery } from '@tanstack/react-query';
 import { Dropdown } from 'primereact/dropdown';
-import { getListSectionClassInfo, getPageSectionClassInfo } from '~/api/section/SectionClassService';
+import { getListSectionClassInfo } from '~/api/section/SectionClassService';
 import { dayInWeekOptions } from '~/pages/AdminDashboard/section-class/SectionClassConstant';
 
 const cx = classNames.bind(styles);
@@ -73,7 +73,6 @@ const Kehoachgiangday = () => {
                             </th>
                         </tr>
                     </thead>
-                    {console.log(sectionClassList)}
                     <tbody>
                         {sectionClassList && sectionClassList?.length > 0 ? (
                             sectionClassList.map((sectionClass, idx) => (
@@ -106,7 +105,7 @@ const Kehoachgiangday = () => {
                                         {sectionClass.lecturerCode} - {sectionClass.lecturerName}
                                     </th>
                                     <th style={{ width: '100px' }} rowSpan="1">
-                                        0
+                                        {sectionClass.numberOfStudents}
                                     </th>
                                 </tr>
                             ))

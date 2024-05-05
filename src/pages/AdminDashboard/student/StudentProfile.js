@@ -90,8 +90,8 @@ const StudentProfile = ({ data = {} }) => {
                                     <i className="pi pi-user mr-2"></i>Thông tin cá nhân
                                 </h3>
                                 <div className="col-12 grid ml-0">
-                                    {infoList.map((item) => (
-                                        <div className="col-6">
+                                    {infoList.map((item, idx) => (
+                                        <div key={idx} className="col-6">
                                             <span className="">
                                                 <div className="flex align-items-center justify-content-between w-full mb-2">
                                                     <p className="m-0">{item?.label}</p>
@@ -107,8 +107,8 @@ const StudentProfile = ({ data = {} }) => {
                                     <i className="pi pi-phone mr-2"></i>Thông tin liên hệ
                                 </h3>
                                 <div className="col-12 grid ml-0">
-                                    {contactList.map((item) => (
-                                        <div className="col-6">
+                                    {contactList.map((item, idx) => (
+                                        <div key={idx} className="col-6">
                                             <span className="">
                                                 <div className="flex align-items-center justify-content-between w-full mb-2">
                                                     <p className="m-0">{item?.label}</p>

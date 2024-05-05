@@ -69,7 +69,7 @@ function Thanhtoantructuyen() {
                             <th rowSpan="1">Số tiền (VND)</th>
                         </tr>
                         <tr>
-                            <th colspan="7">Không tìm thấy dữ liệu công nợ</th>
+                            <th colSpan="7">Không tìm thấy dữ liệu công nợ</th>
                         </tr>
                     </table>
                 </div>

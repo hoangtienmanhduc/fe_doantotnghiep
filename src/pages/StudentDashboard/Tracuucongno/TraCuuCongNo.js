@@ -74,10 +74,9 @@ const Tracuucongno = () => {
                     .map((registration, idx) => {
                         return (
                             <tr key={registration?.id}>
-                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}></td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{registration.termName}</td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                    {registration.secitonCode}
+                                    {registration.sectionCode}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                     {registration.sectionName}
@@ -105,7 +104,11 @@ const Tracuucongno = () => {
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                     {registration.registrationStatus === 'canceled' ? 'Xoá bỏ đăng ký' : 'Đã đăng ký'}
                                 </td>
-                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{'-'}</td>
+                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                    {registration.paymentDate
+                                        ? new Date(registration.paymentDate).toLocaleDateString()
+                                        : 'Hiện chưa chi trả'}
+                                </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{registration.total}</td>
 
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
@@ -115,10 +118,20 @@ const Tracuucongno = () => {
                                     {registration.minusDeductions ? registration.minusDeductions : 0}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{registration.debt}</td>
-                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                    {registration.tuitionStatus}
+                                <td style={{ fontWeight: 'normal', textAlign: 'center', color: 'white' }}>
+                                    {registration.tuitionStatus === 'paid' ? (
+                                        <i className="pi pi-check p-2 border-circle bg-green-300"></i>
+                                    ) : (
+                                        <i className="pi pi-times p-2 border-circle bg-red-300"></i>
+                                    )}
                                 </td>
-                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>{'-'}</td>
+                                <td style={{ fontWeight: 'normal', textAlign: 'center', color: 'white' }}>
+                                    {!!registration.tuitionInvestigateStatus ? (
+                                        <i className="pi pi-check p-2 border-circle bg-green-300"></i>
+                                    ) : (
+                                        <i className="pi pi-times p-2 border-circle bg-red-300"></i>
+                                    )}
+                                </td>
                             </tr>
                         );
                     });
@@ -185,7 +198,6 @@ const Tracuucongno = () => {
                                                 </tr>
                                                 {!selectCollapse.includes(registration?.id) && (
                                                     <tr className={``}>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}></td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                                             {registration.termName}
                                                         </td>
@@ -225,7 +237,11 @@ const Tracuucongno = () => {
                                                                 : 'Đã đăng ký'}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {'-'}
+                                                            {registration.paymentDate
+                                                                ? new Date(
+                                                                      registration.paymentDate,
+                                                                  ).toLocaleDateString()
+                                                                : 'Hiện chưa chi trả'}
                                                         </td>
                                                         <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
                                                             {registration.total}
@@ -267,9 +283,8 @@ const Tracuucongno = () => {
                                                     </tr>
                                                 )}
                                                 {!selectCollapse.includes(registration?.id) && (
-                                                    <tr className="text-center font-bold">
+                                                    <tr className="text-center font-semibold surface-100">
                                                         <td style={{ height: '30px' }} rowSpan="1"></td>
-                                                        <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td>{credits}</td>
@@ -341,7 +356,6 @@ const Tracuucongno = () => {
                 <table border="1" className="w-max">
                     <thead>
                         <tr style={{ backgroundColor: 'rgba(243, 247, 249, 0.27)', color: 'rgb(29, 161, 242)' }}>
-                            <th style={{ width: '2rem', height: '70px' }} rowSpan="1"></th>
                             <th style={{ width: '10rem', height: '70px' }} rowSpan="1">
                                 Học kỳ
                             </th>
@@ -427,16 +441,16 @@ const Tracuucongno = () => {
                         <FontAwesomeIcon icon={faChevronRight} />
                     </button>
                 </div> */}
-            <div className="flex justify-content-between col-12 text-lg font-semibold border-1 border-200 border-round-md mt-3 surface-100">
+            <div className="flex justify-content-between col-12 text-lg text-600 font-semibold border-1 border-200 border-round-md mt-3 surface-100">
                 <div style={{ display: 'flex' }}>
                     <p>Tổng nộp học phí: </p>
                     <p style={{ marginLeft: '5px', color: 'red' }}>
                         {totalAllFee?.totalFee
-                            ? new Intl.NumberFormat('vn', {
+                            ? new Intl.NumberFormat('it-IT', {
                                   style: 'currency',
                                   currency: 'VND',
                               }).format(totalAllFee.totalFee)
-                            : new Intl.NumberFormat('vn', {
+                            : new Intl.NumberFormat('it-IT', {
                                   style: 'currency',
                                   currency: 'VND',
                               }).format(0)}
@@ -445,7 +459,7 @@ const Tracuucongno = () => {
                 <div style={{ display: 'flex' }}>
                     <p>Tổng nộp khoản thu khác: </p>
                     <p style={{ marginLeft: '5px', color: 'red' }}>
-                        {new Intl.NumberFormat('vn', {
+                        {new Intl.NumberFormat('it-IT', {
                             style: 'currency',
                             currency: 'VND',
                         }).format(0)}
@@ -455,11 +469,11 @@ const Tracuucongno = () => {
                     <p>Tổng công nợ: </p>
                     <p style={{ marginLeft: '5px', color: 'red' }}>
                         {totalAllFee?.debt
-                            ? new Intl.NumberFormat('vn', {
+                            ? new Intl.NumberFormat('it-IT', {
                                   style: 'currency',
                                   currency: 'VND',
                               }).format(totalAllFee.debt)
-                            : new Intl.NumberFormat('vn', {
+                            : new Intl.NumberFormat('it-IT', {
                                   style: 'currency',
                                   currency: 'VND',
                               }).format(0)}
@@ -469,7 +483,7 @@ const Tracuucongno = () => {
                     <p>Tổng công nợ thu khác: </p>
                     <p style={{ marginLeft: '5px', color: 'red' }}>
                         {' '}
-                        {new Intl.NumberFormat('vn', {
+                        {new Intl.NumberFormat('it-IT', {
                             style: 'currency',
                             currency: 'VND',
                         }).format(0)}

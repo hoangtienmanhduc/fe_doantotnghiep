@@ -283,7 +283,9 @@ const StudentManagement = () => {
                                             icon="pi pi-eye"
                                             rounded
                                             raised
-                                            onClick={() => window.location.assign(`/admin/student/${rowData?.id}`)}
+                                            onClick={() =>
+                                                window.location.assign(`/admin/student/${rowData?.studentId}`)
+                                            }
                                             tooltip="Xem các học phần của sinh viên"
                                             tooltipOptions={{ position: 'left' }}
                                         />

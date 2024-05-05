@@ -353,10 +353,10 @@ function Lichtheotiendo() {
                             <th style={{ width: '35px' }} rowSpan="2">
                                 Số tín chỉ
                             </th>
-                            <th style={{ width: '250px' }} colspan="6">
+                            <th style={{ width: '250px' }} colSpan="6">
                                 Thông tin lịch
                             </th>
-                            <th style={{ width: '100px' }} colspan="2">
+                            <th style={{ width: '100px' }} colSpan="2">
                                 Thời gian
                             </th>
                             <th style={{ width: '100px' }} rowSpan="2">

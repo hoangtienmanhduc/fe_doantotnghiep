@@ -2,9 +2,6 @@
 import styles from '~/pages/LecturerDashboard/Quanlydiemquatrinhhoctap/Quanlydiemquatrinhhoctap.module.scss';
 import classNames from 'classnames/bind';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRepeat } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
@@ -25,9 +22,13 @@ function Quanlydiemquatrinhhoctap() {
         return !!idString ? parseInt(idString) : null;
     }, [idString]);
 
-    const { data: sectionClassInfo } = useQuery([QueryKey, getUserId()], () => getSectionClassInfo(getUserId(), id), {
-        enabled: !!getUserId() && !!id,
-    });
+    const { data: sectionClassInfo, refetch } = useQuery(
+        [QueryKey, getUserId()],
+        () => getSectionClassInfo(getUserId(), id),
+        {
+            enabled: !!getUserId() && !!id,
+        },
+    );
 
     const [showAdditionalDiv, setShowAdditionalDiv] = useState(false);
     const [randomString, setRandomString] = useState(generateRandomString(4));
@@ -99,6 +100,7 @@ function Quanlydiemquatrinhhoctap() {
                         'Thành công',
                         'Lưu kết quả học tập cuối cùng của lớp học phần thành công !!',
                     );
+                    refetch();
 
                     setShowAdditionalDiv(false);
                 }
@@ -109,7 +111,7 @@ function Quanlydiemquatrinhhoctap() {
         setTimeout(() => {
             setIsErrorVisible(false);
         }, 1500);
-    }, [checkAllFieldsFilled, id, inputValues.verificationCode, randomString, sectionClassInfo?.id]);
+    }, [checkAllFieldsFilled, id, inputValues.verificationCode, randomString, refetch, sectionClassInfo?.id]);
 
     return (
         <div className={cx('wrapper')}>
@@ -131,7 +133,7 @@ function Quanlydiemquatrinhhoctap() {
                         <Button
                             label="Nộp điểm QTHT"
                             icon="pi pi-calculator"
-                            disabled={(sectionClassInfo && !sectionClassInfo?.inputResultEnable) || true}
+                            disabled={sectionClassInfo && !sectionClassInfo?.inputResultEnable}
                             onClick={handleSubmit}
                         />
                         {/* <Button label="In bảng điểm QTHT" icon="pi pi-print" /> */}
@@ -171,6 +173,9 @@ function Quanlydiemquatrinhhoctap() {
                     </div>
                     <hr />
                     <p style={{ fontWeight: 'bold', marginTop: '15px' }}>Danh sách sinh viên</p>
+                    <div className="col-12 flex justify-content-end">
+                        <Button icon="pi pi-replay" onClick={refetch} />
+                    </div>
                     <table style={{ marginTop: '10px' }} border="1" className="w-full">
                         <thead>
                             <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>

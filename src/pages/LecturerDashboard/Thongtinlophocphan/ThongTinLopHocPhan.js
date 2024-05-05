@@ -47,13 +47,13 @@ function Thongtinlophocphan() {
                 <div className="col-12">
                     <div className="p-inputgroup flex-1 flex justify-content-end">
                         <Button label="In ấn" icon="pi pi-print" />
-                        <Button label="Gửi tin nhắn đến SV của lớp" icon="pi pi-send" />
+                        {/* <Button label="Gửi tin nhắn đến SV của lớp" icon="pi pi-send" /> */}
                         <Button
                             label="Xử lý điểm quá trình học tập"
                             icon="pi pi-calculator"
                             onClick={() => window.location.assign(`/quanlydiemquatrinhhoctap/${sectionClassInfo.id}`)}
                         />
-                        <Button label="Danh sách lớp giảng dạy" icon="pi pi-bars" />
+                        {/* <Button label="Danh sách lớp giảng dạy" icon="pi pi-bars" /> */}
                     </div>
                 </div>
                 <TabContext value={tabIndex}>

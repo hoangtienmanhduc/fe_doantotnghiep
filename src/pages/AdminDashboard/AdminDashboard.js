@@ -32,7 +32,6 @@ const AdminDashboard = () => {
 
         { key: 'studentManagement', label: 'QUẢN LÝ SINH VIÊN', icon: 'pi pi-user' },
         { key: 'lecturerManagement', label: 'QUẢN LÝ GIẢNG VIÊN', icon: 'pi pi-users' },
-        { key: 'tuitionManagement', label: 'QUẢN LÝ HỌC PHÍ', icon: 'pi pi-dollar' },
     ];
 
     const handleOnClick = useCallback((item) => {
@@ -77,11 +76,6 @@ const AdminDashboard = () => {
                     {activeTab === 'specializationClassManagement' && <SpecializationClassManagement />}
                     {activeTab === 'academicYearManagement' && <AcademicYearManagement />}
                     {activeTab === 'facultyManagement' && <FacultyManagement />}
-                    {activeTab === 'tuitionManagement' && (
-                        <React.Fragment>
-                            <h2 className="text-center">Developing</h2>
-                        </React.Fragment>
-                    )}
                 </div>
             </div>
         </React.Fragment>
