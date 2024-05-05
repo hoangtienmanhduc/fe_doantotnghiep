@@ -231,14 +231,10 @@ const SectionClassManagement = () => {
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {!!rowData[col.field] ? (
                                             <i className="text-white pi pi-check p-2 border-circle bg-green-300"></i>
-                                        ) : rowData['sectionClassType'] === 'theory' ? (
-                                            <div>
-                                                <i className="text-white pi pi-times p-2 border-circle bg-red-300 mr-2"></i>
-                                                <b className="text-red-300">Lớp lý thuyết hiện chưa có lịch học</b>
-                                            </div>
                                         ) : (
                                             <div>
-                                                <i className="text-white pi pi-check p-2 border-circle bg-green-300"></i>
+                                                <i className="text-white pi pi-times p-2 border-circle bg-red-300 mr-2"></i>
+                                                <b className="text-red-300">Lớp học phần hiện chưa có lịch học</b>
                                             </div>
                                         )}
                                     </div>
