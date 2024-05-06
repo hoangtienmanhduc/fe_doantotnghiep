@@ -149,7 +149,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
-            if (new Date().getTime() > new Date(data.firstTermStart).getTime()) {
+            if (new Date().getTime() >= new Date(data.firstTermStart).getTime()) {
                 toast.current.show({
                     severity: 'info',
                     summary: 'Info',
@@ -158,7 +158,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
-            if (new Date(data.firstTermStart).getTime() > new Date(data.firstTermEnd).getTime()) {
+            if (new Date(data.firstTermStart).getTime() >= new Date(data.firstTermEnd).getTime()) {
                 toast.current.show({
                     severity: 'info',
                     summary: 'Info',
@@ -167,7 +167,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
-            if (new Date(data.firstTermEnd).getTime() > new Date(data.secondTermStart).getTime()) {
+            if (new Date(data.firstTermEnd).getTime() >= new Date(data.secondTermStart).getTime()) {
                 toast.current.show({
                     severity: 'info',
                     summary: 'Info',
@@ -191,7 +191,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
-            if (new Date(data.secondTermStart).getTime() > new Date(data.secondTermEnd).getTime()) {
+            if (new Date(data.secondTermStart).getTime() >= new Date(data.secondTermEnd).getTime()) {
                 toast.current.show({
                     severity: 'info',
                     summary: 'Info',
@@ -200,7 +200,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
-            if (new Date(data.secondTermEnd).getTime() > new Date(data.thirdTermStart).getTime()) {
+            if (new Date(data.secondTermEnd).getTime() >= new Date(data.thirdTermStart).getTime()) {
                 toast.current.show({
                     severity: 'info',
                     summary: 'Info',
@@ -225,7 +225,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
-            if (new Date(data.thirdTermStart).getTime() > new Date(data.thirdTermEnd).getTime()) {
+            if (new Date(data.thirdTermStart).getTime() >= new Date(data.thirdTermEnd).getTime()) {
                 toast.current.show({
                     severity: 'info',
                     summary: 'Info',
