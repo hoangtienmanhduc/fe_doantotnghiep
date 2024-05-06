@@ -142,7 +142,7 @@ const StudentForm = forwardRef((props, ref) => {
             isError = true;
         }
 
-        if (!data?.CINumber) {
+        if (!data?.cinumber) {
             toast.current.show({
                 severity: 'info',
                 summary: 'Info',
@@ -305,8 +305,8 @@ const StudentForm = forwardRef((props, ref) => {
                                     id="school-year"
                                     mask="999999999999"
                                     placeholder="Nhập số căn cước công dân"
-                                    value={data?.CINumber || ''}
-                                    onChange={(e) => handleOnChange('CINumber', e.target.value)}
+                                    value={data?.cinumber || ''}
+                                    onChange={(e) => handleOnChange('cinumber', e.target.value)}
                                 ></InputMask>
                             </span>
                         </div>

@@ -49,7 +49,6 @@ const LecturerManagement = () => {
         { field: 'cinumber', header: 'Số căn cước công dân' },
         { field: 'specializationName', header: 'Thuộc chuyên ngành' },
         { field: 'title', header: 'Chức tước' },
-        { field: 'position', header: 'Vai trò' },
         { field: 'address', header: 'Địa chỉ' },
         { field: 'action', header: 'Thao tác' },
     ];
@@ -140,6 +139,22 @@ const LecturerManagement = () => {
                                             raised
                                             onClick={() => lecturerRef.current.showForm(rowData)}
                                         />
+                                    </div>
+                                ) : col.field === 'gender' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] === 'male'
+                                            ? 'Nam'
+                                            : rowData[col.field] === 'female'
+                                            ? 'Nữ'
+                                            : 'Không biết'}
+                                    </div>
+                                ) : col.field === 'title' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] === 'doctor'
+                                            ? 'Tiến sĩ'
+                                            : rowData[col.field] === 'master'
+                                            ? 'Thạc sĩ'
+                                            : 'Giảng viên'}
                                     </div>
                                 ) : (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>

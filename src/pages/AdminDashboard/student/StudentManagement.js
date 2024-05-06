@@ -333,6 +333,7 @@ const StudentManagement = () => {
                     </div>
                 </div>
                 <div className="card col-12">
+                    {console.log(data)}
                     <DataTable
                         value={
                             !!studentSeparates && studentSeparates?.content?.length > 0 ? studentSeparates?.content : []
