@@ -524,6 +524,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                             handleOnChange('sectionClassType', e?.target.value);
                                             setClassType(e?.target.value);
                                         }}
+                                        disabled={!!data?.id}
                                         filter
                                         showClear
                                         options={SectionClassTypeOptions}

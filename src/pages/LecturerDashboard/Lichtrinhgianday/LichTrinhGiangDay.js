@@ -47,7 +47,7 @@ const Lichtrinhgiangday = () => {
         let tempData = scheduleDataList && scheduleDataList?.length > 0 ? [...scheduleDataList] : [];
         while (currentDate <= endDate) {
             const day = format(currentDate, 'dd/MM/yyyy');
-            let compareDate = addDays(currentDate, 1);
+            let compareDate = currentDate;
 
             if (scheduleDataList && scheduleDataList?.length > 0) {
                 const dayScheduleItems = tempData?.filter((item) =>
