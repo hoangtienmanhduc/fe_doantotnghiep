@@ -149,7 +149,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                 return;
             }
 
-            if (new Date().getTime() >= moment(data.firstTermStart, 'dd/MM/yyyy').toDate().getTime()) {
+            if (new Date().getTime() >= moment(data.firstTermStart, 'DD/MM/YYYY').toDate().getTime()) {
                 toast.current.show({
                     severity: 'info',
                     summary: 'Info',
@@ -159,8 +159,8 @@ const AcademicYearForm = forwardRef((props, ref) => {
             }
 
             if (
-                moment(data.firstTermStart, 'dd/MM/yyyy').toDate().getTime() >=
-                moment(data.firstTermEnd, 'dd/MM/yyyy').toDate().getTime()
+                moment(data.firstTermStart, 'DD/MM/YYYY').toDate().getTime() >=
+                moment(data.firstTermEnd, 'DD/MM/YYYY').toDate().getTime()
             ) {
                 toast.current.show({
                     severity: 'info',
@@ -171,8 +171,8 @@ const AcademicYearForm = forwardRef((props, ref) => {
             }
 
             if (
-                moment(data.firstTermEnd, 'dd/MM/yyyy').toDate().getTime() >=
-                moment(data.secondTermStart, 'dd/MM/yyyy').toDate().getTime()
+                moment(data.firstTermEnd, 'DD/MM/YYYY').toDate().getTime() >=
+                moment(data.secondTermStart, 'DD/MM/YYYY').toDate().getTime()
             ) {
                 toast.current.show({
                     severity: 'info',
@@ -198,8 +198,8 @@ const AcademicYearForm = forwardRef((props, ref) => {
             }
 
             if (
-                moment(data.secondTermStart, 'dd/MM/yyyy').toDate().getTime() >=
-                moment(data.secondTermEnd, 'dd/MM/yyyy').toDate().getTime()
+                moment(data.secondTermStart, 'DD/MM/YYYY').toDate().getTime() >=
+                moment(data.secondTermEnd, 'DD/MM/YYYY').toDate().getTime()
             ) {
                 toast.current.show({
                     severity: 'info',
@@ -210,8 +210,8 @@ const AcademicYearForm = forwardRef((props, ref) => {
             }
 
             if (
-                moment(data.secondTermEnd, 'dd/MM/yyyy').toDate().getTime() >=
-                moment(data.thirdTermStart, 'dd/MM/yyyy').toDate().getTime()
+                moment(data.secondTermEnd, 'DD/MM/YYYY').toDate().getTime() >=
+                moment(data.thirdTermStart, 'DD/MM/YYYY').toDate().getTime()
             ) {
                 toast.current.show({
                     severity: 'info',
@@ -238,8 +238,8 @@ const AcademicYearForm = forwardRef((props, ref) => {
             }
 
             if (
-                moment(data.thirdTermStart, 'dd/MM/yyyy').toDate().getTime() >=
-                moment(data.thirdTermEnd, 'dd/MM/yyyy').toDate().getTime()
+                moment(data.thirdTermStart, 'DD/MM/YYYY').toDate().getTime() >=
+                moment(data.thirdTermEnd, 'DD/MM/YYYY').toDate().getTime()
             ) {
                 toast.current.show({
                     severity: 'info',
@@ -253,12 +253,12 @@ const AcademicYearForm = forwardRef((props, ref) => {
         const toPostData = {
             id: data?.id ? data.id : null,
             ...data,
-            firstTermStart: moment(data.firstTermStart, 'dd/MM/yyyy').toDate(),
-            firstTermEnd: moment(data.firstTermEnd, 'dd/MM/yyyy').toDate(),
-            secondTermStart: moment(data.secondTermStart, 'dd/MM/yyyy').toDate(),
-            secondTermEnd: moment(data.secondTermEnd, 'dd/MM/yyyy').toDate(),
-            thirdTermStart: moment(data.thirdTermStart, 'dd/MM/yyyy').toDate(),
-            thirdTermEnd: moment(data.thirdTermEnd, 'dd/MM/yyyy').toDate(),
+            firstTermStart: moment(data.firstTermStart, 'DD/MM/YYYY').toDate(),
+            firstTermEnd: moment(data.firstTermEnd, 'DD/MM/YYYY').toDate(),
+            secondTermStart: moment(data.secondTermStart, 'DD/MM/YYYY').toDate(),
+            secondTermEnd: moment(data.secondTermEnd, 'DD/MM/YYYY').toDate(),
+            thirdTermStart: moment(data.thirdTermStart, 'DD/MM/YYYY').toDate(),
+            thirdTermEnd: moment(data.thirdTermEnd, 'DD/MM/YYYY').toDate(),
         };
 
         const courseData = await createOrUpdateGenericAcademicYear(getUserId(), toPostData);
@@ -365,7 +365,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         className="w-full"
                                         value={
                                             data?.firstTermStart
-                                                ? moment(data?.firstTermStart, 'dd/MM/yyyy').toDate()
+                                                ? moment(data?.firstTermStart, 'DD/MM/YYYY').toDate()
                                                 : null
                                         }
                                         onChange={(e) => setData({ ...data, firstTermStart: e.value })}
@@ -383,11 +383,11 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         className="w-full"
                                         value={
                                             data?.firstTermEnd
-                                                ? moment(data?.firstTermEnd, 'dd/MM/yyyy').toDate()
+                                                ? moment(data?.firstTermEnd, 'DD/MM/YYYY').toDate()
                                                 : null
                                         }
                                         onChange={(e) => setData({ ...data, firstTermEnd: e.value })}
-                                    ></Calendar>
+                                    />
                                 </span>
                             </div>
                         </div>
@@ -424,7 +424,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         className="w-full"
                                         value={
                                             data?.secondTermStart
-                                                ? moment(data?.secondTermStart, 'dd/MM/yyyy').toDate()
+                                                ? moment(data?.secondTermStart, 'DD/MM/YYYY').toDate()
                                                 : null
                                         }
                                         onChange={(e) => setData({ ...data, secondTermStart: e.value })}
@@ -442,7 +442,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         className="w-full"
                                         value={
                                             data?.secondTermEnd
-                                                ? moment(data?.secondTermEnd, 'dd/MM/yyyy').toDate()
+                                                ? moment(data?.secondTermEnd, 'DD/MM/YYYY').toDate()
                                                 : null
                                         }
                                         onChange={(e) => setData({ ...data, secondTermEnd: e.value })}
@@ -483,7 +483,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         placeholder="Nhập thời gian bắt đầu học kỳ 3"
                                         value={
                                             data?.thirdTermStart
-                                                ? moment(data?.thirdTermStart, 'dd/MM/yyyy').toDate()
+                                                ? moment(data?.thirdTermStart, 'DD/MM/YYYY').toDate()
                                                 : null
                                         }
                                         onChange={(e) => setData({ ...data, thirdTermStart: e.value })}
@@ -501,7 +501,7 @@ const AcademicYearForm = forwardRef((props, ref) => {
                                         className="w-full"
                                         value={
                                             data?.thirdTermEnd
-                                                ? moment(data?.thirdTermEnd, 'dd/MM/yyyy').toDate()
+                                                ? moment(data?.thirdTermEnd, 'DD/MM/YYYY').toDate()
                                                 : null
                                         }
                                         onChange={(e) => setData({ ...data, thirdTermEnd: e.value })}
