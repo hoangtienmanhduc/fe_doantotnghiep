@@ -11,7 +11,7 @@ import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-cyan/theme.css';
 import 'primeicons/primeicons.css';
 import './custom.css';
-import { getAccessToken } from './components/authentication/AuthUtils';
+import { getAccessToken, getUserRole } from './components/authentication/AuthUtils';
 import Login from './pages/Login/Login';
 import Home from './pages/StudentDashboard/Home/Home';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
@@ -57,11 +57,21 @@ function App() {
 
     const routes = useMemo(() => {
         return [
-            { path: '/', component: !getAccessToken() ? Login : Home, layout: !getAccessToken() && null },
+            {
+                path: '/',
+                component: !getAccessToken()
+                    ? Login
+                    : getUserRole() === UserRoles.STUDENT
+                    ? Home
+                    : getUserRole() === UserRoles.LECTURER
+                    ? HomeLecturer
+                    : AdminDashboard,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
             {
                 path: '/lecturer',
-                component: !getAccessToken() ? Login : AdminDashboard,
-                layout: !getAccessToken() && null,
+                component: !getAccessToken() ? Login : HomeLecturer,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
             },
             {
                 path: '/admin',

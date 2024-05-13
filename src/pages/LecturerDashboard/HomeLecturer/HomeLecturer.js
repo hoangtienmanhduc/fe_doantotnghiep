@@ -10,6 +10,7 @@ function HomeLecturer() {
             <div style={{ width: '100%', height: '50px', marginTop: '25px' }}>
                 <h2 style={{ marginTop: '5px', marginLeft: '10px' }}>THÔNG BÁO</h2>
                 <hr />
+                <h4>Hiện tại không có thông báo nào...</h4>
             </div>
         </div>
     );

@@ -19,6 +19,7 @@ import { showNotification } from '~/components/notification/NotificationService'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
+import moment from 'moment';
 
 const QueryKeyLecturerOptions = 'Lecturer-Options';
 const QueryKey = 'Schedule-List';
@@ -128,7 +129,7 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
     const [learningDate, setLearningDate] = useState(null);
 
     const handleSelectDate = (date) => {
-        setLearningDate(date);
+        setLearningDate(date.date);
         setIsAddNew(true);
         setDialogVisible(true);
     };
@@ -160,8 +161,9 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
         let toPostData = {
             ...selectedSchedule,
             sectionClassId: data?.id,
-            learningDate: learningDate?.date,
+            learningDate: !isAddNew ? new Date(selectedSchedule?.learningDate) : learningDate,
         };
+        debugger;
 
         if (!toPostData?.room) {
             showNotification('error', 'Lỗi', 'Phòng học của thời khoá biểu không được trống !!');
@@ -193,7 +195,7 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
             setIsAddNew(false);
             return;
         }
-    }, [data?.id, learningDate, refetch, selectedSchedule]);
+    }, [data?.id, isAddNew, learningDate, refetch, selectedSchedule]);
 
     const handleOnDeleteSchedule = useCallback(async () => {
         const response = await deleteSchedule(getUserId(), selectedSchedule?.id);
@@ -383,13 +385,14 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
                                     setSelectedSchedule({ ...selectedSchedule, lecturerId: e?.target.value })
                                 }
                                 options={lecturerOptions}
-                                optionLabel="name"
+                                optionLabel="fullName"
                                 optionValue="id"
                                 placeholder="Hãy chọn giảng viên phụ trách giảng dạy cho lớp học phần"
                                 className="w-full"
                             />
                         </span>
                     </div>
+                    {console.log(selectedSchedule)}
                     <div className="col-12 p-0">
                         <p className="flex justify-content-between">
                             Phòng học {!isAddNew && <b className="text-red-400">Có thể chính sửa</b>}
@@ -411,7 +414,11 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
                         <span className="w-full">
                             <Dropdown
                                 value={selectedSchedule?.scheduleType || null}
-                                options={scheduleTypeOptions}
+                                options={
+                                    !isAddNew
+                                        ? scheduleTypeOptions
+                                        : scheduleTypeOptions.filter((item) => item.key !== 'suspended')
+                                }
                                 onChange={(e) =>
                                     setSelectedSchedule({ ...selectedSchedule, scheduleType: e?.target.value })
                                 }

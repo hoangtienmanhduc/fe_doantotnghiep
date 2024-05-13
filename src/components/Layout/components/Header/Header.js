@@ -55,7 +55,13 @@ function Header() {
             <div className="col-12 grid align-items-center shadow-1">
                 <div className="flex align-items-center justify-content-between col-12 p-0">
                     <div className="flex align-items-center p-0">
-                        <img src={images.Logo} alt="Logo" height={100}></img>
+                        <img
+                            className="cursor-pointer"
+                            src={images.Logo}
+                            alt="Logo"
+                            height={100}
+                            onClick={() => window.location.assign('/')}
+                        ></img>
                         <div className="md:hidden sm:hidden xs:hidden lg:flex lg:align-items-center mr-3">
                             <span className="p-input-icon-left mr-3">
                                 <i className="pi pi-search" />
@@ -65,21 +71,23 @@ function Header() {
                                 <Button icon="pi pi-search" onClick={() => {}} />
                             </div>
                         </div>
-                        <div className="flex justify-content-between align-items-center">
-                            <div className="p-2">
-                                <Button
-                                    onClick={() => window.location.assign('/')}
-                                    text
-                                    icon="pi pi-home"
-                                    label="Trang chủ"
-                                />
+                        {getUserRole() === UserRoles.STUDENT && (
+                            <div className="flex justify-content-between align-items-center">
+                                <div className="p-2">
+                                    <Button
+                                        onClick={() => window.location.assign('/')}
+                                        text
+                                        icon="pi pi-home"
+                                        label="Trang chủ"
+                                    />
+                                </div>
+                                <div className="p-2">
+                                    <Button text icon="pi pi-bell" iconPos="left" label="Tin tức" onClick={() => {}} />
+                                </div>
                             </div>
-                            <div className="p-2">
-                                <Button text icon="pi pi-bell" iconPos="left" label="Tin tức" onClick={() => {}} />
-                            </div>
-                        </div>
+                        )}
                     </div>
-                    {getUserRole() !== UserRoles.STUDENT && (
+                    {getUserRole() === UserRoles.LECTURER && (
                         <div className="flex gap-2 align-items-center">
                             <div>
                                 <PopupState variant="popover" popupId="demo-popup-menu">

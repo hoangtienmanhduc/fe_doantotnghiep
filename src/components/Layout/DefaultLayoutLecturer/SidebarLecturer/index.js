@@ -7,8 +7,8 @@ const cx = classNames.bind(styles);
 function SidebarLecturer() {
     return (
         <div className="w-full">
-            <div className="text-primary flex justify-content-center align-items-center w-full">
-                <i className=" pi pi-user mr-2"></i> <h3>Ths. Nguyễn Minh Thuận</h3>
+            <div className="border-round-xl mb-3 mt-3 text-white bg-primary flex justify-content-start align-items-center w-full">
+                <i className="ml-2 pi pi-bars mr-2"></i> <h3 className="m-2">Danh sách</h3>
             </div>
             <button className={cx('button')} onClick={() => (window.location.href = '/')}>
                 <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
@@ -21,14 +21,6 @@ function SidebarLecturer() {
             <button className={cx('button')} onClick={() => (window.location.href = '/')}>
                 <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
                 <p>Tích hợp tài khoản</p>
-            </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Đổi mật khẩu</p>
-            </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Đăng xuất</p>
             </button>
             <p
                 className="text-primary"

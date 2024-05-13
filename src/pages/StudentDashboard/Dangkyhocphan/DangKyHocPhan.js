@@ -420,7 +420,7 @@ const Dangkyhocphan = () => {
                                             <th>{rowData?.lecturerName}</th>
                                             <th>{rowData?.lecturerCode}</th>
                                             <th>{rowData?.maxStudents}</th>
-                                            <th>{rowData?.registered ? rowData?.registered : 0}</th>
+                                            <th>{rowData?.numberOfStudents ? rowData?.numberOfStudents : 0}</th>
                                             <th>
                                                 {!!rowData?.sectionClassStatus
                                                     ? rowData?.sectionClassStatus === 'open'

@@ -91,7 +91,13 @@ const Lichtrinhgiangday = () => {
                         ?.map((item) => (
                             <div
                                 key={item.id}
-                                className="font-semibold m-1 border-round surface-100 text-800 p-2 flex flex-column justify-content-start align-items-center"
+                                className={`${
+                                    item?.scheduleType === 'test'
+                                        ? 'bg-yellow-400'
+                                        : item?.scheduleType === 'suspended'
+                                        ? 'bg-red-100'
+                                        : 'surface-100'
+                                } font-semibold m-1 border-round text-800 p-2 flex flex-column justify-content-start align-items-center`}
                                 style={{
                                     textAlign: 'center',
                                 }}
