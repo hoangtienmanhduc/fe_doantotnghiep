@@ -60,7 +60,7 @@ const ProgramForm = forwardRef((props, ref) => {
     const allCourseIdSelected = useMemo(() => {
         let allCourses = new Set([]);
 
-        if (!!termData && termData.length > 1) {
+        if (!!termData && termData.length > 0) {
             for (let i = 0; i < termData.length; i++) {
                 if (termData[i]?.programCourses && termData[i].programCourses.length > 0) {
                     termData[i].programCourses.forEach((course) => {

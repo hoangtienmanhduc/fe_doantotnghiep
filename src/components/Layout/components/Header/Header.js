@@ -1,5 +1,5 @@
 import images from '~/assets/images';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
@@ -10,25 +10,6 @@ import MenuUtils from '~/components/Popper/Menu';
 import { UserRoles } from '~/App';
 import { getUserInfo } from '~/api/user/UserService';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-const MENU_ITEMS = [
-    {
-        title: 'Thông tin cá nhân',
-        to: '/thongtincanhan',
-    },
-    {
-        title: 'Đổi mật khẩu',
-        to: '/doimatkhau',
-    },
-    {
-        title: 'Giao diện quản lý',
-        to: '/admin',
-    },
-    {
-        title: 'Đăng xuất',
-        command: () => clearStorage(),
-        to: '/',
-    },
-];
 
 const buttonClickKeHoachGiangDay = (popupState) => {
     window.location.assign('/kehoachgiangday');
@@ -47,6 +28,38 @@ const buttonClickLichThiKetThucHocPhan = (popupState) => {
 const QueryKey = 'User-Info';
 
 function Header() {
+    const MENU_ITEMS = useMemo(() => {
+        let menuList = [
+            {
+                key: 'info',
+                title: 'Thông tin cá nhân',
+                to: '/thongtincanhan',
+            },
+            {
+                key: 'changepassword',
+                title: 'Đổi mật khẩu',
+                to: '/doimatkhau',
+            },
+            {
+                key: 'manage',
+                title: 'Giao diện quản lý',
+                to: '/admin',
+            },
+            {
+                key: 'logout',
+                title: 'Đăng xuất',
+                command: () => clearStorage(),
+                to: '/',
+            },
+        ];
+
+        if (getUserRole() !== UserRoles.ADMIN) {
+            menuList = menuList.filter((item) => item?.key !== 'manage');
+        }
+
+        return menuList;
+    }, []);
+
     const { data: userInfo } = useQuery([QueryKey, getUserId()], () => getUserInfo(getUserId(), getUserId()), {
         enabled: !!getUserId(),
     });

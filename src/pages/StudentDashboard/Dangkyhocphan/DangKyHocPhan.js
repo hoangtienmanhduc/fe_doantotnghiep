@@ -53,12 +53,13 @@ const Dangkyhocphan = () => {
     });
 
     const { data: sectionList, refetch: refetchSection } = useQuery(
-        [QueryKeySection, getUserId(), selectedTerm],
+        [QueryKeySection, getUserId(), selectedTerm, selectedRegistration],
         () =>
             getListSectionInfo(getUserId(), {
                 termId: selectedTerm,
                 studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
                 createStatus: true,
+                isRegisterBefore: selectedRegistration !== 'new_learning',
             }),
         {
             enabled: !!getUserId() && !!selectedTerm,
