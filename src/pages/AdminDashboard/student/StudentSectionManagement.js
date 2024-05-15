@@ -4,9 +4,13 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { getListLecturerInfo } from '~/api/lecturer/LecturerService';
-import { changeRegistrationStatus, getPageRegistrationInfo } from '~/api/registration/RegistrationService';
+import {
+    changeRegistrationStatus,
+    deletedRegistration,
+    getPageRegistrationInfo,
+} from '~/api/registration/RegistrationService';
 import { getListSectionInfo } from '~/api/section/SectionService';
 import { getListTermInfo } from '~/api/term/TermService';
 import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
@@ -15,6 +19,7 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import { Dropdown } from 'primereact/dropdown';
 import { showNotification } from '~/components/notification/NotificationService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
+import { useParams } from 'react-router-dom';
 const QueryKeyLecturerOptions = 'Lecturer-Options';
 const QueryKeySectionOptions = 'Section-Options';
 const QueryKeyTerm = 'Term-Options';
@@ -27,9 +32,12 @@ const initialPageable = {
     sortOrder: -1,
 };
 const StudentSectionManagement = () => {
+    const { id: idString } = useParams();
+    const id = useMemo(() => {
+        return !!idString ? parseInt(idString) : null;
+    }, [idString]);
     const [pageable, setPageable] = useState({ ...initialPageable });
-    const [filterRequest, setFilterRequest] = useState({ sectionClassType: 'theory' });
-    const [selectedSectionClass, setSelectedSectionClass] = useState(null);
+    const [filterRequest, setFilterRequest] = useState({ sectionClassType: 'theory', studentId: id });
     const [selectedStudentSectionClass, setSelectedStudentSectionClass] = useState(null);
     const [registrationStatus, setRegistrationStatus] = useState(null);
     const studentSectionRef = useRef(null);
@@ -71,6 +79,7 @@ const StudentSectionManagement = () => {
         { field: 'credits', header: 'Số tín chỉ học tập' },
         { field: 'costCredits', header: 'Số tín chỉ học phí' },
         { field: 'registrationStatus', header: 'Tình trạng đăng ký học phần' },
+        { field: 'sectionClasses', header: 'Lớp đã đăng ký của học phần' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -92,6 +101,19 @@ const StudentSectionManagement = () => {
             setSelectedStudentSectionClass(null);
             setRegistrationStatus(null);
             return;
+        }
+    };
+
+    const handleOnDeleteRegistraion = async () => {
+        if (selectedStudentSectionClass) {
+            const response = await deletedRegistration(getUserId(), selectedStudentSectionClass);
+
+            if (response === HTTP_STATUS_OK) {
+                showNotification('success', 'Thành công', 'Cập nhật trạng thái đăng ký thành công !!');
+
+                refetch();
+                return;
+            }
         }
     };
 
@@ -248,6 +270,7 @@ const StudentSectionManagement = () => {
                                             raised
                                             onClick={(e) => {
                                                 setSelectedStudentSectionClass(rowData?.id);
+                                                setRegistrationStatus(rowData?.registrationStatus);
                                                 op.current.toggle(e);
                                             }}
                                         />
@@ -256,12 +279,14 @@ const StudentSectionManagement = () => {
                                                 <p>Trạng thái đăng ký</p>
                                                 <span className="w-full">
                                                     <Dropdown
+                                                        disabled={registrationStatus === 'cancel_register'}
                                                         value={registrationStatus || null}
                                                         onChange={(e) => setRegistrationStatus(e.target.value)}
                                                         options={[
-                                                            { key: 'registered', label: 'Đã đăng ký' },
-                                                            { key: 'canceled', label: 'Đã huỷ' },
-                                                            { key: 'waiting', label: 'Đang chờ' },
+                                                            { key: 'new_learning', label: 'Đăng ký học mới' },
+                                                            { key: 'again_learning', label: 'Đăng ký học lại' },
+                                                            { key: 'improve_learning', label: 'Đăng ký học cải thiện' },
+                                                            { key: 'cancel_register', label: 'Huỷ đăng ký' },
                                                         ]}
                                                         optionLabel="label"
                                                         optionValue="key"
@@ -271,12 +296,20 @@ const StudentSectionManagement = () => {
                                                 </span>
                                             </div>
                                             <hr />
-                                            <div className="w-full">
+                                            <div className="w-full mb-2">
                                                 <Button
                                                     className={`w-full font-bold`}
                                                     icon={'pi pi-check'}
                                                     label={'Xác nhận'}
                                                     onClick={handleOnChangeStatus}
+                                                />
+                                            </div>
+                                            <div className="w-full">
+                                                <Button
+                                                    className={`w-full font-bold bg-red-400`}
+                                                    icon={'pi pi-trash'}
+                                                    label={'Xoá bỏ đăng ký'}
+                                                    onClick={handleOnDeleteRegistraion}
                                                 />
                                             </div>
                                         </OverlayPanel>
@@ -289,6 +322,14 @@ const StudentSectionManagement = () => {
                                             ? 'Học lại'
                                             : rowData[col.field] === 'improve_learning'
                                             ? 'Học cải thiện'
+                                            : rowData[col.field] === 'cancel_register'
+                                            ? 'Đã huỷ đăng ký'
+                                            : '-'}
+                                    </div>
+                                ) : col.field === 'sectionClasses' ? (
+                                    <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
+                                        {rowData[col.field] && rowData[col.field]?.length > 0
+                                            ? rowData[col.field].map((sectionClass) => sectionClass.code).join(', ')
                                             : '-'}
                                     </div>
                                 ) : (

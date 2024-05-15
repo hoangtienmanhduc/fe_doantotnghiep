@@ -626,7 +626,7 @@ const Dangkyhocphan = () => {
                                     <th>{new Date(studentSection?.createdAt).toLocaleDateString()}</th>
 
                                     <th>
-                                        {studentSection?.registrationStatus === 'canceled'
+                                        {studentSection?.registrationStatus === 'cancel_register'
                                             ? 'Đã huỷ bỏ đăng ký'
                                             : 'Đã đăng ký'}
                                     </th>

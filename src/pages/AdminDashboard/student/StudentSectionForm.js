@@ -122,7 +122,7 @@ const StudentSectionForm = forwardRef((props, ref) => {
 
         const toPostData = {
             ...data,
-            userId: id,
+            studentId: id,
         };
 
         const response = await createOrUpdateGenericRegistration(getUserId(), toPostData);
@@ -214,8 +214,8 @@ const StudentSectionForm = forwardRef((props, ref) => {
                                         }
                                         filter
                                         options={sectionClassOptions}
-                                        optionLabel="name"
                                         optionValue="id"
+                                        optionLabel="name"
                                         placeholder="Hãy chọn lớp học phần muốn đăng ký (Bắt buộc)"
                                         className="w-full"
                                     />

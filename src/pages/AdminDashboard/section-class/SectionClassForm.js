@@ -598,6 +598,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                     className={`p-button font-bold mr-2`}
                                     icon={'pi pi-plus'}
                                     label={'Thêm mới'}
+                                    disabled={data?.numberOfStudents && data?.numberOfStudents > 0}
                                     onClick={() => setIsAddTime(true)}
                                 />
                             </div>
@@ -616,36 +617,41 @@ const SectionClassForm = forwardRef((props, ref) => {
                                     <Column field="periodStart" header="Tiết bắt đầu"></Column>
                                     <Column field="periodEnd" header="Tiết kết thúc"></Column>
                                     <Column field="note" header="Ghi chú"></Column>
-                                    <Column
-                                        field="action"
-                                        header="Thao tác"
-                                        body={(rowData, idx) => {
-                                            return (
-                                                <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
-                                                    <Button
-                                                        text
-                                                        icon="pi pi-pencil"
-                                                        rounded
-                                                        raised
-                                                        onClick={() => {
-                                                            setTimeData({ ...rowData });
-                                                            setIsAddTime(true);
-                                                            setEditData({ ...rowData });
-                                                        }}
-                                                    />
-                                                    <Button
-                                                        text
-                                                        icon="pi pi-times"
-                                                        rounded
-                                                        raised
-                                                        onClick={() => {
-                                                            handleOnDeleteTime(rowData);
-                                                        }}
-                                                    />
-                                                </div>
-                                            );
-                                        }}
-                                    ></Column>
+                                    {data?.numberOfStudents && data?.numberOfStudents < 1 && (
+                                        <Column
+                                            field="action"
+                                            header="Thao tác"
+                                            body={(rowData, idx) => {
+                                                return (
+                                                    <div
+                                                        className="overflow-dot overflow-text-2"
+                                                        style={{ width: '100%' }}
+                                                    >
+                                                        <Button
+                                                            text
+                                                            icon="pi pi-pencil"
+                                                            rounded
+                                                            raised
+                                                            onClick={() => {
+                                                                setTimeData({ ...rowData });
+                                                                setIsAddTime(true);
+                                                                setEditData({ ...rowData });
+                                                            }}
+                                                        />
+                                                        <Button
+                                                            text
+                                                            icon="pi pi-times"
+                                                            rounded
+                                                            raised
+                                                            onClick={() => {
+                                                                handleOnDeleteTime(rowData);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                );
+                                            }}
+                                        ></Column>
+                                    )}
                                 </DataTable>
                             </div>
                         </div>

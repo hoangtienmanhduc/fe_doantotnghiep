@@ -81,6 +81,15 @@ export function changeRegistrationStatus(userId, data = {}) {
         .catch((error) => console.log(error));
 }
 
+export function deletedRegistration(userId, id) {
+    return axiosInstance
+        .post(`${BACKEND_ENDPOINT}/registration/deletedRegistration`, null, {
+            params: { userId, id },
+        })
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}
+
 export function changeStudentTuitionStatus(userId, data = {}) {
     return axiosInstance
         .post(`${BACKEND_ENDPOINT}/studentTuition/changeStatus`, data, {
