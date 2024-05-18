@@ -16,7 +16,7 @@ const StudentInformation = () => {
         return !!idString ? parseInt(idString) : null;
     }, [idString]);
 
-    const { data: userData } = useQuery([QueryKey, getUserId()], () => getUserInfoByStudentId(getUserId(), id), {
+    const { data: userData } = useQuery([QueryKey, getUserId(), id], () => getUserInfoByStudentId(getUserId(), id), {
         enabled: !!getUserId() && !!id,
     });
 
