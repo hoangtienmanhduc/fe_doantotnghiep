@@ -163,7 +163,6 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
             sectionClassId: data?.id,
             learningDate: !isAddNew ? new Date(selectedSchedule?.learningDate) : learningDate,
         };
-        debugger;
 
         if (!toPostData?.room) {
             showNotification('error', 'Lỗi', 'Phòng học của thời khoá biểu không được trống !!');

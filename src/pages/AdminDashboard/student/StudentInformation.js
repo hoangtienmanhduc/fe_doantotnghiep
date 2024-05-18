@@ -4,7 +4,7 @@ import StudentProfile from './StudentProfile';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getUserId } from '~/components/authentication/AuthUtils';
-import { getUserInfo } from '~/api/user/UserService';
+import { getUserInfo, getUserInfoByStudentId } from '~/api/user/UserService';
 import StudentSectionManagement from './StudentSectionManagement';
 import StudentTuition from './StudentTuition';
 
@@ -16,7 +16,7 @@ const StudentInformation = () => {
         return !!idString ? parseInt(idString) : null;
     }, [idString]);
 
-    const { data: userData } = useQuery([QueryKey, getUserId()], () => getUserInfo(getUserId(), id), {
+    const { data: userData } = useQuery([QueryKey, getUserId()], () => getUserInfoByStudentId(getUserId(), id), {
         enabled: !!getUserId() && !!id,
     });
 

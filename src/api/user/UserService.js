@@ -12,6 +12,17 @@ export function getUserInfo(userId, id) {
         .catch((error) => console.log(error));
 }
 
+export function getUserInfoByStudentId(userId, id) {
+    return axiosInstance
+        .get(`${BACKEND_ENDPOINT}/user/getByStudentId`, {
+            params: { userId, id },
+        })
+        .then((res) => {
+            return res.data;
+        })
+        .catch((error) => console.log(error));
+}
+
 export function createOrUpdateGenericUser(userId, data = {}) {
     return axiosInstance
         .post(`${BACKEND_ENDPOINT}/user/createOrUpdate`, data, {

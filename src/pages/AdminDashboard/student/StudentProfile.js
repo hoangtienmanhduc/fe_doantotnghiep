@@ -5,7 +5,7 @@ import { contactList, infoList } from './StudentConstant';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { showNotification } from '~/components/notification/NotificationService';
-import { changePassword } from '~/components/authentication/AuthEndPoint';
+import { changePassword, resetPassword } from '~/components/authentication/AuthEndPoint';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { Password } from 'primereact/password';
 
@@ -14,11 +14,6 @@ const StudentProfile = ({ data = {} }) => {
     const [passwordData, setPasswordData] = useState(null);
 
     const handleOnSubmitPassword = useCallback(async () => {
-        if (!passwordData?.oldPassword) {
-            showNotification('error', 'Lỗi', 'Mật khẩu cũ không được để trống !!');
-            return;
-        }
-
         if (!passwordData?.newPassword) {
             showNotification('error', 'Lỗi', 'Mật khẩu mới không được để trống !!');
             return;
@@ -33,7 +28,7 @@ const StudentProfile = ({ data = {} }) => {
             showNotification('error', 'Lỗi', 'Mật khẩu mới và xác nhận mật khẩu không trùng khớp !!');
             return;
         }
-        const response = await changePassword({ ...passwordData, usernameOrEmail: data?.email });
+        const response = await resetPassword({ ...passwordData, usernameOrEmail: data?.email });
 
         if (response === HTTP_STATUS_OK) {
             showNotification('success', 'Thành công', 'Cập nhật tài khoản thành công !!');
@@ -124,25 +119,6 @@ const StudentProfile = ({ data = {} }) => {
                     {activeTab === 'account' && (
                         <div className="col-12 surface-50 border-round-xl">
                             <h1 className="text-primary text-center">Đổi mật khẩu</h1>
-                            <div className="col-12 grid ml-0">
-                                <div className="col-12">
-                                    <span className="w-full">
-                                        <div className="flex align-items-center justify-content-between w-full mb-2">
-                                            <p className="m-0">Mật khẩu cũ</p>
-                                        </div>
-                                        <Password
-                                            pt={{
-                                                input: { className: 'w-full' },
-                                            }}
-                                            value={passwordData?.oldPassword || ''}
-                                            onChange={(e) =>
-                                                setPasswordData({ ...passwordData, oldPassword: e.target.value })
-                                            }
-                                            className="col-12"
-                                        />
-                                    </span>
-                                </div>
-                            </div>
                             <div className="col-12 grid ml-0">
                                 <div className="col-12">
                                     <span className="w-full">

@@ -28,7 +28,6 @@ const Home = () => {
     const creditData = useMemo(() => {
         let courseOfPrograms = []; // Total
         if (programData) {
-            debugger;
             if (programData?.program?.programTerms && programData?.program?.programTerms?.length > 0) {
                 for (let i = 0; i < programData?.program?.programTerms?.length; i++) {
                     if (programData?.program?.programTerms[i].programCourses?.length > 0) {
@@ -66,7 +65,6 @@ const Home = () => {
                         <i className="pi pi-user mr-2"></i>Thông tin sinh viên
                         <hr />
                     </h2>
-
                     <div className="flex flex-column align-items-center justify-content-center col-12">
                         <Avatar className="bg-primary text-white" icon="pi pi-user" size="xlarge" shape="circle" />
                         <Button className="my-2" text label="Xem chi tiết" />

@@ -39,7 +39,6 @@ const PieChartDemo = ({ data = {} }) => {
                 },
             },
         };
-        debugger;
         setChartData(chartData);
         setChartOptions(options);
     }, [data]);

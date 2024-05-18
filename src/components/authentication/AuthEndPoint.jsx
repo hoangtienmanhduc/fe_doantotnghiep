@@ -28,3 +28,10 @@ export function changePassword(data) {
         .then((res) => res.data)
         .catch((error) => console.log(error));
 }
+
+export function resetPassword(data) {
+    return axiosInstance
+        .post(`${BACKEND_ENDPOINT}/user/resetPassword`, data)
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}

@@ -128,6 +128,7 @@ function Quanlydiemquatrinhhoctap() {
                         <Button
                             label="Nhập điểm QTHT"
                             icon="pi pi-send"
+                            disabled={sectionClassInfo && !sectionClassInfo?.inputResultEnable}
                             onClick={() => window.location.assign(`/nhapdiemquatrinhhoctap/${id}`)}
                         />
                         <Button
