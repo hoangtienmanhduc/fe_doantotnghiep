@@ -9,7 +9,7 @@ import { useCallback } from 'react';
 import { useRef } from 'react';
 import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
-import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
+import { getRefId, getUserId, getUserRole } from '~/components/authentication/AuthUtils';
 import { InputNumber } from 'primereact/inputnumber';
 import { createOrUpdateGenericSectionClass, getListSectionClassInfo } from '~/api/section/SectionClassService';
 import { SectionClassTypeOptions, dayInWeekOptions } from './SectionClassConstant';
@@ -20,6 +20,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { getListTermInfo } from '~/api/term/TermService';
+import { UserRoles } from '~/App';
 
 const QueryKeyLecturerOptions = 'Lecturer-Options';
 const QueryKeySectionOptions = 'Section-Options';
@@ -58,8 +59,14 @@ const SectionClassForm = forwardRef((props, ref) => {
     );
     const { data: sectionOptions } = useQuery(
         [QueryKeySectionOptions, getUserId(), data?.termId],
-        () => getListSectionInfo(getUserId(), { termId: data?.termId, studentId: getRefId() }, null, true),
-        { enabled: !!getUserId() && !!visible && !!data?.termId && !!getRefId() },
+        () =>
+            getListSectionInfo(
+                getUserId(),
+                { termId: data?.termId, studentId: getUserRole() === UserRoles.ADMIN ? null : getRefId() },
+                null,
+                true,
+            ),
+        { enabled: !!getUserId() && !!visible && !!data?.termId },
     );
 
     const { data: sectionClassOptions } = useQuery(
