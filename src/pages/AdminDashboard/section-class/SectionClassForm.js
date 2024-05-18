@@ -4,7 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useCallback } from 'react';
 import { useRef } from 'react';
 import { useImperativeHandle } from 'react';
@@ -39,7 +39,7 @@ const SectionClassForm = forwardRef((props, ref) => {
     const [data, setData] = useState({});
     const [editData, setEditData] = useState({});
     const [classType, setClassType] = useState(null);
-
+    const [selectedSection, setSelectedSection] = useState(null);
     const toast = useRef(null);
     const handleShowForm = useCallback((data) => {
         if (data && Object.keys(data)?.length > 0) {
@@ -279,9 +279,14 @@ const SectionClassForm = forwardRef((props, ref) => {
 
     const handleOnChange = useCallback(
         (key, value) => {
+            if (key === 'sectionId') {
+                let section = sectionOptions.find((item) => item?.id === value);
+                setSelectedSection(section);
+            }
+
             setData({ ...data, [key]: value });
         },
-        [data],
+        [data, sectionOptions],
     );
 
     const handleOnChangeTime = useCallback(
@@ -325,6 +330,17 @@ const SectionClassForm = forwardRef((props, ref) => {
             });
         }
     };
+
+    const sectionClassTypes = useMemo(() => {
+        let holderList = [...SectionClassTypeOptions];
+        if (selectedSection) {
+            if (selectedSection?.courseDuration && selectedSection.courseDuration?.practice < 1) {
+                holderList = holderList.filter((item) => item.key !== 'practice');
+            }
+        }
+
+        return holderList;
+    }, [selectedSection]);
 
     return (
         <>
@@ -478,10 +494,10 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         value={data.sectionId}
                                         onChange={(e) => handleOnChange('sectionId', e?.target.value)}
                                         options={sectionOptions}
+                                        optionValue="id"
                                         filter
                                         showClear
                                         optionLabel="fullName"
-                                        optionValue="id"
                                         placeholder="Hãy chọn học phần của lớp học phần"
                                         className="w-full"
                                     />
@@ -527,7 +543,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         disabled={!!data?.id}
                                         filter
                                         showClear
-                                        options={SectionClassTypeOptions}
+                                        options={sectionClassTypes}
                                         optionLabel="label"
                                         optionValue="key"
                                         placeholder="Hãy chọn loại cho lớp học phần"

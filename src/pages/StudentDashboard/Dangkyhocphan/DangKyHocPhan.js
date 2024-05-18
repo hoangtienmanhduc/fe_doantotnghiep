@@ -66,7 +66,7 @@ const Dangkyhocphan = () => {
         },
     );
 
-    const { data: sectionClassTheoryList } = useQuery(
+    const { data: sectionClassTheoryList, refetch: refetchSectionClassTheory } = useQuery(
         [QueryKeySectionClass, getUserId(), selectedSection?.id],
         () =>
             getListSectionClassInfo(getUserId(), {
@@ -76,6 +76,7 @@ const Dangkyhocphan = () => {
             }),
         {
             enabled: !!getUserId() && !!selectedSection?.id,
+            initialData: [],
         },
     );
 
@@ -108,20 +109,21 @@ const Dangkyhocphan = () => {
         onSuccess: (data) => {
             if (!!data && data === HTTP_STATUS_OK) {
                 showNotification('success', 'Thành công', 'Đăng ký học phần thành công !!');
-                refetch();
 
                 setSelectedSection(null);
                 setSelectedSectionClass(null);
                 setSelectTimeAndPlaceRef(null);
                 setSelectTimeAndPlace(null);
 
-                queryClient.setQueryData([QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm], {});
                 queryClient.setQueryData(
                     [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id],
                     () => {},
                 );
+                queryClient.setQueryData([QueryKeySectionClass, getUserId(), selectedSection?.id], () => {});
 
+                refetch();
                 refetchSection();
+                refetchSectionClassTheory();
             }
         },
     });
@@ -400,6 +402,7 @@ const Dangkyhocphan = () => {
                                 <th rowSpan="1">Trạng thái</th>
                             </tr>
                         </thead>
+                        {console.log(sectionClassTheoryList)}
                         {sectionClassTheoryList &&
                             sectionClassTheoryList?.length > 0 &&
                             sectionClassTheoryList
