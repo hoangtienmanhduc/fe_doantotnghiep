@@ -18,30 +18,6 @@ const MenuSidebar = () => {
                             label="Thông tin sinh viên"
                         />
                     </div>
-                    <div className="w-full">
-                        <Button
-                            className="w-full"
-                            onClick={() => window.location.assign('/')}
-                            text
-                            label="Ghi chú nhắc nhở"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Button
-                            className="w-full"
-                            onClick={() => window.location.assign('/capnhatthongtinsinhvien')}
-                            text
-                            label="Đề xuất cập nhật thông tin"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Button
-                            className="w-full"
-                            onClick={() => window.location.assign('/')}
-                            text
-                            label="Cập nhật thông tin ngân hàng"
-                        />
-                    </div>
                 </div>
             </div>
             <div className="mb-2">
@@ -64,22 +40,6 @@ const MenuSidebar = () => {
                             onClick={() => window.location.assign('/lichhoc')}
                             text
                             label="Lịch theo tuấn"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Button
-                            className="w-full"
-                            onClick={() => window.location.assign('/lichtheotiendo')}
-                            text
-                            label="Lịch theo tiến độ"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Button
-                            className="w-full"
-                            onClick={() => window.location.assign('/')}
-                            text
-                            label="Lịch học lớp danh nghĩa"
                         />
                     </div>
                 </div>
@@ -120,22 +80,6 @@ const MenuSidebar = () => {
                             onClick={() => window.location.assign('/tracuucongno')}
                             text
                             label="Tra cứu công nợ"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Button
-                            className="w-full"
-                            onClick={() => window.location.assign('/thanhtoantructuyen')}
-                            text
-                            label="Thanh toán trực tuyến"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Button
-                            className="w-full"
-                            onClick={() => window.location.assign('/phieutonghop')}
-                            text
-                            label="Phiếu thu tổng hợp"
                         />
                     </div>
                 </div>

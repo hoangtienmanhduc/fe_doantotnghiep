@@ -7,21 +7,6 @@ const cx = classNames.bind(styles);
 function SidebarLecturer() {
     return (
         <div className="w-full">
-            <div className="border-round-xl mb-3 mt-3 text-white bg-primary flex justify-content-start align-items-center w-full">
-                <i className="ml-2 pi pi-bars mr-2"></i> <h3 className="m-2">Danh sách</h3>
-            </div>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Thông tin cá nhân</p>
-            </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Lý lịch cán bộ - viên chức</p>
-            </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Tích hợp tài khoản</p>
-            </button>
             <p
                 className="text-primary"
                 style={{
@@ -33,21 +18,17 @@ function SidebarLecturer() {
             >
                 CÁC CHỨC NĂNG CHUNG
             </p>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
+            <button className={cx('button')} onClick={() => (window.location.href = '/kehoachgiangday')}>
                 <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Tin tức - thông báo</p>
+                <p>Kế hoạch giảng dạy</p>
             </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
+            <button className={cx('button')} onClick={() => (window.location.href = '/lichtrinhgiangday')}>
                 <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Lịch công việc</p>
+                <p>Lịch giảng dạy</p>
             </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
+            <button className={cx('button')} onClick={() => (window.location.href = '/lichthiketthuchocphan')}>
                 <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Tin nhắn</p>
-            </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Công việc - sự kiện</p>
+                <p>Lịch thi</p>
             </button>
             <p
                 className="text-primary"

@@ -10,6 +10,8 @@ import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
 import { getListScheduleInfo } from '~/api/schedule/ScheduleSevice';
 import { UserRoles } from '~/App';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
 
 const QueryKey = 'Schedule-List';
 const Lichhoc = () => {
@@ -32,10 +34,10 @@ const Lichhoc = () => {
 
     const CustomDatePickerInput = ({ value = currentDateFormatted, onClick = () => {} }) => {
         return (
-            <span className="p-input-icon-right" onClick={onClick}>
-                <i className="pi pi-calendar" />
+            <IconField className="p-input-icon-right" onClick={onClick}>
+                <InputIcon className="pi pi-calendar" />
                 <InputText value={value} placeholder="Chọn ngày" />
-            </span>
+            </IconField>
         );
     };
 
