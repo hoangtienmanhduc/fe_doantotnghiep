@@ -91,11 +91,20 @@ const Lichhoc = () => {
                         ?.map((item, idx) => (
                             <div
                                 key={idx}
-                                className="font-semibold m-1 border-round surface-100 text-800 p-2 flex flex-column justify-content-start align-items-center"
+                                className={`font-semibold m-1 border-round ${
+                                    item?.scheduleType === 'normal'
+                                        ? 'surface-100 text-700 '
+                                        : item?.scheduleType === 'test'
+                                        ? 'bg-yellow-400'
+                                        : item?.scheduleType === 'suspended'
+                                        ? 'bg-red-300'
+                                        : ''
+                                } p-2 flex flex-column justify-content-start align-items-center`}
                                 style={{
                                     textAlign: 'center',
                                 }}
                             >
+                                {console.log(item)}
                                 <br />
                                 <p className="p-0 m-0">{item.sectionName}</p>
                                 <p className="p-0 m-0">{item.sectionCode}</p>
