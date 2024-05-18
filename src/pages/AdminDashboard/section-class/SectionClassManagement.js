@@ -108,7 +108,6 @@ const SectionClassManagement = () => {
                     <p>Tìm kiếm</p>
                 </span>
                 <span className="p-input-icon-left w-full">
-                    <i className="pi pi-search" />
                     <InputText
                         value={filterRequest?.searchValue || ''}
                         placeholder="Nhập mã lớp học phần để tìm kiếm"

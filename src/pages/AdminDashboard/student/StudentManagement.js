@@ -156,7 +156,6 @@ const StudentManagement = () => {
                     <p>Tìm kiếm</p>
                 </span>
                 <span className="p-input-icon-left w-full">
-                    <i className="pi pi-search" />
                     <InputText
                         value={filterRequest?.searchValue || ''}
                         placeholder="Nhập mã sinh viên hoặc tên của sinh viên để tìm kiếm"
