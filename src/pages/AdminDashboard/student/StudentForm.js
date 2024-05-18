@@ -223,6 +223,7 @@ const StudentForm = forwardRef((props, ref) => {
                             <span className="w-full">
                                 <Dropdown
                                     value={data?.specializationClassId || null}
+                                    disabled={!data?.specializationId}
                                     onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
                                     options={specializationClassOptions}
                                     optionLabel="name"
