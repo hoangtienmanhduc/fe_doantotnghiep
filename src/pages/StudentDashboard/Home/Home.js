@@ -38,15 +38,21 @@ const Home = () => {
                     }
                 }
             }
-            const courseLearned = programData?.courses?.length; // Learned
+            const courseLearned = programData?.courses; // Learned
             let courseLeft = [...courseOfPrograms];
-            if (courseOfPrograms?.length > 0) {
-                if (programData?.courses?.length > 0) {
-                    courseLeft = courseOfPrograms.filter((item) => !courseLearned.include(item?.id));
-                }
-            }
+            // if (courseOfPrograms?.length > 0) {
+            //     if (programData?.courses?.length > 0) {
+            //         courseLeft = courseOfPrograms.filter((item) => !courseLearned.includes(item?.id));
+            //     }
+            // }
 
-            return { learned: courseLearned, left: courseLeft.length };
+            let learned = courseLearned.reduce((sum, course) => sum + course?.credits, 0);
+            let left = courseLeft.reduce((sum, course) => sum + course?.credits, 0);
+
+            return {
+                learned: learned,
+                left: left - learned,
+            };
         }
 
         return {};

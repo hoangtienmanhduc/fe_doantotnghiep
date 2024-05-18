@@ -1,3 +1,4 @@
+import { fontSize } from '@mui/system';
 import { Chart } from 'primereact/chart';
 import React, { useState, useEffect } from 'react';
 
@@ -28,6 +29,13 @@ const PieChartDemo = ({ data = {} }) => {
             plugins: {
                 legend: {
                     labels: {},
+                },
+                title: {
+                    display: true,
+                    text: 'Tổng tiến độ hoàn thành: ' + data?.learned + '/' + [data?.left + data?.learned],
+                    font: {
+                        size: 15,
+                    },
                 },
             },
         };

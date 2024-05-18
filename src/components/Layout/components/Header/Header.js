@@ -77,7 +77,6 @@ function Header() {
                         ></img>
                         <div className="md:hidden sm:hidden xs:hidden lg:flex lg:align-items-center mr-3">
                             <span className="p-input-icon-left mr-3">
-                                <i className="pi pi-search" />
                                 <InputText placeholder="Search..." value={''} onChange={(e) => {}} />
                             </span>
                             <div className="">
