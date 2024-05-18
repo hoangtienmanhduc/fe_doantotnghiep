@@ -2,16 +2,55 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faChartColumn, faDollarSign, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { useQuery } from '@tanstack/react-query';
-import { getUserId } from '~/components/authentication/AuthUtils';
+import { getRefId, getUserId } from '~/components/authentication/AuthUtils';
 import { getUserInfo } from '~/api/user/UserService';
 import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
+import PieChartDemo from '~/components/chart/ProgressChart';
+import { getListStudentProgramInfo } from '~/api/program/ProgramSevice';
+import { useMemo } from 'react';
 
 const QueryKey = 'Home';
 const Home = () => {
     const { data: userInfo } = useQuery([QueryKey, getUserId()], () => getUserInfo(getUserId(), getUserId()), {
         enabled: !!getUserId(),
     });
+
+    // Use Query
+    const { data: programData } = useQuery(
+        [QueryKey, getRefId()],
+        () => getListStudentProgramInfo(getUserId(), getRefId()),
+        {
+            enabled: !!getUserId() && !!getRefId(),
+        },
+    );
+
+    const creditData = useMemo(() => {
+        let courseOfPrograms = []; // Total
+        if (programData) {
+            debugger;
+            if (programData?.program?.programTerms && programData?.program?.programTerms?.length > 0) {
+                for (let i = 0; i < programData?.program?.programTerms?.length; i++) {
+                    if (programData?.program?.programTerms[i].programCourses?.length > 0) {
+                        for (let j = 0; j < programData?.program?.programTerms[i].programCourses?.length; j++) {
+                            courseOfPrograms.push(programData?.program?.programTerms[i].programCourses[j]);
+                        }
+                    }
+                }
+            }
+            const courseLearned = programData?.courses?.length; // Learned
+            let courseLeft = [...courseOfPrograms];
+            if (courseOfPrograms?.length > 0) {
+                if (programData?.courses?.length > 0) {
+                    courseLeft = courseOfPrograms.filter((item) => !courseLearned.include(item?.id));
+                }
+            }
+
+            return { learned: courseLearned, left: courseLeft.length };
+        }
+
+        return {};
+    }, [programData]);
 
     return (
         <div className="w-full mt-3">
@@ -94,11 +133,11 @@ const Home = () => {
                 </div>
                 <div className="xs:col-6 sm:col-6 md:col-6 col-12 h-full">
                     <h2>
-                        <i className="pi pi-bell mr-2"></i>Nhắc nhở mới, chưa xem
+                        <i className="pi pi-bell mr-2"></i>Tiến độ học tập
                         <hr />
                     </h2>
                     <div className="h-full flex flex-column col-12 p-0 m-0 justify-content-around gap-2 align-items-center">
-                        <div className="col-12 bg-blue-100 border-round flex flex-column align-items-center">
+                        {/* <div className="col-12 bg-blue-100 border-round flex flex-column align-items-center">
                             <h2 className="flex align-items-center text-blue-400">
                                 Lịch học trong tuần <i className="pi pi-calendar text-3xl ml-3"></i>
                             </h2>
@@ -125,7 +164,8 @@ const Home = () => {
                                 className="text-orange-400 bg-orange-100"
                                 onClick={() => {}}
                             />
-                        </div>
+                        </div> */}
+                        <PieChartDemo data={creditData} />
                     </div>
                 </div>
             </div>
