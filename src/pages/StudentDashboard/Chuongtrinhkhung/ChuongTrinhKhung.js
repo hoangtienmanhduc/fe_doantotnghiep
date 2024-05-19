@@ -27,7 +27,6 @@ const Chuongtrinhkhung = () => {
     const totalCredits = useMemo(() => {
         let totalCompulsory = 0;
         let totalElective = 0;
-
         if (data && data?.program && data?.program?.programTerms?.length > 0) {
             for (let i = 0; i < data?.program?.programTerms?.length; i++) {
                 const termData = { ...data?.program?.programTerms[i] };
@@ -35,10 +34,13 @@ const Chuongtrinhkhung = () => {
                     termData.programCourses.forEach((course) => {
                         if (course.courseType === 'compulsory') {
                             totalCompulsory += course.credits;
-                        } else if (course.courseType === 'elective') {
-                            totalElective += course.credits;
                         }
+                        // else if (course.courseType === 'elective') {
+                        //     totalElective += course.credits;
+                        // }
                     });
+
+                    totalElective += termData?.totalElective;
                 }
             }
         }
