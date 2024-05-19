@@ -18,10 +18,12 @@ function Ketquahoctap() {
     );
 
     const termListGroup = useMemo(() => {
+        let list = new Set();
         if (sectionStudentList && sectionStudentList?.length > 0) {
-            return sectionStudentList.map((sectionStudent) => {
-                return sectionStudent.termName;
+            sectionStudentList.forEach((sectionStudent) => {
+                list.add(sectionStudent.termName);
             });
+            return Array.from(list);
         }
 
         return [];
@@ -128,12 +130,12 @@ function Ketquahoctap() {
                                                             <td>
                                                                 {!sectionStudent?.totalPoint
                                                                     ? ''
-                                                                    : sectionStudent.totalPoint}
+                                                                    : sectionStudent.totalPoint.toFixed(2)}
                                                             </td>
                                                             <td>
                                                                 {!sectionStudent?.totalPoint
                                                                     ? ''
-                                                                    : sectionStudent.totalPoint * (4 / 10)}
+                                                                    : (sectionStudent.totalPoint * (4 / 10)).toFixed(2)}
                                                             </td>
                                                             <td>
                                                                 {!sectionStudent?.totalPoint

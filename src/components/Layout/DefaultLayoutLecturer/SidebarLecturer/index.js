@@ -18,17 +18,29 @@ function SidebarLecturer() {
             >
                 CÁC CHỨC NĂNG CHUNG
             </p>
-            <button className={cx('button')} onClick={() => (window.location.href = '/kehoachgiangday')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Kế hoạch giảng dạy</p>
+            <button
+                style={{ height: '50px' }}
+                className={cx('button')}
+                onClick={() => (window.location.href = '/kehoachgiangday')}
+            >
+                <img style={{ width: '30px', height: '30px' }} src={images.So} alt="So"></img>
+                <p style={{ marginLeft: '10px' }}>Kế hoạch giảng dạy</p>
             </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/lichtrinhgiangday')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Lịch giảng dạy</p>
+            <button
+                style={{ height: '50px' }}
+                className={cx('button')}
+                onClick={() => (window.location.href = '/lichtrinhgiangday')}
+            >
+                <img style={{ width: '30px', height: '30px' }} src={images.Lich} alt="Lich"></img>
+                <p style={{ marginLeft: '10px' }}>Lịch giảng dạy</p>
             </button>
-            <button className={cx('button')} onClick={() => (window.location.href = '/lichthiketthuchocphan')}>
-                <img style={{ width: '40px', height: '40px' }} src={images.Logo} alt="Logo"></img>
-                <p>Lịch thi</p>
+            <button
+                style={{ height: '50px' }}
+                className={cx('button')}
+                onClick={() => (window.location.href = '/lichthiketthuchocphan')}
+            >
+                <img style={{ width: '30px', height: '30px' }} src={images.Lichthi} alt="Lichthi"></img>
+                <p style={{ marginLeft: '10px' }}>Lịch thi</p>
             </button>
             <p
                 className="text-primary"

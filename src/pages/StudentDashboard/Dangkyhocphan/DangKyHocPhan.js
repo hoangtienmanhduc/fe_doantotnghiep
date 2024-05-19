@@ -393,7 +393,9 @@ const Dangkyhocphan = () => {
                     <table border="1" className="w-full">
                         <thead>
                             <tr className="bg-primary">
-                                <th rowSpan="1">Mã LHP</th>
+                                <th style={{ height: '3rem' }} rowSpan="1">
+                                    Mã LHP
+                                </th>
                                 <th rowSpan="1">Tên lớp học phần</th>
                                 <th rowSpan="1">Giảng viên giảng dạy</th>
                                 <th rowSpan="1">Mã giảng viên</th>
