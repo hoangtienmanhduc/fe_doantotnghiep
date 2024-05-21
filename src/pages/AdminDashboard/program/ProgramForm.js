@@ -182,6 +182,49 @@ const ProgramForm = forwardRef((props, ref) => {
             isError = true;
         }
 
+        let sumElective = selectedTerm?.programCourses.reduce((sum, item) => {
+            if (item.courseType === 'elective') {
+                return sum + item?.credits;
+            }
+
+            return sum;
+        }, 0);
+
+        if (selectedTerm?.minimumElective && selectedTerm?.minimumElective > 0) {
+            if (selectedTerm?.minimumElective > sumElective) {
+                toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'Số tín chỉ tự chọn tối thiểu của học kỳ này không hợp lệ !!',
+                });
+                isError = true;
+            }
+        } else if (sumElective > 0) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Số tín chỉ tự chọn tối thiểu của học kỳ này phải thoả với môn học tự chọn trong kỳ !!',
+            });
+            isError = true;
+        }
+
+        let sumCompulsory = selectedTerm?.programCourses.reduce((sum, item) => {
+            if (item.courseType === 'compulsory') {
+                return sum + item?.credits;
+            }
+
+            return sum;
+        }, 0);
+
+        if (sumCompulsory < 1) {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Số môn học bắt buộc của học kỳ phải lớn hơn 0 !!',
+            });
+            isError = true;
+        }
+
         if (!isError) {
             const toSaveTermData = {
                 ...selectedTerm,
@@ -375,6 +418,12 @@ const ProgramForm = forwardRef((props, ref) => {
                                         />
                                     </div>
                                     <div className="col-12 mb-2">
+                                        {/* <Message
+                                            severity="warn"
+                                            text="Nếu số tín chỉ tự chọn tối thiểu bằng 0 thì những môn học tự chọn trong kỳ
+                                            này sẽ trở thành bắt buộc cho sinh viên thuộc chuyên ngành này"
+                                        /> */}
+
                                         <div className="w-full m-2">
                                             <DataTable
                                                 value={selectedTerm?.programCourses || []}
@@ -420,7 +469,7 @@ const ProgramForm = forwardRef((props, ref) => {
                                                         </div>
                                                     )}
                                                 ></Column>
-                                                <Column
+                                                {/* <Column
                                                     field="action"
                                                     header="Thao tác"
                                                     body={(rowData) => (
@@ -437,7 +486,7 @@ const ProgramForm = forwardRef((props, ref) => {
                                                             />
                                                         </div>
                                                     )}
-                                                ></Column>
+                                                ></Column> */}
                                             </DataTable>
                                         </div>
                                     </div>
