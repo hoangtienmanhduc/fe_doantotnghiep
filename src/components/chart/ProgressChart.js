@@ -14,12 +14,12 @@ const PieChartDemo = ({ data = {} }) => {
                 {
                     data: [data?.learned, data?.left],
                     backgroundColor: [
-                        documentStyle.getPropertyValue('--cyan-500'),
-                        documentStyle.getPropertyValue('--red-500'),
+                        documentStyle.getPropertyValue('--cyan-400'),
+                        documentStyle.getPropertyValue('--red-400'),
                     ],
                     hoverBackgroundColor: [
-                        documentStyle.getPropertyValue('--cyan-300'),
-                        documentStyle.getPropertyValue('--red-300'),
+                        documentStyle.getPropertyValue('--cyan-200'),
+                        documentStyle.getPropertyValue('--red-200'),
                     ],
                     borderJoinStyle: 'bevel',
                 },

@@ -115,7 +115,7 @@ const SpecializationForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.facultyId || null}
                                     onChange={(e) => handleOnChange('facultyId', e?.target.value)}
-                                    options={facultyOptions}
+                                    options={facultyOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn khoa cho chuyên ngành..."

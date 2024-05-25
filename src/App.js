@@ -35,8 +35,10 @@ import Lichthiketthuchocphan from './pages/LecturerDashboard/Lichthiketthuchocph
 import Thongtinlophocphan from './pages/LecturerDashboard/Thongtinlophocphan/ThongTinLopHocPhan';
 import Quanlydiemquatrinhhoctap from './pages/LecturerDashboard/Quanlydiemquatrinhhoctap/QuanLyDiemQuaTrinhHocTap';
 import Nhapdiemquatrinhhoctap from './pages/LecturerDashboard/Nhapdiemquatrinhhoctap/NhapDiemQuaTrinhHocTap';
+import ThongTinGioHoc from './pages/StudentDashboard/Home/ThongTinGioHoc';
 export const UserRoles = {
     ADMIN: 'Admin',
+    STAFF: 'Staff',
     LECTURER: 'Lecturer',
     STUDENT: 'Student',
 };
@@ -66,6 +68,11 @@ function App() {
                     : getUserRole() === UserRoles.LECTURER
                     ? HomeLecturer
                     : AdminDashboard,
+                layout: !getAccessToken() ? null : DefaultLayoutSidebar,
+            },
+            {
+                path: '/tintuc',
+                component: !getAccessToken() ? Login : ThongTinGioHoc,
                 layout: !getAccessToken() ? null : DefaultLayoutSidebar,
             },
             {

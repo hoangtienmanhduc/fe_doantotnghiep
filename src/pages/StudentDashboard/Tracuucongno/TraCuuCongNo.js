@@ -126,7 +126,7 @@ const Tracuucongno = () => {
                                     )}
                                 </td>
                                 <td style={{ fontWeight: 'normal', textAlign: 'center', color: 'white' }}>
-                                    {!!registration.tuitionInvestigateStatus ? (
+                                    {!!registration.investigateStatus ? (
                                         <i className="pi pi-check p-2 border-circle bg-green-300"></i>
                                     ) : (
                                         <i className="pi pi-times p-2 border-circle bg-red-300"></i>
@@ -138,7 +138,6 @@ const Tracuucongno = () => {
             } else {
                 if (!!termOptions && termOptions?.length > 0) {
                     let holderHtml = [];
-
                     for (let i = 0; i < termOptions.length; i++) {
                         let credits = 0;
                         let initialFee = 0;
@@ -147,166 +146,158 @@ const Tracuucongno = () => {
                         let minusDeductions = 0;
                         let totalFee = 0;
                         if (
-                            registrationList?.filter((registration) => registration.termName === termOptions[i].name)
+                            registrationList?.filter((registration) => registration?.termId === termOptions[i].id)
                                 ?.length > 0
                         ) {
                             holderHtml.push(
-                                registrationList
-                                    ?.filter((registration) => registration.termName === termOptions[i].name)
-                                    .map((registration) => {
-                                        credits += registration?.costCredits;
-                                        initialFee += registration?.initialFee;
-                                        discountFee += registration?.discountFee;
-                                        plusDeductions += registration?.plusDeductions;
-                                        minusDeductions += registration?.minusDeductions;
-                                        totalFee += registration?.total;
-                                        return (
-                                            <React.Fragment key={registration?.id}>
-                                                <tr
-                                                    style={{
-                                                        backgroundColor: 'rgba(215, 237, 247, 0.15)',
-                                                        cursor: 'pointer',
-                                                    }}
-                                                    onClick={() => {
-                                                        if (selectCollapse.includes(registration?.id)) {
-                                                            setSelectCollapse(
-                                                                selectCollapse.filter(
-                                                                    (item) => item !== registration?.id,
-                                                                ),
-                                                            );
-                                                        } else {
-                                                            setSelectCollapse([...selectCollapse, registration?.id]);
-                                                        }
-                                                    }}
-                                                >
-                                                    <td
-                                                        style={{ height: '30px' }}
-                                                        className="text-primary font-bold "
-                                                        colSpan="19"
-                                                    >
-                                                        <div className="">
-                                                            <i
-                                                                className={`pi ${
-                                                                    !selectCollapse.includes(registration?.id)
-                                                                        ? 'pi-angle-down'
-                                                                        : 'pi-angle-right'
-                                                                } mr-2`}
-                                                            ></i>
-                                                            Đợt: {registration.termName}
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                {!selectCollapse.includes(registration?.id) && (
-                                                    <tr className={``}>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.termName}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.sectionCode}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.sectionName}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.costCredits}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.initialFee}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.discountAmount}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.discountFee}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.initialFee}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.registrationStatus === 'new_learning'
-                                                                ? 'Đăng ký học mới'
-                                                                : registration.registrationStatus === 'again_learning'
-                                                                ? 'Đăng ký học lại'
-                                                                : registration.registrationStatus === 'improve_learning'
-                                                                ? 'Đăng ký học cải thiện'
-                                                                : '-'}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.registrationStatus === 'canceled'
-                                                                ? 'Xoá bỏ đăng ký'
-                                                                : 'Đã đăng ký'}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.paymentDate
-                                                                ? new Date(
-                                                                      registration.paymentDate,
-                                                                  ).toLocaleDateString()
-                                                                : 'Hiện chưa chi trả'}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.total}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.plusDeductions
-                                                                ? registration.plusDeductions
-                                                                : 0}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.minusDeductions
-                                                                ? registration.minusDeductions
-                                                                : 0}
-                                                        </td>
-                                                        <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
-                                                            {registration.total}
-                                                        </td>
-                                                        <td
-                                                            className="text-white"
-                                                            style={{ fontWeight: 'normal', textAlign: 'center' }}
-                                                        >
-                                                            {registration.tuitionStatus === 'paid' ? (
-                                                                <i className="pi pi-check p-2 border-circle bg-green-300"></i>
-                                                            ) : (
-                                                                <i className="pi pi-times p-2 border-circle bg-red-300"></i>
-                                                            )}
-                                                        </td>
-
-                                                        <td
-                                                            className="text-white"
-                                                            style={{ fontWeight: 'normal', textAlign: 'center' }}
-                                                        >
-                                                            {!!registration.tuitionInvestigateStatus ? (
-                                                                <i className="pi pi-check p-2 border-circle bg-green-300"></i>
-                                                            ) : (
-                                                                <i className="pi pi-times p-2 border-circle bg-red-300"></i>
-                                                            )}
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                                {!selectCollapse.includes(registration?.id) && (
-                                                    <tr className="text-center font-semibold surface-100">
-                                                        <td style={{ height: '30px' }} rowSpan="1"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>{credits}</td>
-                                                        <td>{initialFee}</td>
-                                                        <td></td>
-                                                        <td>{discountFee}</td>
-                                                        <td>{initialFee}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>{totalFee}</td>
-                                                        <td>{plusDeductions}</td>
-                                                        <td>{minusDeductions}</td>
-                                                        <td>{totalFee}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                )}
-                                            </React.Fragment>
-                                        );
-                                    }),
+                                <tr
+                                    style={{
+                                        backgroundColor: 'rgba(215, 237, 247, 0.15)',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={() => {
+                                        if (selectCollapse.includes(termOptions[i].id)) {
+                                            setSelectCollapse(
+                                                selectCollapse.filter((item) => item !== termOptions[i].id),
+                                            );
+                                        } else {
+                                            setSelectCollapse([...selectCollapse, termOptions[i].id]);
+                                        }
+                                    }}
+                                >
+                                    <td style={{ height: '30px' }} className="text-primary font-bold" colSpan="19">
+                                        <div className="flex algin-items-center pl-2">
+                                            <i
+                                                className={`pi ${
+                                                    !selectCollapse.includes(termOptions[i].id)
+                                                        ? 'pi-angle-right'
+                                                        : 'pi-angle-down'
+                                                } mr-2`}
+                                            ></i>
+                                            Đợt: {termOptions[i].name}
+                                        </div>
+                                    </td>
+                                </tr>,
                             );
+                            for (let i = 0; i < registrationList?.length; i++) {
+                                if (selectCollapse.includes(registrationList[i]?.termId)) {
+                                    credits += registrationList[i]?.costCredits;
+                                    initialFee += registrationList[i]?.initialFee;
+                                    discountFee += registrationList[i]?.discountFee;
+                                    plusDeductions += registrationList[i]?.plusDeductions;
+                                    minusDeductions += registrationList[i]?.minusDeductions;
+                                    totalFee += registrationList[i]?.total;
+
+                                    holderHtml.push(
+                                        <React.Fragment key={i}>
+                                            <tr key={registrationList[i]?.id}>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].termName}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].sectionCode}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].sectionName}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].costCredits}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].initialFee}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].discountAmount}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].discountFee}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].initialFee}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].registrationStatus === 'new_learning'
+                                                        ? 'Đăng ký học mới'
+                                                        : registrationList[i].registrationStatus === 'again_learning'
+                                                        ? 'Đăng ký học lại'
+                                                        : registrationList[i].registrationStatus === 'improve_learning'
+                                                        ? 'Đăng ký học cải thiện'
+                                                        : '-'}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].registrationStatus === 'canceled'
+                                                        ? 'Xoá bỏ đăng ký'
+                                                        : 'Đã đăng ký'}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].paymentDate
+                                                        ? new Date(registrationList[i].paymentDate).toLocaleDateString()
+                                                        : 'Hiện chưa chi trả'}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].total}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].plusDeductions
+                                                        ? registrationList[i].plusDeductions
+                                                        : 0}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].minusDeductions
+                                                        ? registrationList[i].minusDeductions
+                                                        : 0}
+                                                </td>
+                                                <td style={{ fontWeight: 'normal', textAlign: 'center' }}>
+                                                    {registrationList[i].total}
+                                                </td>
+                                                <td
+                                                    className="text-white"
+                                                    style={{ fontWeight: 'normal', textAlign: 'center' }}
+                                                >
+                                                    {registrationList[i].tuitionStatus === 'paid' ? (
+                                                        <i className="pi pi-check p-2 border-circle bg-green-300"></i>
+                                                    ) : (
+                                                        <i className="pi pi-times p-2 border-circle bg-red-300"></i>
+                                                    )}
+                                                </td>
+
+                                                <td
+                                                    className="text-white"
+                                                    style={{ fontWeight: 'normal', textAlign: 'center' }}
+                                                >
+                                                    {!!registrationList[i].investigateStatus ? (
+                                                        <i className="pi pi-times p-2 border-circle bg-red-300"></i>
+                                                    ) : (
+                                                        <i className="pi pi-check p-2 border-circle bg-green-300"></i>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                key={registrationList[i]?.id + '-total'}
+                                                className={`text-center font-semibold surface-100`}
+                                            >
+                                                <td style={{ height: '30px' }} rowSpan="1"></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{credits}</td>
+                                                <td>{initialFee}</td>
+                                                <td></td>
+                                                <td>{discountFee}</td>
+                                                <td>{initialFee}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{totalFee}</td>
+                                                <td>{plusDeductions}</td>
+                                                <td>{minusDeductions}</td>
+                                                <td>{totalFee}</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </React.Fragment>,
+                                    );
+                                }
+                            }
                         }
                     }
 
@@ -321,7 +312,6 @@ const Tracuucongno = () => {
     return (
         <div className="w-full">
             <div className="mb-3">
-                {console.log(registrationList)}
                 <div
                     style={{
                         textAlign: 'center',

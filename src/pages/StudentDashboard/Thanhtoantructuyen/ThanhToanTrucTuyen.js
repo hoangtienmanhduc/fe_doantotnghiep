@@ -42,7 +42,7 @@ function Thanhtoantructuyen() {
                             <Select
                                 defaultValue={selectedOption[0]} // Sử dụng defaultValue để đặt giá trị mặc định
                                 onChange={handleChange}
-                                options={options}
+                                options={options || []}
                                 isSearchable={true}
                                 placeholder="Chọn một option..."
                                 maxMenuHeight={250}

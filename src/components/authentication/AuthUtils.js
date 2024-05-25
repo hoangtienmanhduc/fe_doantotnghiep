@@ -85,6 +85,7 @@ export function removeSessionId() {
 // USER ROLE
 export const SystemRoles = {
     ADMIN: 'admin',
+    STAFF: 'staff',
     STUDENT: 'student',
     LECTURER: 'lecturer',
 };

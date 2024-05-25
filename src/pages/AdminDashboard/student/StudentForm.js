@@ -210,7 +210,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.specializationId || null}
                                     onChange={(e) => handleOnChange('specializationId', e?.target.value)}
-                                    options={specializationOptions}
+                                    options={specializationOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn chuyên ngành của sinh viên..."
@@ -223,9 +223,8 @@ const StudentForm = forwardRef((props, ref) => {
                             <span className="w-full">
                                 <Dropdown
                                     value={data?.specializationClassId || null}
-                                    disabled={!data?.specializationId}
                                     onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
-                                    options={specializationClassOptions}
+                                    options={specializationClassOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn lớp chuyên ngành cho sinh viên..."
@@ -239,7 +238,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.typeOfEducation || null}
                                     onChange={(e) => handleOnChange('typeOfEducation', e?.target.value)}
-                                    options={typeOfEducationOptions}
+                                    options={typeOfEducationOptions || []}
                                     optionLabel="label"
                                     optionValue="key"
                                     placeholder="Hãy chọn loại hình đào tạo..."
@@ -275,7 +274,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.gender || null}
                                     onChange={(e) => handleOnChange('gender', e?.target.value)}
-                                    options={genderOptions}
+                                    options={genderOptions || []}
                                     optionLabel="label"
                                     optionValue="key"
                                     placeholder="Hãy chọn giới tính..."
@@ -323,7 +322,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.regionId || null}
                                     onChange={(e) => handleOnChange('regionId', e?.target.value)}
-                                    options={regionOptions}
+                                    options={regionOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn vùng sinh sống..."
@@ -337,7 +336,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.provinceCode || null}
                                     onChange={(e) => handleOnChange('provinceCode', e?.target.value)}
-                                    options={provinceOptions}
+                                    options={provinceOptions || []}
                                     optionLabel="name"
                                     optionValue="code"
                                     placeholder="Hãy chọn tỉnh..."
@@ -351,7 +350,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.districtCode || null}
                                     onChange={(e) => handleOnChange('districtCode', e?.target.value)}
-                                    options={districtOptions}
+                                    options={districtOptions || []}
                                     optionLabel="name"
                                     optionValue="code"
                                     placeholder="Hãy chọn quận..."
@@ -366,7 +365,7 @@ const StudentForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.wardCode || null}
                                     onChange={(e) => handleOnChange('wardCode', e?.target.value)}
-                                    options={wardOptions}
+                                    options={wardOptions || []}
                                     optionLabel="name"
                                     optionValue="code"
                                     placeholder="Hãy chọn phường..."
@@ -396,6 +395,17 @@ const StudentForm = forwardRef((props, ref) => {
                                     value={data?.phone || ''}
                                     onChange={(e) => handleOnChange('phone', e.target.value)}
                                 ></InputMask>
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Email liên hệ</p>
+                            <span className="w-full">
+                                <InputText
+                                    value={data?.activationEmail || ''}
+                                    placeholder="Nhập email liên hệ của sinh viên..."
+                                    onChange={(e) => handleOnChange('activationEmail', e?.target.value)}
+                                    className=" w-full"
+                                />
                             </span>
                         </div>
                     </div>

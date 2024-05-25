@@ -79,8 +79,8 @@ const Home = () => {
                                 <span className="mb-2 flex align-items-center">
                                     <h3 className="text-primary m-0 text-600 font-semibold mr-2">Họ tên:</h3>
                                     <p className="m-0">
+                                        {userInfo?.lastName ? userInfo.lastName : ''}{' '}
                                         {userInfo?.firstName ? userInfo.firstName : ' '}
-                                        {userInfo?.lastName ? userInfo.lastName : ''}
                                     </p>
                                 </span>
                                 <span className="mb-2 flex align-items-center">

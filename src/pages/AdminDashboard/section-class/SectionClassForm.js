@@ -21,8 +21,13 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { getListTermInfo } from '~/api/term/TermService';
 import { UserRoles } from '~/App';
+import { getListSpecializationInfo } from '~/api/specialization/SpecializationService';
+import { getListSpecializationClassInfo } from '~/api/specialization/SpecializationClassService';
+import { convertDayInWeek } from '~/utils/Utils';
 
 const QueryKeyLecturerOptions = 'Lecturer-Options';
+const QueryKeySpecializationOptions = 'Specialization-Options';
+const QueryKeySpecializationClassOptions = 'SpecializationClass-Options';
 const QueryKeySectionOptions = 'Section-Options';
 const QueryKeySectionClassOptions = 'SectionClass-Options';
 const QueryKeyTerm = 'Term-Options';
@@ -53,10 +58,23 @@ const SectionClassForm = forwardRef((props, ref) => {
 
     // Use Query
     const { data: lecturerOptions } = useQuery(
-        [QueryKeyLecturerOptions, getUserId()],
-        () => getListLecturerInfo(getUserId(), { sectionId: data?.sectionId }, null, true),
+        [QueryKeyLecturerOptions, getUserId(), selectedSection],
+        () => getListLecturerInfo(getUserId(), { specializationId: selectedSection?.specializationId }, null, true),
+        { enabled: !!getUserId() && !!visible && !!selectedSection?.specializationId },
+    );
+
+    const { data: specializationOptions } = useQuery(
+        [QueryKeySpecializationOptions, getUserId()],
+        () => getListSpecializationInfo(getUserId(), {}, null, true),
         { enabled: !!getUserId() && !!visible },
     );
+
+    const { data: specializationClassOptions } = useQuery(
+        [QueryKeySpecializationClassOptions, getUserId(), data?.specializationId],
+        () => getListSpecializationClassInfo(getUserId(), { specializationId: data?.specializationId }, null, true),
+        { enabled: !!getUserId() && !!visible && !!data?.specializationId },
+    );
+
     const { data: sectionOptions } = useQuery(
         [QueryKeySectionOptions, getUserId(), data?.termId],
         () =>
@@ -406,7 +424,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                     <Dropdown
                                         value={timeData?.dayOfTheWeek || null}
                                         onChange={(e) => handleOnChangeTime('dayOfTheWeek', e?.target.value)}
-                                        options={dayInWeekOptions}
+                                        options={dayInWeekOptions || []}
                                         optionLabel="label"
                                         optionValue="key"
                                         filter
@@ -474,6 +492,44 @@ const SectionClassForm = forwardRef((props, ref) => {
                         <div className="col-12 p-0">
                             <Divider align="left">
                                 <div className="inline-flex align-items-center">
+                                    <i className="pi pi-user mr-2"></i>
+                                    <h3 className="p-0 m-0">Lớp chuyên ngành</h3>
+                                </div>
+                            </Divider>
+                            <div className="col-12 p-0">
+                                <p>Chuyên ngành</p>
+                                <span className="w-full">
+                                    <Dropdown
+                                        value={data?.specializationId}
+                                        onChange={(e) => handleOnChange('specializationId', e?.target.value)}
+                                        options={specializationOptions || []}
+                                        filter
+                                        showClear
+                                        optionLabel="name"
+                                        optionValue="id"
+                                        placeholder="Hãy chọn chuyên ngành mà lớp học phần này thuộc"
+                                        className="w-full"
+                                    />
+                                </span>
+                            </div>
+                            <div className="col-12 p-0">
+                                <p>Lớp chuyên ngành</p>
+                                <span className="w-full">
+                                    <Dropdown
+                                        value={data?.specializationClassId}
+                                        onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
+                                        options={specializationClassOptions || []}
+                                        filter
+                                        showClear
+                                        optionLabel="name"
+                                        optionValue="id"
+                                        placeholder="Hãy chọn lớp chuyên ngành cho lớp học phần"
+                                        className="w-full"
+                                    />
+                                </span>
+                            </div>
+                            <Divider align="left">
+                                <div className="inline-flex align-items-center">
                                     <i className="pi pi-bars mr-2"></i>
                                     <h3 className="p-0 m-0">Học kỳ và Học phần</h3>
                                 </div>
@@ -484,7 +540,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                     <Dropdown
                                         value={data.termId}
                                         onChange={(e) => handleOnChange('termId', e?.target.value)}
-                                        options={termOptions}
+                                        options={termOptions || []}
                                         filter
                                         showClear
                                         optionLabel="name"
@@ -500,7 +556,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                     <Dropdown
                                         value={data.sectionId}
                                         onChange={(e) => handleOnChange('sectionId', e?.target.value)}
-                                        options={sectionOptions}
+                                        options={sectionOptions || []}
                                         optionValue="id"
                                         filter
                                         showClear
@@ -522,7 +578,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                     <Dropdown
                                         value={data?.lecturerId}
                                         onChange={(e) => handleOnChange('lecturerId', e?.target.value)}
-                                        options={lecturerOptions}
+                                        options={lecturerOptions || []}
                                         filter
                                         showClear
                                         optionLabel="name"
@@ -550,7 +606,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         disabled={!!data?.id}
                                         filter
                                         showClear
-                                        options={sectionClassTypes}
+                                        options={sectionClassTypes || []}
                                         optionLabel="label"
                                         optionValue="key"
                                         placeholder="Hãy chọn loại cho lớp học phần"
@@ -565,7 +621,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                         <Dropdown
                                             value={data?.refId || null}
                                             onChange={(e) => handleOnChange('refId', e?.target.value)}
-                                            options={sectionClassOptions}
+                                            options={sectionClassOptions || []}
                                             filter
                                             showClear
                                             optionLabel="name"
@@ -635,11 +691,16 @@ const SectionClassForm = forwardRef((props, ref) => {
                                     }
                                     tableStyle={{ minWidth: '50rem' }}
                                 >
-                                    <Column field="room" header="Phòng học"></Column>
-                                    <Column field="dayOfTheWeek" header="Ngày học trong tuần"></Column>
-                                    <Column field="periodStart" header="Tiết bắt đầu"></Column>
-                                    <Column field="periodEnd" header="Tiết kết thúc"></Column>
-                                    <Column field="note" header="Ghi chú"></Column>
+                                    <Column className="text-center" field="room" header="Phòng học"></Column>
+                                    <Column
+                                        className="text-center"
+                                        field="dayOfTheWeek"
+                                        header="Ngày học trong tuần"
+                                        body={(rowData) => convertDayInWeek(rowData['dayOfTheWeek'])}
+                                    ></Column>
+                                    <Column className="text-center" field="periodStart" header="Tiết bắt đầu"></Column>
+                                    <Column className="text-center" field="periodEnd" header="Tiết kết thúc"></Column>
+                                    <Column className="text-center" field="note" header="Ghi chú"></Column>
                                     {data?.numberOfStudents && data?.numberOfStudents < 1 && (
                                         <Column
                                             field="action"

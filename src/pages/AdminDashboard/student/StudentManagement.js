@@ -316,7 +316,7 @@ const StudentManagement = () => {
                             <Dropdown
                                 value={schoolYear}
                                 onChange={(e) => setSchoolYear(e?.target.value)}
-                                options={schoolYearOptions}
+                                options={schoolYearOptions || []}
                                 placeholder="Hãy chọn năm học..."
                             />
                             <Button

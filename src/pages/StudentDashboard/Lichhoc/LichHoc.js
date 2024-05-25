@@ -12,6 +12,7 @@ import { getListScheduleInfo } from '~/api/schedule/ScheduleSevice';
 import { UserRoles } from '~/App';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { Tag } from 'primereact/tag';
 
 const QueryKey = 'Schedule-List';
 const Lichhoc = () => {
@@ -95,7 +96,11 @@ const Lichhoc = () => {
                                 key={idx}
                                 className={`font-semibold m-1 border-round ${
                                     item?.scheduleType === 'normal'
-                                        ? 'surface-100 text-700 '
+                                        ? item.sectionClassType === 'theory'
+                                            ? 'surface-300 text-700 '
+                                            : item.sectionClassType === 'practice'
+                                            ? 'bg-green-200 text-700 '
+                                            : ''
                                         : item?.scheduleType === 'test'
                                         ? 'bg-yellow-400'
                                         : item?.scheduleType === 'suspended'
@@ -192,7 +197,7 @@ const Lichhoc = () => {
                     />
                 </div>
             </div>
-            <div className="w-full">
+            <div className="w-full mb-3">
                 <table border="1" className="w-full">
                     <thead>
                         <tr style={{ backgroundColor: '#F0F8FF' }}>
@@ -228,6 +233,29 @@ const Lichhoc = () => {
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div className="w-full flex align-items-center gap-2 border-round border-400 surface-50">
+                <h3 className="ml-2 p-2">Ghi chú:</h3>
+                <Tag className="text-700 surface-300">
+                    <div className="flex align-items-center gap-2">
+                        <span className="text-base">Lịch lớp học Lý thuyết</span>
+                    </div>
+                </Tag>
+                <Tag className="text-700 bg-green-200">
+                    <div className="flex align-items-center gap-2">
+                        <span className="text-base">Lịch lớp học Thực hành</span>
+                    </div>
+                </Tag>
+                <Tag className="text-700 bg-yellow-400">
+                    <div className="flex align-items-center gap-2">
+                        <span className="text-base">Lịch thi</span>
+                    </div>
+                </Tag>
+                <Tag className="text-700 bg-red-300">
+                    <div className="flex align-items-center gap-2">
+                        <span className="text-base">Lịch tạm ngưng</span>
+                    </div>
+                </Tag>
             </div>
         </div>
     );

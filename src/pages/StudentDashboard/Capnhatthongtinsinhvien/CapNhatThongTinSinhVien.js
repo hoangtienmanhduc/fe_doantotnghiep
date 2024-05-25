@@ -368,7 +368,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -380,7 +380,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -423,7 +423,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -450,7 +450,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -523,7 +523,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -535,7 +535,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -547,7 +547,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -580,7 +580,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -592,7 +592,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -604,7 +604,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -637,7 +637,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -649,7 +649,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -661,7 +661,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -694,7 +694,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -706,7 +706,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -718,7 +718,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -757,7 +757,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -769,7 +769,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -781,7 +781,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}
@@ -815,7 +815,7 @@ function Capnhatthongtinsinhvien() {
                         <Select
                             defaultValue={selectedOption} // Set the default value for the Select component
                             onChange={handleChange}
-                            options={options}
+                            options={options || []}
                             isSearchable={true}
                             placeholder={selectedOption.label} // Use the label as a placeholder
                             maxMenuHeight={250}

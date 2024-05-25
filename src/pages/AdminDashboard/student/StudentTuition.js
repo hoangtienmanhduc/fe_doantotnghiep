@@ -14,6 +14,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { showNotification } from '~/components/notification/NotificationService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
 const QueryKeySectionOptions = 'Section-Options';
 const QueryKeyTerm = 'Term-Options';
 
@@ -29,7 +30,7 @@ const StudentTuition = () => {
     const id = useMemo(() => {
         return !!idString ? parseInt(idString) : null;
     }, [idString]);
-
+    const [selectedTuition, setSelectedTuition] = useState(null);
     const [pageable, setPageable] = useState({ ...initialPageable });
     const [filterRequest, setFilterRequest] = useState({ studentId: id });
     const [tuitionStatus, setTuitionStatus] = useState(null);
@@ -71,33 +72,31 @@ const StudentTuition = () => {
         { field: 'action', header: 'Thao tác' },
     ];
 
-    const handleOnChangeStatus = useCallback(
-        async (id) => {
-            if (!tuitionStatus) {
-                showNotification('error', 'Lỗi', 'Trạng thái đóng học phí không được để trống !!');
-                return;
-            }
+    const handleOnChangeStatus = useCallback(async () => {
+        if (!tuitionStatus) {
+            showNotification('error', 'Lỗi', 'Trạng thái đóng học phí không được để trống !!');
+            return;
+        }
 
-            if (!id) {
-                showNotification('error', 'Lỗi', 'Mã công nợ sinh viên không được để trống !!');
-                return;
-            }
+        if (!selectedTuition) {
+            showNotification('error', 'Lỗi', 'Mã công nợ sinh viên không được để trống !!');
+            return;
+        }
 
-            const toPostData = {
-                id: id,
-                status: tuitionStatus,
-            };
+        const toPostData = {
+            id: selectedTuition,
+            status: tuitionStatus,
+        };
 
-            const response = await changeStudentTuitionStatus(getUserId(), toPostData);
+        const response = await changeStudentTuitionStatus(getUserId(), toPostData);
 
-            if (response === HTTP_STATUS_OK) {
-                showNotification('success', 'Thành công', 'Cập nhật trạng thái công nợ thành công !!');
-                setTuitionStatus(null);
-                return;
-            }
-        },
-        [tuitionStatus],
-    );
+        if (response === HTTP_STATUS_OK) {
+            showNotification('success', 'Thành công', 'Cập nhật trạng thái công nợ thành công !!');
+            setTuitionStatus(null);
+            setSelectedTuition(null);
+            return;
+        }
+    }, [selectedTuition, tuitionStatus]);
 
     const header = () => {
         return (
@@ -125,7 +124,7 @@ const StudentTuition = () => {
                                     <MultiSelect
                                         value={filterRequest?.termIds || null}
                                         onChange={(e) => setFilterRequest({ ...filterRequest, termIds: [...e.value] })}
-                                        options={termOptions}
+                                        options={termOptions || []}
                                         optionValue="id"
                                         optionLabel="name"
                                         filter
@@ -143,7 +142,7 @@ const StudentTuition = () => {
                                         onChange={(e) =>
                                             setFilterRequest({ ...filterRequest, sectionIds: [...e.value] })
                                         }
-                                        options={sectionOptions}
+                                        options={sectionOptions || []}
                                         optionValue="id"
                                         optionLabel="name"
                                         filter
@@ -219,6 +218,7 @@ const StudentTuition = () => {
                                             className="mr-2"
                                             raised
                                             onClick={(e) => {
+                                                setSelectedTuition(rowData.id);
                                                 op.current.toggle(e);
                                             }}
                                         />
@@ -246,7 +246,7 @@ const StudentTuition = () => {
                                                     className={`w-full font-bold`}
                                                     icon={'pi pi-check'}
                                                     label={'Xác nhận'}
-                                                    onClick={() => handleOnChangeStatus(rowData.id)}
+                                                    onClick={() => handleOnChangeStatus()}
                                                 />
                                             </div>
                                         </OverlayPanel>
@@ -254,7 +254,7 @@ const StudentTuition = () => {
                                 ) : col.field === 'paymentDate' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {rowData[col.field]
-                                            ? new Date(rowData[col.field]).toLocaleDateString()
+                                            ? moment(rowData[col.field]).format('DD-MM-YYYY HH:mm:ss')
                                             : 'Hiện tại chưa chi trả'}
                                     </div>
                                 ) : (

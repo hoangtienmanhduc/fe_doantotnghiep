@@ -24,7 +24,9 @@ function SidebarLecturer() {
                 onClick={() => (window.location.href = '/kehoachgiangday')}
             >
                 <img style={{ width: '30px', height: '30px' }} src={images.So} alt="So"></img>
-                <p style={{ marginLeft: '10px' }}>Kế hoạch giảng dạy</p>
+                <p className="font-semibold" style={{ marginLeft: '10px' }}>
+                    Kế hoạch giảng dạy
+                </p>
             </button>
             <button
                 style={{ height: '50px' }}
@@ -32,7 +34,9 @@ function SidebarLecturer() {
                 onClick={() => (window.location.href = '/lichtrinhgiangday')}
             >
                 <img style={{ width: '30px', height: '30px' }} src={images.Lich} alt="Lich"></img>
-                <p style={{ marginLeft: '10px' }}>Lịch giảng dạy</p>
+                <p className="font-semibold" style={{ marginLeft: '10px' }}>
+                    Lịch giảng dạy
+                </p>
             </button>
             <button
                 style={{ height: '50px' }}
@@ -40,7 +44,9 @@ function SidebarLecturer() {
                 onClick={() => (window.location.href = '/lichthiketthuchocphan')}
             >
                 <img style={{ width: '30px', height: '30px' }} src={images.Lichthi} alt="Lichthi"></img>
-                <p style={{ marginLeft: '10px' }}>Lịch thi</p>
+                <p className="font-semibold" style={{ marginLeft: '10px' }}>
+                    Lịch thi
+                </p>
             </button>
             <p
                 className="text-primary"

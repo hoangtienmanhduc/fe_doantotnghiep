@@ -143,7 +143,7 @@ const StudentSectionManagement = () => {
                                     <MultiSelect
                                         value={filterRequest?.termIds || null}
                                         onChange={(e) => setFilterRequest({ ...filterRequest, termIds: [...e.value] })}
-                                        options={termOptions}
+                                        options={termOptions || []}
                                         optionValue="id"
                                         optionLabel="name"
                                         filter
@@ -161,7 +161,7 @@ const StudentSectionManagement = () => {
                                         onChange={(e) =>
                                             setFilterRequest({ ...filterRequest, sectionIds: [...e.value] })
                                         }
-                                        options={sectionOptions}
+                                        options={sectionOptions || []}
                                         optionValue="id"
                                         optionLabel="name"
                                         filter
@@ -179,7 +179,7 @@ const StudentSectionManagement = () => {
                                         onChange={(e) =>
                                             setFilterRequest({ ...filterRequest, lecturerIds: [...e.value] })
                                         }
-                                        options={lecturerOptions}
+                                        options={lecturerOptions || []}
                                         optionLabel="fullName"
                                         optionValue="id"
                                         filter

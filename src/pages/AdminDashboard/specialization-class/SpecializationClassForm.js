@@ -40,9 +40,9 @@ const SpecializationClassForm = forwardRef((props, ref) => {
     );
 
     const { data: lecturerOptions } = useQuery(
-        [QueryKeyLecturerOptions, getUserId()],
-        () => getListLecturerInfo(getUserId(), {}, null, true),
-        { enabled: !!getUserId() },
+        [QueryKeyLecturerOptions, getUserId(), data?.specializationId],
+        () => getListLecturerInfo(getUserId(), { specializationId: data?.specializationId }, null, true),
+        { enabled: !!getUserId() && !!data?.specializationId, initialData: [] },
     );
 
     const handleHideForm = useCallback(() => {
@@ -125,7 +125,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.specializationId || null}
                                     onChange={(e) => handleOnChange('specializationId', e?.target.value)}
-                                    options={specializationOptions}
+                                    options={specializationOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn chuyên ngành cho lớp chuyên ngành..."
@@ -139,7 +139,7 @@ const SpecializationClassForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.lecturerId || null}
                                     onChange={(e) => handleOnChange('lecturerId', e?.target.value)}
-                                    options={lecturerOptions}
+                                    options={lecturerOptions || []}
                                     optionLabel="fullName"
                                     optionValue="id"
                                     placeholder="Hãy chọn giảng viên chủ nhiệm cho lớp chuyên ngành..."

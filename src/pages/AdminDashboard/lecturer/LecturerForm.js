@@ -196,7 +196,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.specializationId || null}
                                     onChange={(e) => handleOnChange('specializationId', e?.target.value)}
-                                    options={specializationOptions}
+                                    options={specializationOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn chuyên ngành đào tạo..."
@@ -210,7 +210,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.title || null}
                                     onChange={(e) => handleOnChange('title', e?.target.value)}
-                                    options={titleOptions}
+                                    options={titleOptions || []}
                                     optionLabel="label"
                                     optionValue="key"
                                     placeholder="Hãy chọn chức tước theo trình độ"
@@ -226,7 +226,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                     optionLabel="label"
                                     optionValue="key"
                                     onChange={(e) => handleOnChange('position', e?.target.value)}
-                                    options={positionOptions}
+                                    options={positionOptions || []}
                                     placeholder="Hãy chọn vai trò"
                                     className="w-full"
                                 />
@@ -260,7 +260,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.gender || null}
                                     onChange={(e) => handleOnChange('gender', e?.target.value)}
-                                    options={genderOptions}
+                                    options={genderOptions || []}
                                     optionLabel="label"
                                     optionValue="key"
                                     placeholder="Hãy chọn giới tính..."
@@ -308,7 +308,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.regionId || null}
                                     onChange={(e) => handleOnChange('regionId', e?.target.value)}
-                                    options={regionOptions}
+                                    options={regionOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn vùng sinh sống..."
@@ -322,7 +322,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.provinceCode || null}
                                     onChange={(e) => handleOnChange('provinceCode', e?.target.value)}
-                                    options={provinceOptions}
+                                    options={provinceOptions || []}
                                     optionLabel="name"
                                     optionValue="code"
                                     placeholder="Hãy chọn tỉnh..."
@@ -336,7 +336,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.districtCode}
                                     onChange={(e) => handleOnChange('districtCode', e?.target.value)}
-                                    options={districtOptions}
+                                    options={districtOptions || []}
                                     optionLabel="name"
                                     optionValue="code"
                                     placeholder="Hãy chọn quận..."
@@ -351,7 +351,7 @@ const LecturerForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.wardCode}
                                     onChange={(e) => handleOnChange('wardCode', e?.target.value)}
-                                    options={wardOptions}
+                                    options={wardOptions || []}
                                     optionLabel="name"
                                     optionValue="code"
                                     placeholder="Hãy chọn phường..."

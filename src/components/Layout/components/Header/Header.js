@@ -89,7 +89,13 @@ function Header() {
                                     />
                                 </div>
                                 <div className="p-2">
-                                    <Button text icon="pi pi-bell" iconPos="left" label="Tin tức" onClick={() => {}} />
+                                    <Button
+                                        text
+                                        icon="pi pi-bell"
+                                        iconPos="left"
+                                        label="Tin tức"
+                                        onClick={() => window.location.assign('/tintuc')}
+                                    />
                                 </div>
                             </div>
                         )}
@@ -102,9 +108,11 @@ function Header() {
                                     {!!userInfo
                                         ? `${
                                               getUserRole() === UserRoles.LECTURER
-                                                  ? 'GV.'
+                                                  ? 'Giảng viên '
                                                   : getUserRole() === UserRoles.ADMIN
-                                                  ? 'QL'
+                                                  ? 'Quản lý '
+                                                  : getUserRole() === UserRoles.STAFF
+                                                  ? 'Nhân viên '
                                                   : ''
                                           } ${userInfo.fullName}`
                                         : '_'}

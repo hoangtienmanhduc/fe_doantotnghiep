@@ -304,7 +304,7 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
                             <span className="w-full">
                                 <Dropdown
                                     value={selectedSchedule?.dayInWeek || null}
-                                    options={dayInWeekOptions}
+                                    options={dayInWeekOptions || []}
                                     optionLabel="label"
                                     disabled
                                     optionValue="key"
@@ -383,7 +383,7 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
                                 onChange={(e) =>
                                     setSelectedSchedule({ ...selectedSchedule, lecturerId: e?.target.value })
                                 }
-                                options={lecturerOptions}
+                                options={lecturerOptions || []}
                                 optionLabel="fullName"
                                 optionValue="id"
                                 placeholder="Hãy chọn giảng viên phụ trách giảng dạy cho lớp học phần"
@@ -416,7 +416,7 @@ const ScheduleSectionClass = forwardRef((props, ref) => {
                                 options={
                                     !isAddNew
                                         ? scheduleTypeOptions
-                                        : scheduleTypeOptions.filter((item) => item.key !== 'suspended')
+                                        : scheduleTypeOptions.filter((item) => item.key !== 'suspended') || []
                                 }
                                 onChange={(e) =>
                                     setSelectedSchedule({ ...selectedSchedule, scheduleType: e?.target.value })

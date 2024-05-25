@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Dropdown } from 'primereact/dropdown';
 import { getListSectionClassInfo } from '~/api/section/SectionClassService';
 import { dayInWeekOptions } from '~/pages/AdminDashboard/section-class/SectionClassConstant';
+import moment from 'moment';
 
 const cx = classNames.bind(styles);
 const QueryKeyTerm = 'Term-Options';
@@ -42,7 +43,7 @@ const Kehoachgiangday = () => {
                         <Dropdown
                             value={selectedTerm || null}
                             onChange={(e) => setSelectedTerm(e?.target.value)}
-                            options={termOptions}
+                            options={termOptions || []}
                             optionLabel="name"
                             optionValue="id"
                             filter
@@ -67,13 +68,23 @@ const Kehoachgiangday = () => {
                             <th style={{ width: '200px' }} rowSpan="1">
                                 Giảng viên
                             </th>
-
+                            <th style={{ width: '200px' }} rowSpan="1">
+                                Ngày bắt đầu
+                            </th>
+                            <th style={{ width: '200px' }} rowSpan="1">
+                                Ngày kết thúc
+                            </th>
+                            <th style={{ width: '200px' }} rowSpan="1">
+                                Tổng số buổi học
+                            </th>
                             <th style={{ width: '100px' }} colSpan="1">
                                 Số sinh viên
                             </th>
                         </tr>
                     </thead>
                     <tbody>
+                        {console.log(sectionClassList)}
+
                         {sectionClassList && sectionClassList?.length > 0 ? (
                             sectionClassList.map((sectionClass, idx) => (
                                 <tr
@@ -103,6 +114,15 @@ const Kehoachgiangday = () => {
                                     </th>
                                     <th style={{ width: '200px' }} rowSpan="1">
                                         {sectionClass.lecturerCode} - {sectionClass.lecturerName}
+                                    </th>
+                                    <th style={{ width: '200px' }} rowSpan="1">
+                                        {moment(sectionClass.startDate).format('DD/MM/YYYY')}
+                                    </th>
+                                    <th style={{ width: '200px' }} rowSpan="1">
+                                        {moment(sectionClass.endDate).format('DD/MM/YYYY')}
+                                    </th>
+                                    <th style={{ width: '200px' }} rowSpan="1">
+                                        {sectionClass.numberOfPeriods}
                                     </th>
                                     <th style={{ width: '100px' }} rowSpan="1">
                                         {sectionClass.numberOfStudents}

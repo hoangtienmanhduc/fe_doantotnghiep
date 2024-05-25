@@ -167,7 +167,7 @@ const StudentSectionForm = forwardRef((props, ref) => {
                                     })
                                 }
                                 filter
-                                options={termOptions}
+                                options={termOptions || []}
                                 optionLabel="name"
                                 optionValue="id"
                                 placeholder="Hãy chọn học kỳ đăng ký lớp học phần (Bắt buộc)"
@@ -190,7 +190,7 @@ const StudentSectionForm = forwardRef((props, ref) => {
                                     })
                                 }
                                 filter
-                                options={sectionOptions}
+                                options={sectionOptions || []}
                                 optionLabel="name"
                                 optionValue="id"
                                 placeholder="Hãy chọn học phần để đăng ký lớp học phần (Bắt buộc)"
@@ -213,7 +213,7 @@ const StudentSectionForm = forwardRef((props, ref) => {
                                             })
                                         }
                                         filter
-                                        options={sectionClassOptions}
+                                        options={sectionClassOptions || []}
                                         optionValue="id"
                                         optionLabel="name"
                                         placeholder="Hãy chọn lớp học phần muốn đăng ký (Bắt buộc)"
@@ -227,7 +227,7 @@ const StudentSectionForm = forwardRef((props, ref) => {
                                     <Dropdown
                                         value={data?.timeAndPlaceId || null}
                                         onChange={(e) => setData({ ...data, timeAndPlaceId: e.target.value })}
-                                        options={timeAndPlaceOptions}
+                                        options={timeAndPlaceOptions || []}
                                         optionLabel="name"
                                         optionValue="id"
                                         placeholder="Hãy chọn thời gian học của lớp học phần (Bắt buộc)"
@@ -244,7 +244,7 @@ const StudentSectionForm = forwardRef((props, ref) => {
                                 value={data?.registrationStatus || null}
                                 filter
                                 onChange={(e) => setData({ ...data, registrationStatus: e.target.value })}
-                                options={registrationType}
+                                options={registrationType || []}
                                 optionLabel="name"
                                 optionValue="key"
                                 placeholder="Hãy chọn loại đăng ký lớp học phần (Bắt buộc)"

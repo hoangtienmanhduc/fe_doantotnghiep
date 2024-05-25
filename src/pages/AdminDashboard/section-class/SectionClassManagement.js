@@ -264,7 +264,7 @@ const SectionClassManagement = () => {
                             <MultiSelect
                                 value={filterRequest?.sectionIds || null}
                                 onChange={(e) => setFilterRequest({ ...filterRequest, sectionIds: [...e.value] })}
-                                options={sectionOptions}
+                                options={sectionOptions || []}
                                 optionValue="id"
                                 optionLabel="fullName"
                                 filter
@@ -281,7 +281,7 @@ const SectionClassManagement = () => {
                             <MultiSelect
                                 value={filterRequest?.lecturerIds || null}
                                 onChange={(e) => setFilterRequest({ ...filterRequest, lecturerIds: [...e.value] })}
-                                options={lecturerOptions}
+                                options={lecturerOptions || []}
                                 optionLabel="fullName"
                                 optionValue="id"
                                 filter
@@ -301,7 +301,7 @@ const SectionClassManagement = () => {
                                     onChange={(e) =>
                                         setFilterRequest({ ...filterRequest, sectionClassType: e.target.value })
                                     }
-                                    options={SectionClassTypeOptions}
+                                    options={SectionClassTypeOptions || []}
                                     filter
                                     showClear
                                     optionLabel="label"
@@ -335,7 +335,7 @@ const SectionClassManagement = () => {
                                             setFilterRequest({ ...filterRequest, sectionClassRef: false });
                                         }
                                     }}
-                                    options={SectionClassIsMainOptions}
+                                    options={SectionClassIsMainOptions || []}
                                     filter
                                     showClear
                                     optionLabel="label"

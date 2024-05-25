@@ -128,7 +128,7 @@ const SectionForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.termId || null}
                                     onChange={(e) => handleOnChange('termId', e?.target.value)}
-                                    options={termOptions}
+                                    options={termOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn học kỳ mà học phần thuộc"
@@ -142,7 +142,7 @@ const SectionForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.courseId || null}
                                     onChange={(e) => handleOnChange('courseId', e?.target.value)}
-                                    options={courseOptions}
+                                    options={courseOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn môn học mà học phần thuộc"

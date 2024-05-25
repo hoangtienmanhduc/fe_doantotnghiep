@@ -215,7 +215,7 @@ const Dangkyhocphan = () => {
                                         () => {},
                                     );
                                 }}
-                                options={termOptions}
+                                options={termOptions || []}
                                 optionLabel="name"
                                 optionValue="id"
                                 placeholder="Hãy chọn học kỳ bạn muốn đăng ký học phần"
@@ -467,7 +467,7 @@ const Dangkyhocphan = () => {
                             <Dropdown
                                 value={selectedTerm || (!!termOptions[0] && termOptions[0].id)}
                                 onChange={(e) => handleChange(e?.target?.value)}
-                                options={termOptions}
+                                options={termOptions || []}
                                 optionLabel="name"
                                 optionValue="id"
                                 isSearchable={true}

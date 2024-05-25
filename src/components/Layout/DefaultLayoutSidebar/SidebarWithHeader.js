@@ -9,7 +9,7 @@ function DefaultLayoutSidebar({ children }) {
         <div>
             <Header />
             <div className="flex col-12 justify-content-center aling-items-center overflow-x-auto">
-                {getUserRole() !== UserRoles.ADMIN && (
+                {getUserRole() !== UserRoles.ADMIN && getUserRole() !== UserRoles.STAFF && (
                     <div className="col-2 border-1 border-300 border-round-md">
                         {getUserRole() === UserRoles.STUDENT ? (
                             <MenuSidebar />
@@ -20,7 +20,13 @@ function DefaultLayoutSidebar({ children }) {
                         )}
                     </div>
                 )}
-                <div className={`${getUserRole() === UserRoles.ADMIN ? 'col-12' : 'col-10'}`}>{children}</div>
+                <div
+                    className={`${
+                        getUserRole() === UserRoles.ADMIN || getUserRole() === UserRoles.STAFF ? 'col-12' : 'col-10'
+                    }`}
+                >
+                    {children}
+                </div>
             </div>
         </div>
     );

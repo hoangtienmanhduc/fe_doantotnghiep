@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Ripple } from 'primereact/ripple';
 import { useState } from 'react';
 import CouseManagement from './course/CouseManagement';
-import { clearStorage } from '~/components/authentication/AuthUtils';
+import { clearStorage, getUserRole } from '~/components/authentication/AuthUtils';
 import SectionManagement from './section/SectionManagement';
 import SectionClassManagement from './section-class/SectionClassManagement';
 import AcademicYearManagement from './academic-year/AcademicYearManagement';
@@ -13,26 +13,38 @@ import SpecializationClassManagement from './specialization-class/Specialization
 import SpecializationManagement from './specialization/SpecializationManagement';
 import { Button } from 'primereact/button';
 import ProgramManagement from './program/ProgramManagement';
+import StaffManagement from './staff/StaffManagement';
+import { UserRoles } from '~/App';
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('academicYearManagement');
-    const tabList = [
-        { key: 'academicYearManagement', label: 'QUẢN LÝ NIÊN KHOÁ', icon: 'pi pi-th-large' },
-        { key: 'facultyManagement', label: 'QUẢN LÝ KHOA', icon: 'pi pi-th-large' },
-        { key: 'specializationManagement', label: 'QUẢN LÝ CHUYÊN NGÀNH', icon: 'pi pi-th-large' },
-        { key: 'programManagement', label: 'QUẢN LÝ CHƯƠNG TRÌNH ĐÀO TẠO', icon: 'pi pi-tag' },
-        {
-            key: 'specializationClassManagement',
-            label: 'QUẢN LÝ LỚP CHUYÊN NGÀNH',
-            icon: 'pi pi-th-large',
-            component: '',
-        },
-        { key: 'courseManagement', label: 'QUẢN LÝ MÔN HỌC', icon: 'pi pi-tag' },
-        { key: 'sectionManagement', label: 'QUẢN LÝ HỌC PHẦN', icon: 'pi pi-tags' },
-        { key: 'sectionClassManagement', label: 'QUẢN LÝ LỚP HỌC PHẦN', icon: 'pi pi-tablet' },
 
-        { key: 'studentManagement', label: 'QUẢN LÝ SINH VIÊN', icon: 'pi pi-user' },
-        { key: 'lecturerManagement', label: 'QUẢN LÝ GIẢNG VIÊN', icon: 'pi pi-users' },
-    ];
+    const tabListFilter = useMemo(() => {
+        const tabList = [
+            { key: 'staffManagement', label: 'QUẢN LÝ NHÂN VIÊN', icon: 'pi pi-th-large' },
+            { key: 'academicYearManagement', label: 'QUẢN LÝ NIÊN KHOÁ', icon: 'pi pi-th-large' },
+            { key: 'facultyManagement', label: 'QUẢN LÝ KHOA', icon: 'pi pi-th-large' },
+            { key: 'specializationManagement', label: 'QUẢN LÝ CHUYÊN NGÀNH', icon: 'pi pi-th-large' },
+            { key: 'programManagement', label: 'QUẢN LÝ CHƯƠNG TRÌNH ĐÀO TẠO', icon: 'pi pi-tag' },
+            {
+                key: 'specializationClassManagement',
+                label: 'QUẢN LÝ LỚP CHUYÊN NGÀNH',
+                icon: 'pi pi-th-large',
+                component: '',
+            },
+            { key: 'courseManagement', label: 'QUẢN LÝ MÔN HỌC', icon: 'pi pi-tag' },
+            { key: 'sectionManagement', label: 'QUẢN LÝ HỌC PHẦN', icon: 'pi pi-tags' },
+            { key: 'sectionClassManagement', label: 'QUẢN LÝ LỚP HỌC PHẦN', icon: 'pi pi-tablet' },
+
+            { key: 'studentManagement', label: 'QUẢN LÝ SINH VIÊN', icon: 'pi pi-user' },
+            { key: 'lecturerManagement', label: 'QUẢN LÝ GIẢNG VIÊN', icon: 'pi pi-users' },
+        ];
+
+        if (getUserRole() === UserRoles.STAFF) {
+            return tabList.filter((item) => item?.key !== 'staffManagement');
+        } else {
+            return tabList;
+        }
+    }, []);
 
     const handleOnClick = useCallback((item) => {
         setActiveTab(item.key);
@@ -44,7 +56,7 @@ const AdminDashboard = () => {
                 <div className="col-3 bg-white border-round-xl">
                     <h2 className="text-cyan-200 text-center">QUẢN LÝ HỆ THỐNG</h2> <hr className="mb-3" />
                     <ul className="flex flex-column list-none p-0 m-0 overflow-hidden h-full">
-                        {tabList.map((item) => (
+                        {tabListFilter.map((item) => (
                             <li
                                 key={item.key}
                                 className={`m-2 p-2 border-round hover:text-white hover:bg-cyan-200 hover:border-gray-100 ${
@@ -66,6 +78,7 @@ const AdminDashboard = () => {
                     </ul>
                 </div>
                 <div className="col-9 bg-white border-round-xl">
+                    {activeTab === 'staffManagement' && getUserRole() === UserRoles.ADMIN && <StaffManagement />}
                     {activeTab === 'courseManagement' && <CouseManagement />}
                     {activeTab === 'programManagement' && <ProgramManagement />}
                     {activeTab === 'sectionManagement' && <SectionManagement />}

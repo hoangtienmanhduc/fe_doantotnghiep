@@ -41,7 +41,7 @@ const CourseForm = forwardRef((props, ref) => {
     );
 
     const { data: courseOptions } = useQuery(
-        [QueryKeyCourseOptions, getUserId()],
+        [QueryKeyCourseOptions, getUserId(), data?.specializationId],
         () =>
             getListCourseInfo(
                 getUserId(),
@@ -49,7 +49,7 @@ const CourseForm = forwardRef((props, ref) => {
                 null,
                 true,
             ),
-        { enabled: !!getUserId() },
+        { enabled: !!getUserId() && !!data?.specializationId },
     );
 
     // Handle Func
@@ -78,15 +78,15 @@ const CourseForm = forwardRef((props, ref) => {
 
             let holderCourseTypes = [];
             if (data?.requireCourse) {
-                if (!!data.requireCourse?.studyFirst && data.requireCourse?.studyFirst > 0) {
+                if (!!data.requireCourse?.studyFirst && data.requireCourse?.studyFirst?.length > 0) {
                     holderCourseTypes.push('studyFirst');
                 }
 
-                if (!!data.requireCourse?.parallel && data.requireCourse?.parallel > 0) {
+                if (!!data.requireCourse?.parallel && data.requireCourse?.parallel?.length > 0) {
                     holderCourseTypes.push('parallel');
                 }
 
-                if (!!data.requireCourse?.prerequisite && data.requireCourse?.prerequisite > 0) {
+                if (!!data.requireCourse?.prerequisite && data.requireCourse?.prerequisite?.length > 0) {
                     holderCourseTypes.push('prerequisite');
                 }
 
@@ -95,12 +95,15 @@ const CourseForm = forwardRef((props, ref) => {
                 }
             }
         }
+
         setVisible(true);
     }, []);
 
     const handleHideForm = useCallback(() => {
         setData({});
         setVisible(false);
+        setCourseTypes(['none']);
+        setCourseWorks([]);
     }, []);
 
     const handleOnChangeSectionType = (type, value) => {
@@ -270,12 +273,7 @@ const CourseForm = forwardRef((props, ref) => {
         (type, value) => {
             setData({
                 ...data,
-                requireCourse: !!data?.requireCourse
-                    ? {
-                          ...data?.requireCourse,
-                          [type]: !!data?.requireCourse[type] ? [...data?.requireCourse[type], ...value] : [...value],
-                      }
-                    : { [type]: [...value] },
+                requireCourse: { [type]: [...value] },
             });
         },
         [data],
@@ -306,7 +304,7 @@ const CourseForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.specializationId || null}
                                     onChange={(e) => handleOnChange('specializationId', e?.target.value)}
-                                    options={specializationOptions}
+                                    options={specializationOptions || []}
                                     optionLabel="name"
                                     optionValue="id"
                                     placeholder="Hãy chọn chuyên ngành của môn học"
@@ -363,7 +361,7 @@ const CourseForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.typeOfKnowledge || null}
                                     onChange={(e) => handleOnChange('typeOfKnowledge', e?.target.value)}
-                                    options={typeOfKnowledge}
+                                    options={typeOfKnowledge || []}
                                     optionLabel="label"
                                     optionValue="key"
                                     placeholder="Hãy chọn loại kiến thứ của môn học (Bắt buộc)"
@@ -377,7 +375,7 @@ const CourseForm = forwardRef((props, ref) => {
                                 <Dropdown
                                     value={data?.courseType}
                                     onChange={(e) => handleOnChange('courseType', e?.target.value)}
-                                    options={CourseTypeOptions}
+                                    options={CourseTypeOptions || []}
                                     optionLabel="label"
                                     optionValue="key"
                                     placeholder="Hãy chọn loại môn học (Bắt buộc)"
@@ -419,7 +417,7 @@ const CourseForm = forwardRef((props, ref) => {
                                 <MultiSelect
                                     value={courseWorks}
                                     onChange={(e) => handleOnChangeCourseWork(e.target.value)}
-                                    options={workCourseOptions}
+                                    options={workCourseOptions || []}
                                     selectAll
                                     optionLabel="label"
                                     optionValue="key"
@@ -499,7 +497,7 @@ const CourseForm = forwardRef((props, ref) => {
                                 <MultiSelect
                                     value={courseTypes || ['none']}
                                     onChange={(e) => handleOnChangeSectionType(e.selectedOption.key, e.target.value)}
-                                    options={courseTypeOptions}
+                                    options={courseTypeOptions || []}
                                     optionLabel="label"
                                     optionValue="key"
                                     maxSelectedLabels={3}
@@ -520,7 +518,10 @@ const CourseForm = forwardRef((props, ref) => {
                                         }
                                         filter
                                         onChange={(e) => handleOnChangePrerequisite('studyFirst', e?.target.value)}
-                                        options={courseOptions && courseOptions.filter((item) => item?.id !== data?.id)}
+                                        options={
+                                            (courseOptions && courseOptions.filter((item) => item?.id !== data?.id)) ||
+                                            []
+                                        }
                                         optionLabel="name"
                                         optionValue="code"
                                         placeholder="Hãy chọn các môn học học trước"
@@ -542,7 +543,10 @@ const CourseForm = forwardRef((props, ref) => {
                                         }
                                         filter
                                         onChange={(e) => handleOnChangePrerequisite('parallel', e?.target.value)}
-                                        options={courseOptions && courseOptions.filter((item) => item?.id !== data?.id)}
+                                        options={
+                                            (courseOptions && courseOptions.filter((item) => item?.id !== data?.id)) ||
+                                            []
+                                        }
                                         optionLabel="name"
                                         optionValue="code"
                                         placeholder="Hãy chọn các môn học song hành"
@@ -564,7 +568,10 @@ const CourseForm = forwardRef((props, ref) => {
                                         }
                                         filter
                                         onChange={(e) => handleOnChangePrerequisite('prerequisite', e?.target.value)}
-                                        options={courseOptions && courseOptions.filter((item) => item?.id !== data?.id)}
+                                        options={
+                                            (courseOptions && courseOptions.filter((item) => item?.id !== data?.id)) ||
+                                            []
+                                        }
                                         optionLabel="name"
                                         optionValue="code"
                                         placeholder="Hãy chọn các môn học tiên quyết"

@@ -43,7 +43,7 @@ function Lichthiketthuchocphan() {
                         <Dropdown
                             value={selectedTerm || null}
                             onChange={(e) => setSelectedTerm(e?.target.value)}
-                            options={termOptions}
+                            options={termOptions || []}
                             optionLabel="name"
                             optionValue="id"
                             filter
