@@ -59,7 +59,13 @@ const SectionClassForm = forwardRef((props, ref) => {
     // Use Query
     const { data: lecturerOptions } = useQuery(
         [QueryKeyLecturerOptions, getUserId(), selectedSection],
-        () => getListLecturerInfo(getUserId(), { specializationId: selectedSection?.specializationId }, null, true),
+        () =>
+            getListLecturerInfo(
+                getUserId(),
+                { specializationId: selectedSection?.specializationId || null },
+                null,
+                true,
+            ),
         { enabled: !!getUserId() && !!visible && !!selectedSection?.specializationId },
     );
 
@@ -71,7 +77,13 @@ const SectionClassForm = forwardRef((props, ref) => {
 
     const { data: specializationClassOptions } = useQuery(
         [QueryKeySpecializationClassOptions, getUserId(), data?.specializationId],
-        () => getListSpecializationClassInfo(getUserId(), { specializationId: data?.specializationId }, null, true),
+        () =>
+            getListSpecializationClassInfo(
+                getUserId(),
+                { specializationId: data?.specializationId || null },
+                null,
+                true,
+            ),
         { enabled: !!getUserId() && !!visible && !!data?.specializationId },
     );
 
@@ -80,11 +92,16 @@ const SectionClassForm = forwardRef((props, ref) => {
         () =>
             getListSectionInfo(
                 getUserId(),
-                { termId: data?.termId, studentId: getUserRole() === UserRoles.ADMIN ? null : getRefId() },
+                {
+                    termId: data?.termId,
+                    specializationClassId: data?.specializationClassId,
+                    studentId:
+                        getUserRole() === UserRoles.ADMIN || getUserRole() === UserRoles.STAFF ? null : getRefId(),
+                },
                 null,
                 true,
             ),
-        { enabled: !!getUserId() && !!visible && !!data?.termId },
+        { enabled: !!getUserId() && !!visible && !!data?.termId && !!data?.specializationClassId },
     );
 
     const { data: sectionClassOptions } = useQuery(
@@ -305,7 +322,7 @@ const SectionClassForm = forwardRef((props, ref) => {
     const handleOnChange = useCallback(
         (key, value) => {
             if (key === 'sectionId') {
-                let section = sectionOptions.find((item) => item?.id === value);
+                let section = sectionOptions?.find((item) => item?.id === value);
                 setSelectedSection(section);
             }
 
@@ -500,7 +517,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 <p>Chuyên ngành</p>
                                 <span className="w-full">
                                     <Dropdown
-                                        value={data?.specializationId}
+                                        value={data?.specializationId || null}
                                         onChange={(e) => handleOnChange('specializationId', e?.target.value)}
                                         options={specializationOptions || []}
                                         filter
@@ -516,7 +533,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 <p>Lớp chuyên ngành</p>
                                 <span className="w-full">
                                     <Dropdown
-                                        value={data?.specializationClassId}
+                                        value={data?.specializationClassId || null}
                                         onChange={(e) => handleOnChange('specializationClassId', e?.target.value)}
                                         options={specializationClassOptions || []}
                                         filter
@@ -538,7 +555,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 <p>Học kỳ</p>
                                 <span className="w-full">
                                     <Dropdown
-                                        value={data.termId}
+                                        value={data.termId || null}
                                         onChange={(e) => handleOnChange('termId', e?.target.value)}
                                         options={termOptions || []}
                                         filter
@@ -554,7 +571,7 @@ const SectionClassForm = forwardRef((props, ref) => {
                                 <p>Học phần</p>
                                 <span className="w-full">
                                     <Dropdown
-                                        value={data.sectionId}
+                                        value={data.sectionId || null}
                                         onChange={(e) => handleOnChange('sectionId', e?.target.value)}
                                         options={sectionOptions || []}
                                         optionValue="id"
