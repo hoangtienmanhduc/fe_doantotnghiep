@@ -13,18 +13,19 @@ import { UserRoles } from '~/App';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { Tag } from 'primereact/tag';
+import { Calendar } from 'primereact/calendar';
 
 const QueryKey = 'Schedule-List';
 const Lichhoc = () => {
     // Date
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedSchedule, setSelectedSchedule] = useState(0);
-
     const { data: scheduleDataList } = useQuery(
-        [QueryKey, getUserId(), getUserRole() === UserRoles.STUDENT ? getRefId() : null],
+        [QueryKey, getUserId(), getUserRole() === UserRoles.STUDENT ? getRefId() : null, selectedSchedule],
         () =>
             getListScheduleInfo(getUserId(), {
                 studentId: getUserRole() === UserRoles.STUDENT ? getRefId() : null,
+                scheduleType: selectedSchedule === 1 ? 'normal' : selectedSchedule === 2 ? 'test' : null,
             }),
         {
             enabled: !!getUserId() && !!getRefId(),
@@ -111,7 +112,6 @@ const Lichhoc = () => {
                                     textAlign: 'center',
                                 }}
                             >
-                                {console.log(item)}
                                 <br />
                                 <p className="p-0 m-0">{item.sectionName}</p>
                                 <p className="p-0 m-0">{item.sectionCode}</p>
@@ -175,12 +175,19 @@ const Lichhoc = () => {
                             </label>
                         </div>
                     </div>
-                    <DatePicker
+                    <Calendar
+                        icon="pi pi-calendar"
+                        iconPos="right"
+                        dateFormat="dd/mm/yy"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.value)}
+                    />
+                    {/* <DatePicker
                         selected={selectedDate}
                         onChange={(date) => setSelectedDate(date)}
                         dateFormat="dd/MM/yyyy"
                         customInput={<CustomDatePickerInput />}
-                    />
+                    /> */}
                 </div>
                 <div className="h-3rem flex justify-content-center ml-3 gap-2">
                     <Button label="Hiện tại" icon="pi pi-calendar" onClick={() => setSelectedDate(new Date())} />

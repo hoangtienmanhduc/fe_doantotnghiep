@@ -16,6 +16,8 @@ import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { RadioButton } from 'primereact/radiobutton';
 import { convertDayInWeek } from '~/utils/Utils';
 import { UserRoles } from '~/App';
+import { Button } from 'primereact/button';
+import { deletedRegistration } from '~/api/registration/RegistrationService';
 
 export const registrationType = [
     {
@@ -171,6 +173,25 @@ const Dangkyhocphan = () => {
         selectedRegistration,
         mutate,
     ]);
+
+    const handleOnCancelSection = async (studentSection) => {
+        if (studentSection && studentSection?.id) {
+            if (studentSection.sectionStatus === 'closed') {
+                showNotification('warn', 'Cảnh báo', 'Không thể huỷ học phần này do thời gian đăng ký đã đóng !!');
+                return;
+            } else {
+                const response = await deletedRegistration(getUserId(), studentSection?.id);
+
+                if (response === HTTP_STATUS_OK) {
+                    showNotification('success', 'Thành công', 'Cập nhật trạng thái đăng ký thành công !!');
+
+                    refetchSection();
+                    refetch();
+                    return;
+                }
+            }
+        }
+    };
 
     // Render
     return (
@@ -602,6 +623,7 @@ const Dangkyhocphan = () => {
                             <th rowSpan="1">Loại ĐK</th>
                             <th rowSpan="1">Ngày ĐK</th>
                             <th rowSpan="1">Trạng thái ĐK</th>
+                            <th rowSpan="1">Thao tác</th>
                         </tr>
                     </thead>
                     {sectionStudentList &&
@@ -634,6 +656,15 @@ const Dangkyhocphan = () => {
                                         {studentSection?.registrationStatus === 'cancel_register'
                                             ? 'Đã huỷ bỏ đăng ký'
                                             : 'Đã đăng ký'}
+                                    </th>
+                                    <th>
+                                        <div>
+                                            <Button
+                                                label="Huỷ học phần"
+                                                className="p-button-text"
+                                                onClick={() => handleOnCancelSection(studentSection)}
+                                            />
+                                        </div>
                                     </th>
                                 </tr>
                             </tbody>

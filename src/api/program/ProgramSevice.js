@@ -55,3 +55,16 @@ export function getListStudentProgramInfo(userId, studentId) {
         .then((res) => res.data)
         .catch((error) => console.log(error));
 }
+
+export function getLatestProgram(userId, specializationId) {
+    return axiosInstance
+        .post(
+            `${BACKEND_ENDPOINT}/program/getLatestProgram`,
+            {},
+            {
+                params: { userId, specializationId },
+            },
+        )
+        .then((res) => res.data)
+        .catch((error) => console.log(error));
+}

@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { useState } from 'react';
 import { useCallback } from 'react';
@@ -15,6 +14,8 @@ import { getListCourseInfo } from '~/api/course/CourseService';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { getListTermInfo } from '~/api/term/TermService';
 import { createOrUpdateGenericSection } from '~/api/section/SectionService';
+import moment from 'moment';
+import { Calendar } from 'primereact/calendar';
 
 const QueryKeyCourseOptions = 'Course-Options';
 const QueryKeyTerm = 'Term-Options';
@@ -147,6 +148,30 @@ const SectionForm = forwardRef((props, ref) => {
                                     optionValue="id"
                                     placeholder="Hãy chọn môn học mà học phần thuộc"
                                     className="w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Ngày mở đăng ký học phần</p>
+                            <span className="w-full">
+                                <Calendar
+                                    placeholder="Nhập thời gian mở đăng ký"
+                                    className="w-full"
+                                    value={data?.openDate ? moment(data?.openDate, 'DD/MM/YYYY').toDate() : null}
+                                    onChange={(e) => handleOnChange('openDate', e?.target.value)}
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Ngày khoá đăng ký học phần (Mặc định là sau 2 tuần từ khi mở đăng ký)</p>
+                            <span className="w-full">
+                                <Calendar
+                                    disabled={!data?.openDate}
+                                    placeholder="Nhập thời gian khoá đăng ký"
+                                    className="w-full"
+                                    minDate={data?.openDate || moment().toDate()}
+                                    value={data?.lockDate ? moment(data?.lockDate, 'DD/MM/YYYY').toDate() : null}
+                                    onChange={(e) => handleOnChange('lockDate', e?.target.value)}
                                 />
                             </span>
                         </div>

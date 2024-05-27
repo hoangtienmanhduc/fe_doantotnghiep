@@ -13,6 +13,7 @@ import { InputText } from 'primereact/inputtext';
 import { saveFinalResults } from '~/api/result/ResultService';
 import { HTTP_STATUS_OK } from '~/utils/Constants';
 import { showNotification } from '~/components/notification/NotificationService';
+import html2pdf from 'html2pdf.js';
 const cx = classNames.bind(styles);
 
 const QueryKey = 'SectionClass-Info';
@@ -113,236 +114,251 @@ function Quanlydiemquatrinhhoctap() {
         }, 1500);
     }, [checkAllFieldsFilled, id, inputValues.verificationCode, randomString, refetch, sectionClassInfo?.id]);
 
+    const exportPdf = useCallback(() => {
+        if (sectionClassInfo && sectionClassInfo?.students) {
+            const input = document.getElementById('print');
+
+            const opt = {
+                filename: `Danh_Sach_Diem_Sinh_Vien.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { useCORS: true },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait',
+                },
+            };
+
+            html2pdf().set(opt).from(input).save();
+        }
+    }, [sectionClassInfo]);
+
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('container')}>
-                <div style={{ height: '10px', width: '100%' }}></div>
-                <div className={cx('header')}>
-                    <div style={{ marginLeft: '15px' }}>
-                        <h2>QUẢN LÝ ĐIỂM QUÁ TRÌNH HỌC TẬP</h2>
+        <div className="w-full">
+            <div className={cx('header')}>
+                <div style={{ marginLeft: '15px' }}>
+                    <h2>QUẢN LÝ ĐIỂM QUÁ TRÌNH HỌC TẬP</h2>
+                </div>
+            </div>
+            <hr />
+            <div className="col-12">
+                <div className="p-inputgroup flex-1 flex justify-content-end">
+                    <Button
+                        label="Nhập điểm QTHT"
+                        icon="pi pi-send"
+                        disabled={sectionClassInfo && !sectionClassInfo?.inputResultEnable}
+                        onClick={() => window.location.assign(`/nhapdiemquatrinhhoctap/${id}`)}
+                    />
+                    <Button
+                        label="Nộp điểm QTHT"
+                        icon="pi pi-calculator"
+                        disabled={sectionClassInfo && !sectionClassInfo?.inputResultEnable}
+                        onClick={handleSubmit}
+                    />
+                    <Button label="In bảng điểm QTHT" icon="pi pi-print" onClick={exportPdf} />
+                    <Button label="Quay lại" icon="pi pi-arrow-right" />
+                </div>
+            </div>
+            <div id="print" style={{ margin: '5px' }}>
+                <div className="align-items-center" style={{ display: 'flex' }}>
+                    <p className="col-4">Lớp học phần:</p>
+                    <div className="col-8">
+                        <p
+                            style={{
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            {sectionClassInfo?.name}
+                        </p>
+                    </div>
+                </div>
+                <div className="align-items-center" style={{ display: 'flex' }}>
+                    <p className="col-4">Giảng viên:</p>
+                    <div className="col-8">
+                        <p
+                            style={{
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            {sectionClassInfo?.lecturerName}
+                        </p>
+                    </div>
+                </div>
+                <div className="align-items-center" style={{ display: 'flex' }}>
+                    <p className="col-4">Công thức tính điểm QTHT:</p>
+                    <div className="col-8">
+                        <Image src={img} alt="Image" width="600" preview />
                     </div>
                 </div>
                 <hr />
-                <div className="col-12">
-                    <div className="p-inputgroup flex-1 flex justify-content-end">
-                        <Button
-                            label="Nhập điểm QTHT"
-                            icon="pi pi-send"
-                            disabled={sectionClassInfo && !sectionClassInfo?.inputResultEnable}
-                            onClick={() => window.location.assign(`/nhapdiemquatrinhhoctap/${id}`)}
-                        />
-                        <Button
-                            label="Nộp điểm QTHT"
-                            icon="pi pi-calculator"
-                            disabled={sectionClassInfo && !sectionClassInfo?.inputResultEnable}
-                            onClick={handleSubmit}
-                        />
-                        {/* <Button label="In bảng điểm QTHT" icon="pi pi-print" /> */}
-                        <Button label="Quay lại" icon="pi pi-arrow-right" />
-                    </div>
-                </div>
-                <div style={{ marginLeft: '15px' }}>
-                    <div className="align-items-center" style={{ display: 'flex' }}>
-                        <p className="col-4">Lớp học phần:</p>
-                        <div className="col-8">
-                            <p
-                                style={{
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                {sectionClassInfo?.name}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="align-items-center" style={{ display: 'flex' }}>
-                        <p className="col-4">Giảng viên:</p>
-                        <div className="col-8">
-                            <p
-                                style={{
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                {sectionClassInfo?.lecturerName}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="align-items-center" style={{ display: 'flex' }}>
-                        <p className="col-4">Công thức tính điểm QTHT:</p>
-                        <div className="col-8">
-                            <Image src={img} alt="Image" width="600" preview />
-                        </div>
-                    </div>
-                    <hr />
+                <div className="flex align-items-center justify-content-between">
                     <p style={{ fontWeight: 'bold', marginTop: '15px' }}>Danh sách sinh viên</p>
-                    <div className="col-12 flex justify-content-end">
+                    <div className="flex justify-content-end">
                         <Button icon="pi pi-replay" onClick={refetch} />
                     </div>
-                    <table style={{ marginTop: '10px' }} border="1" className="w-full">
-                        <thead>
-                            <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                                <th style={{ height: '150px' }} rowSpan="3">
-                                    STT
-                                </th>
-                                <th rowSpan="3">Mã sinh viên</th>
-                                <th rowSpan="3">Họ và tên</th>
-                                <th colSpan="3">Giữa kì</th>
-                                <th colSpan="5" style={{ height: '50px' }}>
-                                    Thường kì
-                                </th>
-                                <th colSpan="2">Thực hành</th>
-                                <th rowSpan="3">Cuối kỳ</th>
-                                <th rowSpan="3">Điểm tổng kết</th>
-                            </tr>
-
-                            <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                                <th style={{ width: '40px' }} rowSpan="2">
-                                    1
-                                </th>
-                                <th style={{ width: '40px' }} rowSpan="2">
-                                    2
-                                </th>
-                                <th style={{ width: '40px' }} rowSpan="2">
-                                    3
-                                </th>
-                                <th colSpan="5">LT Hệ số 1</th>
-                                <th style={{ width: '40px' }} rowSpan="2">
-                                    1
-                                </th>
-                                <th style={{ width: '40px' }} rowSpan="2">
-                                    2
-                                </th>
-                            </tr>
-                            <tr style={{ backgroundColor: 'rgb(29, 161, 242)' }}>
-                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
-                                    1
-                                </th>
-                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
-                                    2
-                                </th>
-                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
-                                    3
-                                </th>
-                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
-                                    4
-                                </th>
-                                <th style={{ width: '40px', height: '50px' }} rowSpan="1">
-                                    5
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sectionClassInfo?.students &&
-                                sectionClassInfo.students?.length > 0 &&
-                                sectionClassInfo.students.map((student, index) => (
-                                    <tr key={index}>
-                                        <th style={{ height: '35px', width: '50px' }}>{index + 1}</th>
-                                        <th style={{ width: '100px' }}>{student.studentCode}</th>
-                                        <th style={{ width: '300px' }}>{student.studentName}</th>
-                                        <th style={{ width: '50px' }}>{student.midtermPoint1}</th>
-                                        <th style={{ width: '50px' }}>{student.midtermPoint2}</th>
-                                        <th style={{ width: '50px' }}>{student.midtermPoint3}</th>
-                                        <th style={{ width: '40px' }}>{student.regularPoint1}</th>
-                                        <th style={{ width: '40px' }}>{student.regularPoint2}</th>
-                                        <th style={{ width: '40px' }}>{student.regularPoint3}</th>
-                                        <th style={{ width: '40px' }}>{student.regularPoint4}</th>
-                                        <th style={{ width: '40px' }}>{student.regularPoint5}</th>
-                                        <th style={{ width: '40px' }}>{student.practicePoint1}</th>
-                                        <th style={{ width: '40px' }}>{student.practicePoint2}</th>
-                                        <th style={{ width: '40px' }}>{student.finalPoint}</th>
-                                        <th style={{ width: '40px' }}>
-                                            {student?.totalPoint ? Math.round(student?.totalPoint * 100) / 100 : '_'}
-                                        </th>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </table>
-                    <hr />
-                    {showAdditionalDiv && (
+                </div>
+                <table style={{ marginTop: '10px' }} border="1" className="w-full">
+                    <thead style={{ backgroundColor: 'rgb(29, 161, 242, 0.6)' }}>
+                        <tr>
+                            <th style={{ height: '150px' }} rowSpan="3">
+                                STT
+                            </th>
+                            <th rowSpan="3">Mã sinh viên</th>
+                            <th rowSpan="3">Họ và tên</th>
+                            <th colSpan="3">Giữa kì</th>
+                            <th colSpan="5" style={{ height: '50px' }}>
+                                Thường kì
+                            </th>
+                            <th colSpan="2">Thực hành</th>
+                            <th rowSpan="3">Cuối kỳ</th>
+                            <th rowSpan="3">Điểm tổng kết</th>
+                        </tr>
+                        <tr>
+                            <th style={{ width: '40px' }} rowSpan="2">
+                                1
+                            </th>
+                            <th style={{ width: '40px' }} rowSpan="2">
+                                2
+                            </th>
+                            <th style={{ width: '40px' }} rowSpan="2">
+                                3
+                            </th>
+                            <th colSpan="5">LT Hệ số 1</th>
+                            <th style={{ width: '40px' }} rowSpan="2">
+                                1
+                            </th>
+                            <th style={{ width: '40px' }} rowSpan="2">
+                                2
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                1
+                            </th>
+                            <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                2
+                            </th>
+                            <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                3
+                            </th>
+                            <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                4
+                            </th>
+                            <th style={{ width: '40px', height: '50px' }} rowSpan="1">
+                                5
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {sectionClassInfo?.studentSections &&
+                            sectionClassInfo.studentSections?.length > 0 &&
+                            sectionClassInfo.studentSections.map((student, index) => (
+                                <tr key={index}>
+                                    <th style={{ height: '35px', width: '50px' }}>{index + 1}</th>
+                                    <th style={{ width: '100px' }}>{student.studentCode}</th>
+                                    <th style={{ width: '300px' }}>{student.studentName}</th>
+                                    <th style={{ width: '50px' }}>{student.midtermPoint1}</th>
+                                    <th style={{ width: '50px' }}>{student.midtermPoint2}</th>
+                                    <th style={{ width: '50px' }}>{student.midtermPoint3}</th>
+                                    <th style={{ width: '40px' }}>{student.regularPoint1}</th>
+                                    <th style={{ width: '40px' }}>{student.regularPoint2}</th>
+                                    <th style={{ width: '40px' }}>{student.regularPoint3}</th>
+                                    <th style={{ width: '40px' }}>{student.regularPoint4}</th>
+                                    <th style={{ width: '40px' }}>{student.regularPoint5}</th>
+                                    <th style={{ width: '40px' }}>{student.practicePoint1}</th>
+                                    <th style={{ width: '40px' }}>{student.practicePoint2}</th>
+                                    <th style={{ width: '40px' }}>{student.finalPoint}</th>
+                                    <th style={{ width: '40px' }}>
+                                        {student?.totalPoint ? Math.round(student?.totalPoint * 100) / 100 : '_'}
+                                    </th>
+                                </tr>
+                            ))}
+                    </tbody>
+                </table>
+                <hr />
+                {showAdditionalDiv && (
+                    <div>
                         <div>
-                            <div>
-                                <h2
-                                    className="text-primary"
-                                    style={{
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    Nộp điểm quá trình học tập
-                                </h2>
-                            </div>
-                            <p style={{ fontWeight: 'bold', marginTop: '20px' }}>Lưu ý:</p>
-                            <div style={{ marginTop: '10px' }}>
-                                <p>
-                                    - Thầy/ cô vui lòng kiểm tra kỹ bảng điểm và chắc chắn đã hoàn tất việc nhập điểm
-                                    trước khi tiến hành nộp điểm;
-                                </p>
-                                <p>
-                                    - Sau khi nộp điểm, chức năng xử lý điểm quá trình học tập đối với lớp học phần sẽ
-                                    bị khóa
-                                </p>
-                                <p>
-                                    - Thầy/ cô sẽ không thể thay đổi chính sách tính điểm và các cột điểm sau khi nộp
-                                    điểm;
-                                </p>
-                            </div>
-                            <div style={{ marginTop: '10px', display: 'flex' }}>
-                                <p className="mr-2" style={{ fontWeight: 'bold' }}>
-                                    Mã xác nhận:
-                                </p>
-                                <div style={{ justifyContent: 'space-between' }}>
-                                    <div className="flex align-items-center mb-3">
-                                        <InputText
-                                            id="username"
-                                            placeholder="Nhập mã"
-                                            className=" w-full mr-2"
-                                            value={inputValues.verificationCode}
-                                            onChange={(e) => handleInputChange(e, 'verificationCode')}
-                                        />
-                                        <div>
-                                            <Button
-                                                icon="pi pi-replay"
-                                                onClick={() => {
-                                                    regenerateString();
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="surface-100 py-1 text-center mb-3">
-                                        <h2
-                                            className="text-primary"
-                                            style={{
-                                                fontWeight: 'bold',
-                                            }}
-                                        >
-                                            {randomString}
-                                        </h2>
-                                    </div>
-                                    <div className="w-full">
+                            <h2
+                                className="text-primary"
+                                style={{
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                Nộp điểm quá trình học tập
+                            </h2>
+                        </div>
+                        <p style={{ fontWeight: 'bold', marginTop: '20px' }}>Lưu ý:</p>
+                        <div style={{ marginTop: '10px' }}>
+                            <p>
+                                - Thầy/ cô vui lòng kiểm tra kỹ bảng điểm và chắc chắn đã hoàn tất việc nhập điểm trước
+                                khi tiến hành nộp điểm;
+                            </p>
+                            <p>
+                                - Sau khi nộp điểm, chức năng xử lý điểm quá trình học tập đối với lớp học phần sẽ bị
+                                khóa
+                            </p>
+                            <p>
+                                - Thầy/ cô sẽ không thể thay đổi chính sách tính điểm và các cột điểm sau khi nộp điểm;
+                            </p>
+                        </div>
+                        <div style={{ marginTop: '10px', display: 'flex' }}>
+                            <p className="mr-2" style={{ fontWeight: 'bold' }}>
+                                Mã xác nhận:
+                            </p>
+                            <div style={{ justifyContent: 'space-between' }}>
+                                <div className="flex align-items-center mb-3">
+                                    <InputText
+                                        id="username"
+                                        placeholder="Nhập mã"
+                                        className=" w-full mr-2"
+                                        value={inputValues.verificationCode}
+                                        onChange={(e) => handleInputChange(e, 'verificationCode')}
+                                    />
+                                    <div>
                                         <Button
-                                            className="w-full"
-                                            icon="pi pi-check"
-                                            style={{
-                                                backgroundColor: '#00BFFF',
-                                                color: 'white',
+                                            icon="pi pi-replay"
+                                            onClick={() => {
+                                                regenerateString();
                                             }}
-                                            label="Nhập điểm quá trình học tập"
-                                            onClick={handleOnSubmitFinalResult}
                                         />
-                                        {!isAllFieldsFilled && isErrorVisible && !isVerificationCodeMatched && (
-                                            <p style={{ color: 'red', marginTop: '10px' }}>
-                                                Vui lòng điền đầy đủ thông tin!
-                                            </p>
-                                        )}
-
-                                        {!isVerificationCodeMatched && isErrorVisible && isAllFieldsFilled && (
-                                            <p style={{ color: 'red', marginTop: '10px' }}>Mã xác minh không đúng!</p>
-                                        )}
                                     </div>
+                                </div>
+                                <div className="surface-100 py-1 text-center mb-3">
+                                    <h2
+                                        className="text-primary"
+                                        style={{
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {randomString}
+                                    </h2>
+                                </div>
+                                <div className="w-full">
+                                    <Button
+                                        className="w-full"
+                                        icon="pi pi-check"
+                                        style={{
+                                            backgroundColor: '#00BFFF',
+                                            color: 'white',
+                                        }}
+                                        label="Nhập điểm quá trình học tập"
+                                        onClick={handleOnSubmitFinalResult}
+                                    />
+                                    {!isAllFieldsFilled && isErrorVisible && !isVerificationCodeMatched && (
+                                        <p style={{ color: 'red', marginTop: '10px' }}>
+                                            Vui lòng điền đầy đủ thông tin!
+                                        </p>
+                                    )}
+
+                                    {!isVerificationCodeMatched && isErrorVisible && isAllFieldsFilled && (
+                                        <p style={{ color: 'red', marginTop: '10px' }}>Mã xác minh không đúng!</p>
+                                    )}
                                 </div>
                             </div>
                         </div>
-                    )}
-                    {console.log(sectionClassInfo)}
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     );

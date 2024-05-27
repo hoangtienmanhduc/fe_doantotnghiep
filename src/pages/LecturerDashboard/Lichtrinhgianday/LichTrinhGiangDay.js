@@ -20,10 +20,11 @@ const Lichtrinhgiangday = () => {
     const [selectedSchedule, setSelectedSchedule] = useState(0);
 
     const { data: scheduleDataList } = useQuery(
-        [QueryKey, getUserId(), getUserRole() === UserRoles.LECTURER ? getRefId() : null],
+        [QueryKey, getUserId(), getUserRole() === UserRoles.LECTURER ? getRefId() : null, selectedSchedule],
         () =>
             getListScheduleInfo(getUserId(), {
                 lecturerId: getUserRole() === UserRoles.LECTURER ? getRefId() : null,
+                scheduleType: selectedSchedule === 1 ? 'normal' : selectedSchedule === 2 ? 'test' : null,
             }),
         {
             enabled: !!getUserId() && !!getRefId(),

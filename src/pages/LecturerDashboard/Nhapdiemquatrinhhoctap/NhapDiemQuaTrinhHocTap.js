@@ -28,8 +28,8 @@ function Nhapdiemquatrinhhoctap() {
     const [studentResultList, setStudentResultList] = useState([]);
 
     useEffect(() => {
-        if (sectionClassInfo && sectionClassInfo?.students && sectionClassInfo?.students?.length > 0) {
-            setStudentResultList([...sectionClassInfo?.students]);
+        if (sectionClassInfo && sectionClassInfo?.studentSections && sectionClassInfo?.studentSections?.length > 0) {
+            setStudentResultList([...sectionClassInfo?.studentSections]);
         }
     }, [sectionClassInfo]);
 

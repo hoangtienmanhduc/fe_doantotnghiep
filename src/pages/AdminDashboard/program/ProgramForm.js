@@ -20,7 +20,9 @@ import { InputNumber } from 'primereact/inputnumber';
 import { TermProgram } from './ProgramConstant';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { MultiSelect } from 'primereact/multiselect';
-import { createOrUpdatedateProgram } from '~/api/program/ProgramSevice';
+import { createOrUpdatedateProgram, getLatestProgram } from '~/api/program/ProgramSevice';
+import { showNotification } from '~/components/notification/NotificationService';
+const QueryKeyLatestProgram = 'Latest-Program';
 const QueryKeySpecializationOptions = 'Specialization-Options';
 const QueryKeyCourseOptions = 'Course-Options';
 const QueryKeyAcademicOptions = 'Academic-Options';
@@ -39,7 +41,14 @@ const ProgramForm = forwardRef((props, ref) => {
     const opCompulsory = useRef(null);
     const opElective = useRef(null);
     const [isEditProgramTerm, setIsEditProgramTerm] = useState(false);
+
     // Use Query
+    const { data: latestProgarm } = useQuery(
+        [QueryKeyLatestProgram, getUserId(), data?.specializationId, visible],
+        () => getLatestProgram(getUserId(), data?.specializationId),
+        { enabled: !!visible && !!getUserId() && !!data?.specializationId },
+    );
+
     const { data: specializationOptions } = useQuery(
         [QueryKeySpecializationOptions, getUserId()],
         () => getListSpecializationInfo(getUserId(), {}, null, true),
@@ -208,8 +217,62 @@ const ProgramForm = forwardRef((props, ref) => {
                     if (courses && courses?.length > 0) {
                         minimumElective = courses.reduce((sum, course) => (sum = course?.credits), 0);
                     }
+                    debugger;
+                    if (courses?.length > 0) {
+                        for (let i = 0; i < courses?.length; i++) {
+                            if (!!courses[i].requireCourse) {
+                                if (courses[i].requireCourse.prerequisite?.length > 0) {
+                                    let courseRequire = courses?.find((course) =>
+                                        courses[i].requireCourse.prerequisite.includes(course.code),
+                                    );
+                                    if (!!courseRequire) {
+                                        showNotification(
+                                            'warn',
+                                            'Cảnh báo',
+                                            'Trong kì đào tạo không được chứa môn thuộc tiên quyết của nhau ' +
+                                                courseRequire.name,
+                                        );
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     setSelectedTerm({ ...selectedTerm, [type]: [...courses], minimumElective: minimumElective });
                 } else {
+                    if (courses?.length > 0) {
+                        for (let i = 0; i < courses?.length; i++) {
+                            if (!!courses[i].requireCourse) {
+                                if (courses[i].requireCourse.prerequisite?.length > 0) {
+                                    let courseRequire = courses?.find((course) =>
+                                        courses[i].requireCourse.prerequisite.includes(course.code),
+                                    );
+                                    if (!!courseRequire) {
+                                        showNotification(
+                                            'warn',
+                                            'Cảnh báo',
+                                            'Trong kì đào tạo không được chứa môn thuộc môn tiên quyết của ' +
+                                                courseRequire.name,
+                                        );
+                                        return;
+                                    }
+                                } else if (courses[i].requireCourse.studyFirst?.length > 0) {
+                                    let courseRequire = courses?.find((course) =>
+                                        courses[i].requireCourse.studyFirst.includes(course.code),
+                                    );
+                                    if (!!courseRequire) {
+                                        showNotification(
+                                            'warn',
+                                            'Cảnh báo',
+                                            'Trong kì đào tạo không được chứa môn thuộc học trước của ' +
+                                                courseRequire.name,
+                                        );
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     setSelectedTerm({ ...selectedTerm, [type]: [...courses] });
                 }
             }
@@ -351,20 +414,33 @@ const ProgramForm = forwardRef((props, ref) => {
                                     />
                                 </span>
                             </div>
-                            <div className="col-12 p-0">
-                                <p>Chuyên ngành</p>
-                                <span className="w-full">
-                                    <Dropdown
-                                        value={data?.specializationId || null}
-                                        onChange={(e) => handleOnChange('specializationId', e?.target.value)}
-                                        options={specializationOptions || []}
-                                        optionLabel="name"
-                                        optionValue="id"
-                                        placeholder="Hãy chọn chuyên ngành của chương trình đào tạo (Bắt buộc)"
-                                        className="w-full"
-                                    />
-                                </span>
+                            <div className="w-full mb-3 flex align-items-end">
+                                <div className="flex-1 p-0 mr-2">
+                                    <p>Chuyên ngành</p>
+                                    <span className="w-full">
+                                        <Dropdown
+                                            value={data?.specializationId || null}
+                                            onChange={(e) => handleOnChange('specializationId', e?.target.value)}
+                                            options={specializationOptions || []}
+                                            optionLabel="name"
+                                            optionValue="id"
+                                            placeholder="Hãy chọn chuyên ngành của chương trình đào tạo (Bắt buộc)"
+                                            className="w-full"
+                                        />
+                                    </span>
+                                </div>
+                                <Button
+                                    disabled={!latestProgarm}
+                                    tooltip={`${'Sao chép lại chương trình đào tạo của năm ngoái'}`}
+                                    icon={'pi pi-copy'}
+                                    onClick={() => setData({ ...latestProgarm, academicYearId: data?.academicYearId })}
+                                />
                             </div>
+                            {!latestProgarm && (
+                                <span className="text-orange-400 ">
+                                    *Hiện các năm trước chưa có chương trình đào tạo này
+                                </span>
+                            )}
                             <div className="col-12 p-0">
                                 <p>Đơn vị thời gian đào tạo của chương trình (Năm)</p>
                                 <span className="w-full">
@@ -387,7 +463,6 @@ const ProgramForm = forwardRef((props, ref) => {
                                     <h3 className="p-0 m-0">Thông tin các học kỳ đào tạo</h3>
                                 </div>
                             </Divider>
-
                             {data?.trainingTime && data?.trainingTime > 0 ? (
                                 <div className="grid col-12">
                                     {programTerms &&
@@ -493,7 +568,6 @@ const ProgramForm = forwardRef((props, ref) => {
                                     </div>
                                     <div className="col-12 mb-2">
                                         <div className="w-full">
-                                            {console.log(selectedTerm?.programCompulsoryCourses)}
                                             <DataTable
                                                 value={selectedTerm?.programCompulsoryCourses || []}
                                                 emptyMessage="Hiện chưa có môn học bắt buộc nào"

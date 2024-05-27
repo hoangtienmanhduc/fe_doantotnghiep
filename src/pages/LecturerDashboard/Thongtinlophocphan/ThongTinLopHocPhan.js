@@ -67,19 +67,6 @@ const Thongtinlophocphan = () => {
             <div className="col-12">
                 <div className="p-inputgroup flex-1 flex justify-content-end">
                     {tabIndex === '2' && <Button label="In ấn" icon="pi pi-print" onClick={exportPdf} />}
-                    <OverlayPanel ref={op}>
-                        <div className="w-full flex align-items-center gap-2">
-                            <Button
-                                type="button"
-                                icon="pi pi-file-pdf"
-                                severity="warning"
-                                label="PDF"
-                                rounded
-                                onClick={exportPdf}
-                                data-pr-tooltip="PDF"
-                            />
-                        </div>
-                    </OverlayPanel>
                     <Button
                         label="Xử lý điểm quá trình học tập"
                         icon="pi pi-calculator"

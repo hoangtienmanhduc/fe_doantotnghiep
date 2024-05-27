@@ -112,7 +112,7 @@ const Chuongtrinhkhung = () => {
                                             ) : (
                                                 <i className="pi pi-angle-right mr-2"></i>
                                             )}
-                                            {TermProgram.find((item) => item.value === term.termType).label}
+                                            {TermProgram?.find((item) => item.value === term.termType)?.label}
                                         </td>
                                         <td
                                             style={{ fontWeight: 'bold', height: '30px', textAlign: 'center' }}
@@ -184,8 +184,8 @@ const Chuongtrinhkhung = () => {
                                                             ></td>
                                                         </tr>
                                                     )}
-                                                    {courseType === 'elective' ? (
-                                                        term?.programCourses.filter(
+                                                    {courseType === 'elective' && term?.programCourses?.length > 0 ? (
+                                                        term?.programCourses?.filter(
                                                             (course) => course.courseType === 'elective',
                                                         )?.length > 0 ? (
                                                             term?.programCourses
@@ -230,7 +230,7 @@ const Chuongtrinhkhung = () => {
                                                         ) : (
                                                             <span className="text-700 p-2">Không có...</span>
                                                         )
-                                                    ) : term?.programCourses.filter(
+                                                    ) : term?.programCourses?.filter(
                                                           (course) => course.courseType === 'compulsory',
                                                       )?.length > 0 ? (
                                                         term?.programCourses
