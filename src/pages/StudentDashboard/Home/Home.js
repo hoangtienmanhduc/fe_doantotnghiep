@@ -26,31 +26,44 @@ const Home = () => {
     );
 
     const creditData = useMemo(() => {
-        let courseOfPrograms = []; // Total
+        let total = 0; // Total
+        let learned = 0;
+        let left = 0;
         if (programData) {
-            if (programData?.program?.programTerms && programData?.program?.programTerms?.length > 0) {
-                for (let i = 0; i < programData?.program?.programTerms?.length; i++) {
-                    if (programData?.program?.programTerms[i].programCourses?.length > 0) {
-                        for (let j = 0; j < programData?.program?.programTerms[i].programCourses?.length; j++) {
-                            courseOfPrograms.push(programData?.program?.programTerms[i].programCourses[j]);
+            const termList = [...programData?.program?.programTerms];
+            let courseLeft = [...programData?.courses];
+
+            if (termList && termList?.length > 0) {
+                for (let i = 0; i < termList?.length; i++) {
+                    if (termList[i].programCompulsoryCourses?.length > 0) {
+                        for (let j = 0; j < termList[i].programCompulsoryCourses?.length; j++) {
+                            total += termList[i].programCompulsoryCourses[j].credits;
+
+                            if (courseLeft.some((course) => termList[i].programCompulsoryCourses[j].id === course.id)) {
+                                learned += termList[i].programCompulsoryCourses[j].credits;
+                            }
+                        }
+                    }
+
+                    if (termList[i].programElectiveCourses?.length > 0) {
+                        total += termList[i].minimumElective;
+
+                        if (
+                            courseLeft.some((course) =>
+                                termList[i].programElectiveCourses.some(
+                                    (courseElective) => courseElective === course.id,
+                                ),
+                            )
+                        ) {
+                            learned += termList[i].minimumElective;
                         }
                     }
                 }
             }
-            const courseLearned = programData?.courses; // Learned
-            let courseLeft = [...courseOfPrograms];
-            // if (courseOfPrograms?.length > 0) {
-            //     if (programData?.courses?.length > 0) {
-            //         courseLeft = courseOfPrograms.filter((item) => !courseLearned.includes(item?.id));
-            //     }
-            // }
-
-            let learned = courseLearned.reduce((sum, course) => sum + course?.credits, 0);
-            let left = courseLeft.reduce((sum, course) => sum + course?.credits, 0);
 
             return {
                 learned: learned,
-                left: left - learned,
+                left: total - learned,
             };
         }
 
@@ -169,6 +182,8 @@ const Home = () => {
                                 onClick={() => {}}
                             />
                         </div> */}
+                        {console.log(creditData)}
+                        {console.log(programData)}
                         <PieChartDemo data={creditData} />
                     </div>
                 </div>
