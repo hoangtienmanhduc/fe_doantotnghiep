@@ -623,6 +623,7 @@ const Dangkyhocphan = () => {
                             <th rowSpan="1">Loại ĐK</th>
                             <th rowSpan="1">Ngày ĐK</th>
                             <th rowSpan="1">Trạng thái ĐK</th>
+                            <th rowSpan="1">Trạng thái học phần</th>
                             <th rowSpan="1">Thao tác</th>
                         </tr>
                     </thead>
@@ -657,6 +658,7 @@ const Dangkyhocphan = () => {
                                             ? 'Đã huỷ bỏ đăng ký'
                                             : 'Đã đăng ký'}
                                     </th>
+                                    <th>{studentSection?.sectionStatus === 'open' ? 'Đang mở' : 'Đã khoá'}</th>
                                     <th>
                                         <div>
                                             <Button

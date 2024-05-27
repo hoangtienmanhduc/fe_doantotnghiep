@@ -28,7 +28,6 @@ const Home = () => {
     const creditData = useMemo(() => {
         let total = 0; // Total
         let learned = 0;
-        let left = 0;
         if (programData) {
             const termList = [...programData?.program?.programTerms];
             let courseLeft = [...programData?.courses];
