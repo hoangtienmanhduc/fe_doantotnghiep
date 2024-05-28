@@ -390,7 +390,6 @@ const ProgramForm = forwardRef((props, ref) => {
                 visible={visible}
                 pt={{ header: { className: 'p-0' } }}
             >
-                {console.log(data)}
                 {!isEditProgramTerm ? (
                     <div>
                         <div className="col-12 p-0">
@@ -404,6 +403,7 @@ const ProgramForm = forwardRef((props, ref) => {
                                 <p>Năm học của chương trình đào tạo</p>
                                 <span className="w-full">
                                     <Dropdown
+                                        disabled={!!data?.id}
                                         value={data?.academicYearId || null}
                                         onChange={(e) => handleOnChange('academicYearId', e?.target.value)}
                                         options={academicYearOptions || []}
@@ -429,12 +429,20 @@ const ProgramForm = forwardRef((props, ref) => {
                                         />
                                     </span>
                                 </div>
-                                <Button
-                                    disabled={!latestProgarm}
-                                    tooltip={`${'Sao chép lại chương trình đào tạo của năm ngoái'}`}
-                                    icon={'pi pi-copy'}
-                                    onClick={() => setData({ ...latestProgarm, academicYearId: data?.academicYearId })}
-                                />
+                                {data?.id && (
+                                    <Button
+                                        disabled={!latestProgarm}
+                                        tooltip={`${'Sao chép lại chương trình đào tạo của năm ngoái'}`}
+                                        icon={'pi pi-copy'}
+                                        onClick={() =>
+                                            setData({
+                                                ...latestProgarm,
+                                                academicYearId: data?.academicYearId,
+                                                id: null,
+                                            })
+                                        }
+                                    />
+                                )}
                             </div>
                             {!latestProgarm && (
                                 <span className="text-orange-400 ">

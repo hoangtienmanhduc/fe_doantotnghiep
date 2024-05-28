@@ -247,23 +247,23 @@ const StudentForm = forwardRef((props, ref) => {
                             </span>
                         </div>
                         <div className="col-12 p-0">
-                            <p>Tên sinh viên</p>
-                            <span className="w-full">
-                                <InputText
-                                    value={data?.firstName || ''}
-                                    placeholder="Nhập tên của sinh viên..."
-                                    onChange={(e) => handleOnChange('firstName', e?.target.value)}
-                                    className=" w-full"
-                                />
-                            </span>
-                        </div>
-                        <div className="col-12 p-0">
                             <p>Họ đệm sinh viên</p>
                             <span className="w-full">
                                 <InputText
                                     value={data?.lastName || ''}
                                     placeholder="Nhập họ đệm của sinh viên..."
                                     onChange={(e) => handleOnChange('lastName', e?.target.value)}
+                                    className=" w-full"
+                                />
+                            </span>
+                        </div>
+                        <div className="col-12 p-0">
+                            <p>Tên sinh viên</p>
+                            <span className="w-full">
+                                <InputText
+                                    value={data?.firstName || ''}
+                                    placeholder="Nhập tên của sinh viên..."
+                                    onChange={(e) => handleOnChange('firstName', e?.target.value)}
                                     className=" w-full"
                                 />
                             </span>
