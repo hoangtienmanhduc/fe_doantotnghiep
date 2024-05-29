@@ -9,7 +9,6 @@ import { useRef } from 'react';
 import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { getUserId } from '~/components/authentication/AuthUtils';
-import { CourseTypeOptions } from './SectionConstant';
 import { getListCourseInfo } from '~/api/course/CourseService';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { getListTermInfo } from '~/api/term/TermService';
@@ -154,10 +153,12 @@ const SectionForm = forwardRef((props, ref) => {
                         <div className="col-12 p-0">
                             <p>Ngày mở đăng ký học phần</p>
                             <span className="w-full">
+                                {console.log(data)}
                                 <Calendar
                                     placeholder="Nhập thời gian mở đăng ký"
                                     className="w-full"
-                                    value={data?.openDate ? moment(data?.openDate, 'DD/MM/YYYY').toDate() : null}
+                                    dateFormat="dd/mm/yy"
+                                    value={data?.openDate ? new Date(data?.openDate) : null}
                                     onChange={(e) => handleOnChange('openDate', e?.target.value)}
                                 />
                             </span>
@@ -169,8 +170,9 @@ const SectionForm = forwardRef((props, ref) => {
                                     disabled={!data?.openDate}
                                     placeholder="Nhập thời gian khoá đăng ký"
                                     className="w-full"
-                                    minDate={data?.openDate || moment().toDate()}
-                                    value={data?.lockDate ? moment(data?.lockDate, 'DD/MM/YYYY').toDate() : null}
+                                    dateFormat="dd/mm/yy"
+                                    minDate={new Date(data?.openDate) || Date.now()}
+                                    value={data?.lockDate ? new Date(data?.lockDate) : null}
                                     onChange={(e) => handleOnChange('lockDate', e?.target.value)}
                                 />
                             </span>

@@ -41,9 +41,9 @@ const SectionManagement = () => {
         { field: 'courseCode', header: 'Mã môn học' },
         { field: 'name', header: 'Tên học phần' },
         { field: 'code', header: 'Mã học phần' },
+        { field: 'openDate', header: 'Thời gian mở đăng ký' },
+        { field: 'lockDate', header: 'Thời gian khoá đăng ký' },
         { field: 'description', header: 'Mô tả học phần' },
-        { field: 'createdAt', header: 'Được tạo' },
-        { field: 'deleted', header: 'Trạng thái bị xoá' },
         { field: 'action', header: 'Thao tác' },
     ];
 
@@ -128,7 +128,7 @@ const SectionManagement = () => {
                                             onClick={() => sectionRef.current.showForm(rowData)}
                                         />
                                     </div>
-                                ) : col.field === 'createdAt' ? (
+                                ) : col.field === 'lockDate' || col.field === 'openDate' ? (
                                     <div className="overflow-dot overflow-text-2" style={{ width: '100%' }}>
                                         {new Date(rowData[col.field]).toLocaleDateString()}
                                     </div>

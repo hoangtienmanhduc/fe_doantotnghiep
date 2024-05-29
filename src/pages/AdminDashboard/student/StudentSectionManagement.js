@@ -285,7 +285,7 @@ const StudentSectionManagement = () => {
                                                             { key: 'new_learning', label: 'Đăng ký học mới' },
                                                             { key: 'again_learning', label: 'Đăng ký học lại' },
                                                             { key: 'improve_learning', label: 'Đăng ký học cải thiện' },
-                                                            { key: 'cancel_register', label: 'Huỷ đăng ký' },
+                                                            // { key: 'cancel_register', label: 'Huỷ đăng ký' },
                                                         ]}
                                                         optionLabel="label"
                                                         optionValue="key"

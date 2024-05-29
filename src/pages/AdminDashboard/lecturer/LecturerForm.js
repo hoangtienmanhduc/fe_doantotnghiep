@@ -363,7 +363,7 @@ const LecturerForm = forwardRef((props, ref) => {
                             <p>Địa chỉ (Số nhà, Tổ, Khu phố, Đường)</p>
                             <span className="w-full">
                                 <InputText
-                                    value={data?.addressLine}
+                                    value={data?.addressLine || ''}
                                     placeholder="Nhập địa chỉ..."
                                     onChange={(e) => handleOnChange('addressLine', e?.target.value)}
                                     className=" w-full"

@@ -69,7 +69,7 @@ const Dangkyhocphan = () => {
     );
 
     const { data: sectionClassTheoryList, refetch: refetchSectionClassTheory } = useQuery(
-        [QueryKeySectionClass, getUserId(), selectedSection?.id],
+        [QueryKeySectionClass, getUserId(), selectedSection],
         () =>
             getListSectionClassInfo(getUserId(), {
                 sectionId: selectedSection?.id,
@@ -77,11 +77,12 @@ const Dangkyhocphan = () => {
                 createStatus: true,
             }),
         {
-            enabled: !!getUserId() && !!selectedSection?.id,
+            enabled: !!getUserId() && !!selectedSection?.id && !!selectedSection?.lockDate,
+            // && new Date(selectedSection?.lockDate) >= new Date() &&
+            // new Date(selectedSection?.openDate) <= new Date()
             initialData: [],
         },
     );
-
     const { data: sectionClassList } = useQuery(
         [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id],
         () =>
@@ -121,7 +122,7 @@ const Dangkyhocphan = () => {
                     [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id],
                     () => {},
                 );
-                queryClient.setQueryData([QueryKeySectionClass, getUserId(), selectedSection?.id], () => {});
+                queryClient.setQueryData([QueryKeySectionClass, getUserId(), selectedSection], () => {});
 
                 refetch();
                 refetchSection();
@@ -193,6 +194,32 @@ const Dangkyhocphan = () => {
         }
     };
 
+    const handleOnChangeTerm = useCallback(
+        (termSelectId) => {
+            setSelectedTerm(termSelectId);
+            if (termOptions && termOptions?.length > 0) {
+                // const termSelect = termOptions.find((term) => term.id === termSelectId);
+
+                // if (termSelect?.yearStart !== new Date().getFullYear()) {
+                //     showNotification('warn', 'Cảnh báo', 'Sinh viên hiện không được đăng ký học phần ở học kỳ này !!');
+                // }
+
+                setSelectedSection(null);
+                setSelectedSectionClass(null);
+                setSelectTimeAndPlaceRef(null);
+                setSelectTimeAndPlace(null);
+
+                queryClient.setQueryData([QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm], {});
+
+                queryClient.setQueryData(
+                    [QueryKeySectionClass, getUserId(), selectedSectionClass?.id, selectedSection?.id],
+                    () => {},
+                );
+            }
+        },
+        [queryClient, selectedSection?.id, selectedSectionClass?.id, selectedTerm, termOptions],
+    );
+
     // Render
     return (
         <React.Fragment>
@@ -214,28 +241,7 @@ const Dangkyhocphan = () => {
                             <Dropdown
                                 className="w-full"
                                 value={selectedTerm || null}
-                                onChange={(e) => {
-                                    setSelectedTerm(e?.target?.value);
-                                    setSelectedSection(null);
-                                    setSelectedSectionClass(null);
-                                    setSelectTimeAndPlaceRef(null);
-                                    setSelectTimeAndPlace(null);
-
-                                    queryClient.setQueryData(
-                                        [QueryKeySectionClass, getUserId(), selectedSection?.id, selectedTerm],
-                                        {},
-                                    );
-
-                                    queryClient.setQueryData(
-                                        [
-                                            QueryKeySectionClass,
-                                            getUserId(),
-                                            selectedSectionClass?.id,
-                                            selectedSection?.id,
-                                        ],
-                                        () => {},
-                                    );
-                                }}
+                                onChange={(e) => handleOnChangeTerm(e.target?.value)}
                                 options={termOptions || []}
                                 optionLabel="name"
                                 optionValue="id"

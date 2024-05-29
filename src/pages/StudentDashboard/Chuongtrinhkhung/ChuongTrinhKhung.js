@@ -30,15 +30,11 @@ const Chuongtrinhkhung = () => {
         if (data && data?.program && data?.program?.programTerms?.length > 0) {
             for (let i = 0; i < data?.program?.programTerms?.length; i++) {
                 const termData = { ...data?.program?.programTerms[i] };
-                if (termData.programCourses && termData.programCourses.length > 0) {
-                    termData.programCourses.forEach((course) => {
-                        if (course.courseType === 'compulsory') {
-                            totalCompulsory += course.credits;
-                        }
-                        // else if (course.courseType === 'elective') {
-                        //     totalElective += course.credits;
-                        // }
-                    });
+                if (termData.programCompulsoryCourses && termData.programCompulsoryCourses.length > 0) {
+                    totalCompulsory = termData.programCompulsoryCourses.reduce(
+                        (sum, course) => (sum += course.credits),
+                        0,
+                    );
 
                     totalElective += termData?.minimumElective;
                 }
@@ -52,7 +48,7 @@ const Chuongtrinhkhung = () => {
         };
     }, [data]);
 
-    const coursCompletedIds = useMemo(() => {
+    const courseCompletedIds = useMemo(() => {
         let coursIdsData = [];
         if (data && data?.courses && data?.courses?.length > 0) {
             coursIdsData = [...data?.courses.map((course) => course.id)];
@@ -72,6 +68,7 @@ const Chuongtrinhkhung = () => {
 
     return (
         <div>
+            {console.log(data)}
             <div>
                 <h2>Chương trình khung</h2>
             </div>
@@ -184,58 +181,9 @@ const Chuongtrinhkhung = () => {
                                                             ></td>
                                                         </tr>
                                                     )}
-                                                    {courseType === 'elective' && term?.programCourses?.length > 0 ? (
-                                                        term?.programCourses?.filter(
-                                                            (course) => course.courseType === 'elective',
-                                                        )?.length > 0 ? (
-                                                            term?.programCourses
-                                                                .filter((course) => course.courseType === 'elective')
-                                                                ?.map((course, courseIndex) => (
-                                                                    <tr key={courseIndex}>
-                                                                        <th style={{ fontWeight: 'normal' }}>
-                                                                            {course.code}
-                                                                        </th>
-                                                                        <th style={{ fontWeight: 'normal' }}>
-                                                                            {course.name}
-                                                                        </th>
-                                                                        <th style={{ fontWeight: 'normal' }}>
-                                                                            {course.courseDuration.theory}
-                                                                        </th>
-                                                                        <th style={{ fontWeight: 'normal' }}>
-                                                                            {course.courseDuration.practice}
-                                                                        </th>
-                                                                        <th style={{ fontWeight: 'normal' }}>
-                                                                            {course.credits}
-                                                                        </th>
-                                                                        <th style={{ fontWeight: 'normal' }}>
-                                                                            {term.minimumElective}
-                                                                        </th>
-                                                                        <th
-                                                                            style={{
-                                                                                fontWeight: 'normal',
-                                                                                height: '3rem',
-                                                                                width: '3rem',
-                                                                            }}
-                                                                        >
-                                                                            {coursCompletedIds &&
-                                                                            coursCompletedIds?.length > 0 &&
-                                                                            coursCompletedIds.includes(course.id) ? (
-                                                                                <i className="pi pi-check flex align-items-center justify-content-center bg-green-300 text-white h-full w-full"></i>
-                                                                            ) : (
-                                                                                <i className="pi pi-times flex align-items-center justify-content-center bg-red-300 text-white h-full w-full"></i>
-                                                                            )}
-                                                                        </th>
-                                                                    </tr>
-                                                                ))
-                                                        ) : (
-                                                            <span className="text-700 p-2">Không có...</span>
-                                                        )
-                                                    ) : term?.programCourses?.filter(
-                                                          (course) => course.courseType === 'compulsory',
-                                                      )?.length > 0 ? (
-                                                        term?.programCourses
-                                                            .filter((course) => course.courseType === 'compulsory')
-                                                            ?.map((course, courseIndex) => (
+                                                    {courseType === 'elective' ? (
+                                                        term?.programElectiveCourses?.length > 0 ? (
+                                                            term?.programElectiveCourses?.map((course, courseIndex) => (
                                                                 <tr key={courseIndex}>
                                                                     <th style={{ fontWeight: 'normal' }}>
                                                                         {course.code}
@@ -262,9 +210,9 @@ const Chuongtrinhkhung = () => {
                                                                             width: '3rem',
                                                                         }}
                                                                     >
-                                                                        {coursCompletedIds &&
-                                                                        coursCompletedIds?.length > 0 &&
-                                                                        coursCompletedIds.includes(course.id) ? (
+                                                                        {courseCompletedIds &&
+                                                                        courseCompletedIds?.length > 0 &&
+                                                                        courseCompletedIds.includes(course.id) ? (
                                                                             <i className="pi pi-check flex align-items-center justify-content-center bg-green-300 text-white h-full w-full"></i>
                                                                         ) : (
                                                                             <i className="pi pi-times flex align-items-center justify-content-center bg-red-300 text-white h-full w-full"></i>
@@ -272,6 +220,57 @@ const Chuongtrinhkhung = () => {
                                                                     </th>
                                                                 </tr>
                                                             ))
+                                                        ) : (
+                                                            <tr className="h-3rem">
+                                                                <th style={{ fontWeight: 'normal' }} colSpan="10">
+                                                                    <span className="text-700">Không có...</span>
+                                                                </th>
+                                                            </tr>
+                                                        )
+                                                    ) : courseType === 'compulsory' ? (
+                                                        term?.programCompulsoryCourses?.length > 0 ? (
+                                                            term?.programCompulsoryCourses?.map(
+                                                                (course, courseIndex) => (
+                                                                    <tr key={courseIndex}>
+                                                                        <th style={{ fontWeight: 'normal' }}>
+                                                                            {course.code}
+                                                                        </th>
+                                                                        <th style={{ fontWeight: 'normal' }}>
+                                                                            {course.name}
+                                                                        </th>
+                                                                        <th style={{ fontWeight: 'normal' }}>
+                                                                            {course.courseDuration.theory}
+                                                                        </th>
+                                                                        <th style={{ fontWeight: 'normal' }}>
+                                                                            {course.courseDuration.practice}
+                                                                        </th>
+                                                                        <th style={{ fontWeight: 'normal' }}>
+                                                                            {course.credits}
+                                                                        </th>
+                                                                        <th style={{ fontWeight: 'normal' }}>
+                                                                            {term.minimumElective}
+                                                                        </th>
+                                                                        <th
+                                                                            style={{
+                                                                                fontWeight: 'normal',
+                                                                                height: '3rem',
+                                                                                width: '3rem',
+                                                                            }}
+                                                                        >
+                                                                            {courseCompletedIds &&
+                                                                            courseCompletedIds?.length > 0 &&
+                                                                            courseCompletedIds.includes(course.id) ? (
+                                                                                <i className="pi pi-check flex align-items-center justify-content-center bg-green-300 text-white h-full w-full"></i>
+                                                                            ) : (
+                                                                                <i className="pi pi-times flex align-items-center justify-content-center bg-red-300 text-white h-full w-full"></i>
+                                                                            )}
+                                                                        </th>
+                                                                    </tr>
+                                                                ),
+                                                            )
+                                                        ) : (
+                                                            <span className="text-700 p-2">Không có...</span>
+                                                        )
                                                     ) : (
                                                         <span className="text-700 p-2">Không có...</span>
                                                     )}
