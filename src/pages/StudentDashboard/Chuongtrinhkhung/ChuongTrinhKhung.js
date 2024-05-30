@@ -31,7 +31,7 @@ const Chuongtrinhkhung = () => {
             for (let i = 0; i < data?.program?.programTerms?.length; i++) {
                 const termData = { ...data?.program?.programTerms[i] };
                 if (termData.programCompulsoryCourses && termData.programCompulsoryCourses.length > 0) {
-                    totalCompulsory = termData.programCompulsoryCourses.reduce(
+                    totalCompulsory += termData.programCompulsoryCourses.reduce(
                         (sum, course) => (sum += course.credits),
                         0,
                     );
