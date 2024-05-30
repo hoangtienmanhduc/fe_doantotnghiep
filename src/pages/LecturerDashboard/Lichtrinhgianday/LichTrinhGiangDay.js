@@ -91,16 +91,22 @@ const Lichtrinhgiangday = () => {
                                 ? item?.periodStart > 12 && item?.periodStart <= 15
                                 : false,
                         )
-                        ?.map((item) => (
+                        ?.map((item, idx) => (
                             <div
-                                key={item.id}
-                                className={`${
-                                    item?.scheduleType === 'test'
+                                key={idx}
+                                className={`font-semibold m-1 border-round ${
+                                    item?.scheduleType === 'normal'
+                                        ? item.sectionClassType === 'theory'
+                                            ? 'surface-300 text-700 '
+                                            : item.sectionClassType === 'practice'
+                                            ? 'bg-green-200 text-700 '
+                                            : ''
+                                        : item?.scheduleType === 'test'
                                         ? 'bg-yellow-400'
                                         : item?.scheduleType === 'suspended'
-                                        ? 'bg-red-100'
-                                        : 'surface-100'
-                                } font-semibold m-1 border-round text-800 p-2 flex flex-column justify-content-start align-items-center`}
+                                        ? 'bg-red-300'
+                                        : ''
+                                } p-2 flex flex-column justify-content-start align-items-center`}
                                 style={{
                                     textAlign: 'center',
                                 }}
