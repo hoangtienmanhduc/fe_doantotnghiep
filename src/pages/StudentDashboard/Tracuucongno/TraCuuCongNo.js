@@ -63,7 +63,7 @@ const Tracuucongno = () => {
             }
         }
 
-        return { debt: debt, totalFee: totalFee };
+        return { debt: debt, totalFee: totalFee - debt };
     }, [registrationList, selectedTerm]);
 
     const renderRegistrations = useCallback(() => {
